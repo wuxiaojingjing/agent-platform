@@ -1,0 +1,10 @@
+agent:
+  id: agent.wealth_aggregate
+  displayName: 财富聚合助手
+  roles: [domain, routing]
+  domains: [wealth_aggregate]
+implementation: { mode: extension, artifact: "com.huawei.finance:wealth-aggregate" }
+runtime: { intentEngine: default, context: enabled, taskOrchestrator: enabled }
+a2a: { inbound: true, delegation: { enabled: true } }
+assets: { path: ./assets }
+storage: { namespace: wealth-aggregate }

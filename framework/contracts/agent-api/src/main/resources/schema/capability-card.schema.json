@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://huawei.finance.agent.com/schema/capability-card.schema.json",
+  "title": "CapabilityCard",
+  "description": "注册中心 → 快慢召回（v0.7 附录 B）。发布门禁在 CI 与 Registry 加载期都用这份 Schema。",
+  "type": "object",
+  "required": ["capabilityId", "name", "type", "granularity", "domains", "riskLevel", "version", "status"],
+  "properties": {
+    "capabilityId": {"type": "string", "minLength": 1},
+    "name": {"type": "string", "minLength": 1},
+    "type": {"type": "string", "enum": ["TOOL", "SKILL", "WORKFLOW", "AGENT"]},
+    "granularity": {"type": "string", "enum": ["AGENT", "TOOL", "SKILL", "WORKFLOW"]},
+    "parentCapabilityId": {"type": ["string", "null"]},
+    "domains": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "description": {"type": "string"},
+    "supportedIntents": {"type": "array", "items": {"type": "string"}},
+    "inputSchema": {"type": "object"},
+    "outputSchema": {"type": "object"},
+    "preconditions": {"type": "array", "items": {"type": "string"}},
+    "sideEffects": {"type": "array", "items": {"type": "string"}},
+    "riskLevel": {"type": "string", "enum": ["R0", "R1", "R2"]},
+    "timeoutMs": {"type": "integer", "minimum": 1},
+    "idempotency": {"type": "string", "enum": ["REQUIRED", "SUPPORTED", "NONE"]},
+    "owner": {"type": "string"},
+    "version": {"type": "string", "minLength": 1},
+    "status": {"type": "string", "enum": ["ACTIVE", "GRAY", "DISABLED"]},
+    "utterances": {"type": "array", "items": {"type": "string"}},
+    "keywords": {"type": "array", "items": {"type": "string"}},
+    "requiredSlots": {"type": "array", "items": {"type": "string"}},
+    "guardrailOwner": {"type": "string", "enum": ["MAIN", "DOMAIN"]},
+    "principalRequired": {"type": "boolean", "default": true},
+    "confirmationPolicy": {"type": "string", "enum": ["NONE", "REVIEW_ONLY", "EXPLICIT"]},
+    "loopAccess": {"type": "string", "enum": ["DEFAULT", "PROPOSE_ONLY", "DENY"], "default": "DEFAULT"}
+    ,"entryVisible": {"type": "boolean", "default": true},
+    "implementationStatus": {"type": "string", "enum": ["IMPLEMENTED", "SCAFFOLD"]},
+    "positiveBoundary": {"type": "array", "items": {"type": "string"}},
+    "negativeBoundary": {"type": "array", "items": {"type": "string"}},
+    "fallbackCapabilityIds": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+  },
+  "allOf": [
+    {
+      "description": "v0.7 附录 B 说明：TOOL/SKILL 必须填写所属 Agent 的 capabilityId",
+      "if": {
+        "properties": {"type": {"enum": ["TOOL", "SKILL"]}},
+        "required": ["type"]
+      },
+      "then": {
+        "properties": {"parentCapabilityId": {"type": "string", "minLength": 1}},
+        "required": ["parentCapabilityId"]
+      }
+    },
+    {
+      "if": {"properties": {"riskLevel": {"const": "R1"}}, "required": ["riskLevel"]},
+      "then": {"properties": {"confirmationPolicy": {"enum": ["REVIEW_ONLY", "EXPLICIT"]}}}
+    },
+    {
+      "description": "R2 为资金类交易，必须声明幂等要求，否则重放无从拦截",
+      "if": {
+        "properties": {"riskLevel": {"const": "R2"}},
+        "required": ["riskLevel"]
+      },
+      "then": {
+        "properties": {"idempotency": {"const": "REQUIRED"}, "confirmationPolicy": {"const": "EXPLICIT"}},
+        "required": ["idempotency"]
+      }
+    },
+    {
+      "description": "占位 Agent 只能处于禁用态，不得参与执行路由",
+      "if": {
+        "properties": {"type": {"const": "AGENT"}, "implementationStatus": {"const": "SCAFFOLD"}},
+        "required": ["type", "implementationStatus"]
+      },
+      "then": {"properties": {"status": {"const": "DISABLED"}}}
+    }
+  ]
+}

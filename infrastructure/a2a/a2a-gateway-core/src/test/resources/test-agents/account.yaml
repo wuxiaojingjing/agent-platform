@@ -1,0 +1,21 @@
+# 样例：一张 ACTIVE 的节点卡，外加一张 capability 粒度的卡（不该被投影）
+- capabilityId: agent.account
+  name: 账户助手
+  type: AGENT
+  granularity: AGENT
+  domains: [account]
+  description: 账户余额、明细、状态相关的领域智能体
+  riskLevel: R0
+  timeoutMs: 5000
+  owner: 账户领域
+  version: "1.0.0"
+  status: ACTIVE
+
+- capabilityId: cap.account.balance.query
+  name: 余额查询
+  type: CAPABILITY
+  granularity: CAPABILITY
+  domains: [account]
+  riskLevel: R0
+  timeoutMs: 3000
+  status: ACTIVE

@@ -1,0 +1,35 @@
+# Build / deps
+target/
+**/target/
+**/node_modules/
+**/frontend/dist/
+dev/local/.dist/
+
+# Local secrets — never commit
+scripts/env.local.sh
+**/application-local.yml
+*.pem
+*.key
+*.p12
+*.jks
+.env
+.env.*
+!.env.example
+
+# Local run artifacts
+.tmp/
+outputs/
+logs/
+*.log
+final-test.log
+target-clean-test.log
+build-local-dist.log
+mobile-banking-assistant.log
+
+# IDE / OS
+.idea/
+*.iml
+.vscode/
+.DS_Store
+*.swp
+*~

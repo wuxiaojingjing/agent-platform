@@ -1,0 +1,18 @@
+# 科技域子智能体：数字人民币
+
+- capabilityId: agent.e_cny
+  name: 数字人民币助手
+  type: AGENT
+  granularity: AGENT
+  domains: [e_cny]
+  description: 数字人民币钱包与支付相关的领域智能体。本期面客 TOOL 未开放
+  riskLevel: R0
+  timeoutMs: 5000
+  idempotency: SUPPORTED
+  owner: 数币领域
+  version: "1.0.0"
+  status: DISABLED
+  implementationStatus: SCAFFOLD
+  positiveBoundary: [数字人民币钱包, 数字人民币支付]
+  negativeBoundary: [本期不开立钱包, 本期不执行支付]
+  fallbackCapabilityIds: []

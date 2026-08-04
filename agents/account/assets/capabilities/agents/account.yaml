@@ -1,0 +1,14 @@
+# 科技域子智能体：账户管理
+
+- capabilityId: agent.account
+  name: 账户助手
+  type: AGENT
+  granularity: AGENT
+  domains: [account]
+  description: 账户余额、明细、状态相关的领域智能体
+  riskLevel: R0
+  timeoutMs: 5000
+  idempotency: SUPPORTED
+  owner: 账户领域
+  version: "1.0.0"
+  status: ACTIVE

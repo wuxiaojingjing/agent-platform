@@ -1,0 +1,18 @@
+# 科技域子智能体：咨询服务
+
+- capabilityId: agent.advisory_service
+  name: 咨询助手
+  type: AGENT
+  granularity: AGENT
+  domains: [advisory_service]
+  description: 投顾与理财咨询相关的领域智能体。本期面客 TOOL 未开放
+  riskLevel: R0
+  timeoutMs: 5000
+  idempotency: SUPPORTED
+  owner: 金融助手领域
+  version: "1.0.0"
+  status: DISABLED
+  implementationStatus: SCAFFOLD
+  positiveBoundary: [投顾咨询, 理财咨询]
+  negativeBoundary: [本期不提供面客咨询能力, 本期不执行投资交易]
+  fallbackCapabilityIds: []

@@ -1,0 +1,46 @@
+# 人工复核截图补充菜单。主菜单树由 Excel 自动生成，截图中新出现的入口单独维护在这里。
+version: screenshot-business-directory-1.0.0
+source: knowledge/screenshot-source-ledger.yaml
+menus:
+  - { menuId: menu.account.账户管理, businessDomain: 账户管理, techDomain: account, path: 账户管理, finalName: 账户管理, bksPath: 账户管理, kind: menu }
+  - { menuId: menu.transfer.转账服务, businessDomain: 转账服务, techDomain: transfer, path: 转账服务, finalName: 转账服务, bksPath: 转账服务, kind: menu }
+  - { menuId: menu.payment.支付管理, businessDomain: 支付管理, techDomain: payment, path: 支付管理, finalName: 支付管理, bksPath: 支付管理, kind: menu }
+  - { menuId: menu.wealth_aggregate.财富管理, businessDomain: 财富管理, techDomain: wealth_aggregate, path: 财富管理, finalName: 财富管理, bksPath: 财富管理, kind: menu }
+  - { menuId: menu.loan_service.贷款服务, businessDomain: 贷款服务, techDomain: loan_service, path: 贷款服务, finalName: 贷款服务, bksPath: 贷款服务, kind: menu }
+  - { menuId: menu.benefits_ops.权益服务, businessDomain: 权益服务, techDomain: benefits_ops, path: 权益服务, finalName: 权益服务, bksPath: 权益服务, kind: menu }
+  - { menuId: menu.life_service.生活服务, businessDomain: 生活服务, techDomain: life_service, path: 生活服务, finalName: 生活服务, bksPath: 生活服务, kind: menu }
+  - { menuId: menu.vip_service.客户专享, businessDomain: 客户专享, techDomain: vip_service, path: 客户专享, finalName: 客户专享, bksPath: 客户专享, kind: menu }
+  - { menuId: menu.branch_service.网点服务, businessDomain: 网点服务, techDomain: branch_service, path: 网点服务, finalName: 网点服务, bksPath: 网点服务, kind: menu }
+  - { menuId: menu.finance_assistant.金融助手, businessDomain: 金融助手, techDomain: finance_assistant, path: 金融助手, finalName: 金融助手, bksPath: 金融助手, kind: menu }
+
+  - { menuId: menu.account.收支, businessDomain: 账户管理, techDomain: account, path: 账户管理＞收支, finalName: 收支, bksPath: 账户管理＞收支, kind: menu }
+  - { menuId: menu.transfer.转账汇款, businessDomain: 转账服务, techDomain: transfer, path: 转账服务＞转账汇款, finalName: 转账汇款, bksPath: 转账服务＞转账汇款, kind: menu }
+  - { menuId: menu.transfer.境内汇款, businessDomain: 转账服务, techDomain: transfer, path: 转账服务＞境内汇款, finalName: 境内汇款, bksPath: 转账服务＞境内汇款, kind: menu }
+  - { menuId: menu.transfer.注册账户转账, businessDomain: 转账服务, techDomain: transfer, path: 转账服务＞注册账户转账, finalName: 注册账户转账, bksPath: 转账服务＞注册账户转账, kind: menu }
+  - { menuId: menu.transfer.收款人管理, businessDomain: 转账服务, techDomain: transfer, path: 转账服务＞收款人管理, finalName: 收款人管理, bksPath: 转账服务＞收款人管理, kind: menu }
+  - { menuId: menu.wealth_aggregate.资产, businessDomain: 财富管理, techDomain: wealth_aggregate, path: 财富管理＞资产, finalName: 资产, bksPath: 财富管理＞资产, kind: menu }
+  - { menuId: menu.creditcard_service.申请办卡, businessDomain: 信用卡, techDomain: creditcard_service, path: 信用卡＞申请办卡, finalName: 申请办卡, bksPath: 信用卡＞申请办卡, kind: menu }
+  - { menuId: menu.creditcard_service.申请进度, businessDomain: 信用卡, techDomain: creditcard_service, path: 信用卡＞申请进度, finalName: 申请进度, bksPath: 信用卡＞申请进度, kind: menu }
+  - { menuId: menu.creditcard_service.分期付款, businessDomain: 信用卡, techDomain: creditcard_service, path: 信用卡＞分期付款, finalName: 分期付款, bksPath: 信用卡＞分期付款, kind: menu }
+  - { menuId: menu.loan_service.贷款, businessDomain: 贷款服务, techDomain: loan_service, path: 贷款服务＞贷款, finalName: 贷款, bksPath: 贷款服务＞贷款, kind: menu }
+  - { menuId: menu.benefits_ops.热门活动, businessDomain: 权益服务, techDomain: benefits_ops, path: 权益服务＞热门活动, finalName: 热门活动, bksPath: 权益服务＞热门活动, kind: menu }
+  - { menuId: menu.benefits_ops.权益中心, businessDomain: 权益服务, techDomain: benefits_ops, path: 权益服务＞权益中心, finalName: 权益中心, bksPath: 权益服务＞权益中心, kind: menu }
+  - { menuId: menu.benefits_ops.工银i豆乐园, businessDomain: 权益服务, techDomain: benefits_ops, path: 权益服务＞工银i豆乐园, finalName: 工银i豆乐园, bksPath: 权益服务＞工银i豆乐园, kind: menu }
+  - { menuId: menu.benefits_ops.工银i豆商城, businessDomain: 权益服务, techDomain: benefits_ops, path: 权益服务＞工银i豆商城, finalName: 工银i豆商城, bksPath: 权益服务＞工银i豆商城, kind: menu }
+  - { menuId: menu.benefits_ops.升金有礼, businessDomain: 权益服务, techDomain: benefits_ops, path: 权益服务＞升金有礼, finalName: 升金有礼, bksPath: 权益服务＞升金有礼, kind: menu }
+  - { menuId: menu.payroll_service.薪管家, businessDomain: 客户专享, techDomain: payroll_service, path: 客户专享＞薪管家, finalName: 薪管家, bksPath: 客户专享＞薪管家, kind: menu }
+  - { menuId: menu.fx_service.跨境金融, businessDomain: 客户专享, techDomain: fx_service, path: 客户专享＞跨境金融, finalName: 跨境金融, bksPath: 客户专享＞跨境金融, kind: menu }
+  - { menuId: menu.branch_service.预约取号, businessDomain: 网点服务, techDomain: branch_service, path: 网点服务＞预约/取号, finalName: 预约/取号, bksPath: 网点服务＞预约/取号, kind: menu }
+  - { menuId: menu.branch_service.纪念币预约, businessDomain: 网点服务, techDomain: branch_service, path: 网点服务＞纪念币预约, finalName: 纪念币预约, bksPath: 网点服务＞纪念币预约, kind: menu }
+  - { menuId: menu.branch_service.大额人民币预约, businessDomain: 网点服务, techDomain: branch_service, path: 网点服务＞大额人民币预约, finalName: 大额人民币预约, bksPath: 网点服务＞大额人民币预约, kind: menu }
+
+  # 网点预约页的可选业务。与首页同名时保留独立 menuId，点击时使用完整路径路由。
+  - { menuId: menu.branch_service.预约存款, businessDomain: 网点服务, techDomain: branch_service, path: 网点预约＞存款, finalName: 存款, bksPath: 网点服务＞预约/取号, kind: menu }
+  - { menuId: menu.branch_service.预约取款, businessDomain: 网点服务, techDomain: branch_service, path: 网点预约＞取款, finalName: 取款, bksPath: 网点服务＞预约/取号, kind: menu }
+  - { menuId: menu.branch_service.残币小票兑换业务, businessDomain: 网点服务, techDomain: branch_service, path: 网点预约＞残币小票兑换业务, finalName: 残币小票兑换业务, bksPath: 网点服务＞预约/取号, kind: menu }
+  - { menuId: menu.branch_service.预约开户, businessDomain: 网点服务, techDomain: branch_service, path: 网点预约＞开户, finalName: 开户, bksPath: 网点服务＞预约/取号, kind: menu }
+  - { menuId: menu.branch_service.预约销户, businessDomain: 网点服务, techDomain: branch_service, path: 网点预约＞销户, finalName: 销户, bksPath: 网点服务＞预约/取号, kind: menu }
+  - { menuId: menu.branch_service.账户解锁, businessDomain: 网点服务, techDomain: branch_service, path: 网点预约＞账户解锁, finalName: 账户解锁, bksPath: 网点服务＞预约/取号, kind: menu }
+  - { menuId: menu.branch_service.预约账户挂失, businessDomain: 网点服务, techDomain: branch_service, path: 网点预约＞账户挂失, finalName: 账户挂失, bksPath: 网点服务＞预约/取号, kind: menu }
+  - { menuId: menu.branch_service.军人业务, businessDomain: 网点服务, techDomain: branch_service, path: 网点预约＞军人业务, finalName: 军人业务, bksPath: 网点服务＞预约/取号, kind: menu }
+  - { menuId: menu.branch_service.通用业务, businessDomain: 网点服务, techDomain: branch_service, path: 网点预约＞通用业务, finalName: 通用业务, bksPath: 网点服务＞预约/取号, kind: menu }

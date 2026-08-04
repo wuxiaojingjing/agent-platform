@@ -1,0 +1,18 @@
+# 科技域子智能体：外汇服务
+
+- capabilityId: agent.fx_service
+  name: 外汇助手
+  type: AGENT
+  granularity: AGENT
+  domains: [fx_service]
+  description: 外汇兑换与汇款相关的领域智能体。本期面客 TOOL 未开放
+  riskLevel: R0
+  timeoutMs: 5000
+  idempotency: SUPPORTED
+  owner: 财富领域
+  version: "1.0.0"
+  status: DISABLED
+  implementationStatus: SCAFFOLD
+  positiveBoundary: [外汇兑换, 外汇汇款]
+  negativeBoundary: [本期不执行兑换, 本期不执行外汇汇款]
+  fallbackCapabilityIds: []

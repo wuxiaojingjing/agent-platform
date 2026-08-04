@@ -1,0 +1,4 @@
+- capabilityId: agent.bad
+  name: "未闭合
+  type: AGENT
+   bad indent: [

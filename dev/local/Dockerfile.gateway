@@ -1,0 +1,5 @@
+FROM eclipse-temurin:21-jre
+WORKDIR /opt/app
+COPY dev/local/.dist/a2a-gateway-app.jar app.jar
+EXPOSE 8086
+ENTRYPOINT ["java", "-jar", "/opt/app/app.jar"]

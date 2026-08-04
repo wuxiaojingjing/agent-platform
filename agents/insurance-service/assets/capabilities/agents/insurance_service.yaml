@@ -1,0 +1,14 @@
+# 科技域子智能体：保险服务
+
+- capabilityId: agent.insurance_service
+  name: 保险助手
+  type: AGENT
+  granularity: AGENT
+  domains: [insurance_service]
+  description: 保险产品要素查询相关的领域智能体
+  riskLevel: R0
+  timeoutMs: 5000
+  idempotency: SUPPORTED
+  owner: 保险领域
+  version: "1.0.0"
+  status: ACTIVE

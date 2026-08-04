@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.huawei.finance</groupId>
+    <artifactId>agent-platform</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <!-- 移进 domains/ 一层后父 pom 不再是默认的 ../pom.xml -->
+    <relativePath>../../../pom.xml</relativePath>
+  </parent>
+  <artifactId>mock-agents-sample</artifactId>
+  <name>mock-agents-sample</name>
+  <description>Mock 领域 Agent：只消费 UnifiedTask、回传 TaskResult，不持有任务真值（后续换 OJ Agent Server）</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>asset-registry</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>stability-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>agent-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>task-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>a2a-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-yaml</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
+    </dependency>
+  </dependencies>
+</project>

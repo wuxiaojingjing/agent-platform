@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: agent-host
+management:
+  endpoints.web.exposure.include: health,info,prometheus
+logging:
+  structured:
+    format.console: logstash
+    json:
+      add:
+        service: ${spring.application.name}
+        agentId: ${huawei.finance.agent.id}
+        implementationMode: ${huawei.finance.agent.implementation-mode}
+        role: domain
+  level:
+    graph: "OFF"
+    workflow: "OFF"
+    session: "OFF"
+    controller: "OFF"
+    agent: "OFF"
+    tool: "OFF"
+    com.openjiuwen.core: WARN

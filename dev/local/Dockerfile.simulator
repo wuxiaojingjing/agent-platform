@@ -1,0 +1,5 @@
+FROM eclipse-temurin:21-jre
+WORKDIR /opt/app
+COPY dev/local/.dist/banking-systems-simulator.jar app.jar
+EXPOSE 8090
+ENTRYPOINT ["java", "-jar", "/opt/app/app.jar"]

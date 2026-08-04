@@ -1,0 +1,10 @@
+agent:
+  id: agent.e_cny
+  displayName: 数字人民币助手
+  roles: [domain]
+  domains: [e_cny]
+implementation: { mode: scaffold }
+runtime: { intentEngine: default, context: enabled, taskOrchestrator: enabled }
+a2a: { inbound: true, delegation: { enabled: true } }
+assets: { path: ./assets }
+storage: { namespace: e-cny }

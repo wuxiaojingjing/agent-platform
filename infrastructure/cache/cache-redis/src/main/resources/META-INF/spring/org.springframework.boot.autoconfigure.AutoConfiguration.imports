@@ -1,0 +1,4 @@
+com.huawei.finance.cache.redis.RedissonClientAutoConfiguration
+com.huawei.finance.cache.redis.RedisSessionLockAutoConfiguration
+com.huawei.finance.cache.redis.RedisDecisionCacheConfiguration
+com.huawei.finance.cache.redis.OjKVStoreRegistration

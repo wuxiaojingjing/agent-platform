@@ -1,0 +1,18 @@
+# 科技域子智能体：安全服务
+
+- capabilityId: agent.security_service
+  name: 安全助手
+  type: AGENT
+  granularity: AGENT
+  domains: [security_service]
+  description: 账户安全、风控与鉴权相关的领域智能体。本期面客 TOOL 未开放
+  riskLevel: R0
+  timeoutMs: 5000
+  idempotency: SUPPORTED
+  owner: 金融助手领域
+  version: "1.0.0"
+  status: DISABLED
+  implementationStatus: SCAFFOLD
+  positiveBoundary: [账户安全, 风控, 身份鉴权]
+  negativeBoundary: [本期不修改安全设置, 本期不代替身份核验]
+  fallbackCapabilityIds: []

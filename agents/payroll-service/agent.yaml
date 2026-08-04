@@ -1,0 +1,10 @@
+agent:
+  id: agent.payroll_service
+  displayName: 薪资助手
+  roles: [domain]
+  domains: [payroll_service]
+implementation: { mode: extension, artifact: "com.huawei.finance:payroll-service" }
+runtime: { intentEngine: default, context: enabled, taskOrchestrator: enabled }
+a2a: { inbound: true, delegation: { enabled: true } }
+assets: { path: ./assets }
+storage: { namespace: payroll-service }

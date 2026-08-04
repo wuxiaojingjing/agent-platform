@@ -1,0 +1,10 @@
+agent:
+  id: agent.transfer
+  displayName: 转账助手
+  roles: [domain]
+  domains: [transfer]
+implementation: { mode: extension, artifact: "com.huawei.finance:transfer" }
+runtime: { intentEngine: default, context: enabled, taskOrchestrator: enabled }
+a2a: { inbound: true, delegation: { enabled: true } }
+assets: { path: ./assets }
+storage: { namespace: transfer }

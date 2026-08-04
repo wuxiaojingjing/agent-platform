@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://huawei.finance.agent.com/schema/task-result.schema.json",
+  "title": "TaskResult",
+  "description": "执行层 → 中控/回复编排（v0.7 附录 B），与 UnifiedTask 成对",
+  "type": "object",
+  "required": ["taskId", "status"],
+  "properties": {
+    "taskId": {"type": "string", "minLength": 1},
+    "status": {"type": "string", "enum": ["SUCCESS", "PARTIAL", "FAILED", "CANCELLED", "NEED_USER"]},
+    "failureClass": {
+      "type": "string",
+      "enum": ["RETRYABLE", "NEED_USER", "PARTIAL", "FATAL", "CANCELLED", "NONE"]
+    },
+    "resultPayload": {"type": "object"},
+    "idempotencyKey": {"type": "string"},
+    "guardrailCheck": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {"type": "string", "enum": ["PENDING", "PASSED", "FAILED"]},
+        "codes": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "description": "非 SUCCESS 必须给出 failureClass，中控据此决定重试、补偿还是转人工；缺失会让补偿逻辑无从分支。",
+      "if": {
+        "properties": {"status": {"not": {"const": "SUCCESS"}}},
+        "required": ["status"]
+      },
+      "then": {
+        "properties": {"failureClass": {"not": {"const": "NONE"}}},
+        "required": ["failureClass"]
+      }
+    }
+  ]
+}

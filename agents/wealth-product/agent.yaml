@@ -1,0 +1,10 @@
+agent:
+  id: agent.wealth_product
+  displayName: 理财助手
+  roles: [domain]
+  domains: [wealth_product]
+implementation: { mode: extension, artifact: "com.huawei.finance:wealth-product" }
+runtime: { intentEngine: default, context: enabled, taskOrchestrator: enabled }
+a2a: { inbound: true, delegation: { enabled: true } }
+assets: { path: ./assets }
+storage: { namespace: wealth-product }

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://huawei.finance.agent.com/schema/task-shape-model-output.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["decision", "taskShape", "candidateIds", "confidence", "reasonCode"],
+  "properties": {
+    "decision": {"type": "string", "enum": ["EXECUTE_CAPABILITY", "START_WORKFLOW", "STATIC_PLAN", "DELEGATE_GOAL", "START_LOOP", "CLARIFY", "HANDOFF"]},
+    "taskShape": {"type": "string", "enum": ["SINGLE_ACTION", "FIXED_MULTI_STEP", "CONDITIONAL_PLAN", "OPEN_ENDED_DIAGNOSIS", "OBSERVATION_DRIVEN", "AMBIGUOUS_GOAL", "UNSUPPORTED_GOAL"]},
+    "candidateIds": {"type": "array", "items": {"type": "string"}},
+    "subGoals": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["id", "candidateIds", "dependsOn", "selectionBasis"], "properties": {"id": {"type": "string", "minLength": 1}, "candidateIds": {"type": "array", "items": {"type": "string"}}, "dependsOn": {"type": "array", "items": {"type": "string"}}, "selectionBasis": {"type": "string", "enum": ["NOW", "RESULT_RULE", "AFTER_OBSERVATION"]}, "conditionText": {"type": "string", "minLength": 1}, "conditionExpr": {"$ref": "#/$defs/conditionExpression"}}}},
+    "missingSlots": {"type": "array", "items": {"type": "string"}},
+    "extractedSlots": {"type": "object"},
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "reasonCode": {"type": "string", "enum": ["HIGH_CONFIDENCE", "LOW_MARGIN", "NO_CANDIDATE", "MISSING_SLOT", "MULTI_INTENT", "CROSS_DOMAIN", "POLICY_BLOCK", "RESULT_RULE", "AFTER_OBSERVATION", "OPEN_ENDED_DIAGNOSIS", "REVIEW_REQUIRED", "CONFIRMATION_REQUIRED"]}
+  },
+  "$defs": {
+    "conditionExpression": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operator", "operands"],
+      "properties": {
+        "operator": {"type": "string", "enum": ["EQ", "NE", "GT", "GTE", "LT", "LTE", "AND", "OR", "NOT", "EXISTS"]},
+        "operands": {"type": "array", "items": {"$ref": "#/$defs/conditionOperand"}}
+      }
+    },
+    "conditionOperand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source"],
+      "properties": {
+        "source": {"type": "string", "enum": ["STEP_OUTPUT", "PARAMETER", "LITERAL", "EXPRESSION"]},
+        "stepId": {"type": "string", "minLength": 1},
+        "pointer": {"type": "string", "pattern": "^/"},
+        "parameter": {"type": "string", "minLength": 1},
+        "literal": {},
+        "expression": {"$ref": "#/$defs/conditionExpression"}
+      }
+    }
+  },
+  "allOf": [
+    {"if": {"properties": {"decision": {"const": "EXECUTE_CAPABILITY"}}}, "then": {"properties": {"candidateIds": {"minItems": 1, "maxItems": 1}}}},
+    {"if": {"properties": {"decision": {"const": "CLARIFY"}, "reasonCode": {"const": "MISSING_SLOT"}}}, "then": {"required": ["missingSlots"], "properties": {"missingSlots": {"minItems": 1}}}}
+  ]
+}

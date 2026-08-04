@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.huawei.finance</groupId>
+    <artifactId>agent-platform</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <relativePath>../../../pom.xml</relativePath>
+  </parent>
+  <artifactId>a2a-gateway-app</artifactId>
+  <name>a2a-gateway-app</name>
+  <description>独立部署的 A2A 发现、路由、限流与委托回执入口</description>
+  <dependencies>
+    <dependency><groupId>com.huawei.finance</groupId><artifactId>a2a-gateway-core</artifactId></dependency>
+    <dependency><groupId>com.huawei.finance</groupId><artifactId>persistence-jdbc</artifactId></dependency>
+    <dependency><groupId>com.huawei.finance</groupId><artifactId>discovery-nacos</artifactId></dependency>
+    <dependency><groupId>com.huawei.finance</groupId><artifactId>observability-otel</artifactId></dependency>
+    <dependency><groupId>io.micrometer</groupId><artifactId>micrometer-registry-prometheus</artifactId></dependency>
+    <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-web</artifactId></dependency>
+    <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-actuator</artifactId></dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>a2a-client-starter</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <build><plugins><plugin>
+    <groupId>org.springframework.boot</groupId><artifactId>spring-boot-maven-plugin</artifactId>
+    <configuration><skip>false</skip><mainClass>com.huawei.finance.a2a.gateway.A2AGatewayApplication</mainClass></configuration>
+  </plugin></plugins></build>
+</project>

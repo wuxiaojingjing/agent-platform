@@ -1,0 +1,19 @@
+agent:
+  id: agent.example
+  displayName: 示例助手
+  roles: [domain]
+  domains: [example]
+implementation:
+  mode: scaffold
+runtime:
+  intentEngine: default
+  context: enabled
+  taskOrchestrator: enabled
+a2a:
+  inbound: true
+  delegation:
+    enabled: true
+assets:
+  path: ./assets
+storage:
+  namespace: example

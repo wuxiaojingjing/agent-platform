@@ -1,0 +1,9 @@
+# 样例：status 写了个认不出的值，应按 SCAFFOLD 处理
+- capabilityId: agent.transfer
+  name: 转账助手
+  type: AGENT
+  granularity: AGENT
+  domains: [transfer]
+  riskLevel: R2
+  timeoutMs: 8000
+  status: 建设中

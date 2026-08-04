@@ -1,0 +1,10 @@
+agent:
+  id: agent.deposit_service
+  displayName: 存款助手
+  roles: [domain]
+  domains: [deposit_service]
+implementation: { mode: extension, artifact: "com.huawei.finance:deposit-service" }
+runtime: { intentEngine: default, context: enabled, taskOrchestrator: enabled }
+a2a: { inbound: true, delegation: { enabled: true } }
+assets: { path: ./assets }
+storage: { namespace: deposit-service }

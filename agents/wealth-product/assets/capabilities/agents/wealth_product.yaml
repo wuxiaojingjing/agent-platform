@@ -1,0 +1,19 @@
+# 科技域子智能体：理财服务
+
+- capabilityId: agent.wealth_product
+  name: 理财助手
+  type: AGENT
+  granularity: AGENT
+  domains: [wealth_product]
+  description: 理财产品要素咨询相关的领域智能体。本 Agent 不提供投资建议、不执行购买或赎回
+  riskLevel: R0
+  timeoutMs: 5000
+  idempotency: SUPPORTED
+  owner: 财富领域
+  version: "1.0.0"
+  status: ACTIVE
+  implementationStatus: IMPLEMENTED
+  positiveBoundary: [基金与理财产品咨询, 条件筛选澄清, 风险提示, 产品导航]
+  negativeBoundary: [不提供投资建议, 不承诺收益, 不执行购买, 不执行赎回]
+  fallbackCapabilityIds: [cap.nav.wealth_product_理财选品购买, cap.nav.wealth_product_查询理财持仓]
+  loopAccess: DEFAULT

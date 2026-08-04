@@ -1,0 +1,191 @@
+# 账户领域 TOOL。AGENT 父卡见 agents/account.yaml。
+
+- capabilityId: cap.account.reference.resolve
+  name: 账户引用权威解析
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.account
+  domains: [account]
+  description: 平台内部使用权威账户列表解析结构化账户引用与金额依据，不接收用户自然语言且不作为入口候选
+  supportedIntents: []
+  utterances: []
+  keywords: []
+  inputSchema:
+    type: object
+    additionalProperties: false
+    required: [accountOrdinal, resolutionMode]
+    properties:
+      accountOrdinal: {type: integer, minimum: 1}
+      amountBasis: {type: string, enum: [REQUERY_THEN_HALF]}
+      resolutionMode: {type: string, enum: [CONTEXT_ONLY, EXECUTION]}
+  outputSchema:
+    type: object
+    additionalProperties: false
+    required: [resolvedSlots, refreshAtExecution]
+    properties:
+      resolvedSlots:
+        type: object
+        additionalProperties: false
+        properties:
+          accountOrdinal: {type: integer, minimum: 1}
+          amountBasis: {type: string, enum: [REQUERY_THEN_HALF]}
+          fromAccount: {type: string, minLength: 1}
+          amount: {type: string, pattern: "^[0-9]+(?:\\.[0-9]{1,2})?$"}
+      refreshAtExecution: {type: boolean}
+  requiredSlots: []
+  preconditions: [已登录]
+  sideEffects: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 账户领域
+  version: "1.0.0"
+  status: ACTIVE
+  confirmationPolicy: NONE
+  loopAccess: DENY
+  entryVisible: false
+
+- capabilityId: cap.account.balance.query
+  name: 查询账户余额
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.account
+  domains: [account]
+  # description 末句的负向边界不是文档修饰，它是召回与仲裁唯一能读到的「我不管什么」。
+  # 外部同类系统正是靠这一句守住了「个人余额不得走知识问答」（切片计划 §2.7.8）。
+  description: 查询本人名下借记卡、活期账户的可用余额与账户余额。本能力不涉及他人账户、不涉及信用卡账单与可用额度
+  supportedIntents:
+    - 查询余额
+    - 查看账户还有多少钱
+    - 卡里剩多少
+  utterances:
+    - 查一下余额
+    - 我的余额是多少
+    - 卡里还有多少钱
+    - 看看我还有多少钱
+    - 账户余额查询
+    - 帮我查下存款
+  keywords: [余额, 存款, 账户, 多少钱]
+  inputSchema:
+    type: object
+    additionalProperties: false
+    properties:
+      accountOrdinal: {type: integer, minimum: 1}
+  outputSchema:
+    type: object
+    additionalProperties: false
+    required: [cards, accountAlias, availableBalance]
+    properties:
+      cards: {type: array}
+      accountAlias: {type: string}
+      availableBalance:
+        type: string
+        pattern: "^[0-9,]+(?:\\.[0-9]{1,2})?$"
+        x-value-type: decimal
+      amountBasis: {type: string, enum: [REQUERY_THEN_HALF]}
+      resolutionMode: {type: string, enum: [CONTEXT_ONLY, EXECUTION]}
+  requiredSlots: []
+  preconditions: [已登录]
+  sideEffects: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 账户领域
+  version: "1.0.0"
+  status: ACTIVE
+
+- capabilityId: cap.account.transaction.query
+  name: 查询交易明细
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.account
+  domains: [account]
+  description: 查询指定时间范围内的账户收支交易明细流水。本能力不涉及当前余额、不支持修改或撤销任何一笔交易
+  supportedIntents:
+    - 查询交易明细
+    - 查看流水
+  utterances:
+    - 查一下我的流水
+    - 最近的交易明细
+    - 上个月的收支记录
+  keywords: [明细, 流水, 交易记录, 收支]
+  inputSchema:
+    type: object
+    additionalProperties: false
+    properties:
+      accountOrdinal: {type: integer, minimum: 1}
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 3000
+  idempotency: SUPPORTED
+  owner: 账户领域
+  version: "1.0.0"
+  status: ACTIVE
+
+- capabilityId: cap.payroll.arrival.query
+  name: 查询工资到账记录
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.account
+  domains: [account, payroll_service]
+  description: 查询本人账户最近的工资代发入账记录与到账状态。本能力只读，不处理工资补发或单位薪资争议
+  supportedIntents: [查询工资是否到账, 查询工资入账记录]
+  utterances:
+    - 工资到账了吗
+    - 工资没到账
+    - 查一下工资入账记录
+  keywords: [工资到账, 工资没到账, 工资入账, 代发工资]
+  inputSchema:
+    type: object
+    additionalProperties: false
+    properties: {}
+  outputSchema:
+    type: object
+    additionalProperties: false
+    required: [payrollArrived, payrollTransactions]
+    properties:
+      payrollArrived: {type: boolean}
+      payrollTransactions: {type: array}
+  requiredSlots: []
+  preconditions: [已登录]
+  sideEffects: []
+  riskLevel: R0
+  timeoutMs: 3000
+  idempotency: SUPPORTED
+  owner: 账户领域
+  version: "1.0.0"
+  status: ACTIVE
+
+- capabilityId: cap.account.card.status.query
+  name: 查询银行卡状态
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.account
+  domains: [account]
+  description: 查询本人借记卡或工资卡是否正常、冻结或失效。本能力只读，不处理解冻、挂失或换卡
+  supportedIntents: [查询银行卡状态, 检查工资卡状态]
+  utterances:
+    - 检查工资卡状态
+    - 查一下银行卡状态
+    - 工资卡是否正常
+  keywords: [工资卡状态, 银行卡状态, 卡状态, 是否正常]
+  inputSchema:
+    type: object
+    additionalProperties: false
+    properties: {}
+  outputSchema:
+    type: object
+    additionalProperties: false
+    required: [accountAlias, cardStatus]
+    properties:
+      accountAlias: {type: string}
+      cardStatus: {type: string}
+  requiredSlots: []
+  preconditions: [已登录]
+  sideEffects: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 账户领域
+  version: "1.0.0"
+  status: ACTIVE

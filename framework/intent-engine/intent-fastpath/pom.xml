@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.huawei.finance</groupId>
+    <artifactId>agent-platform</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <!-- 移进 framework/intent-engine/ 一层后父 pom 不再是默认的 ../pom.xml -->
+    <relativePath>../../../pom.xml</relativePath>
+  </parent>
+  <artifactId>intent-fastpath</artifactId>
+  <name>intent-fastpath</name>
+  <!--
+    模块名保留 fastpath：快慢分路是真实的架构决策（强规则短路排在召回之前，
+    为的是把 A 线网关往返压到 ≤2 次），不是命名习惯，改名会把这个决策藏起来。
+  -->
+  <description>意图引擎快路径：改写归一、混合召回、融合负向、三级短路、仲裁与规则回退、四出口判定</description>
+
+  <dependencies>
+    <!--
+      门面（IntentEngine / IntentRequest / IntentResult / PathSummary / DecisionCache）
+      住在 intent-engine-api，本模块是它的一个实现。方向必须是这个方向：
+      别的 Agent 引 api 就够，引不到 hanlp 与 aviator。
+    -->
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>intent-engine-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>stability-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>agent-observability</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>agent-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>task-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>a2a-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>model-openai-compatible</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <!--
+        只要 asset-registry，不要 capability-registry。后者带着 opensearch-java 与
+        model-openai-compatible，而引擎只需要资产的只读视图；候选检索走 CandidateSearch SPI
+        （实现留在 registry 侧）。这样复用意图引擎的 Agent 不会被拖进 OpenSearch
+        （架构草案 §4.3 第 3 行）。这条由 ModuleDependencyTest 钉住。
+      -->
+      <artifactId>asset-registry</artifactId>
+    </dependency>
+    <!--
+      索引侧只在 test 作用域出现：FastPathLiveFixture / FastPathEvalLiveTest /
+      FastPathDiagnosisTest 要连真 OpenSearch 做检索评测，这是刻意保留的能力
+      （见 ModuleDependencyTest#fastpathMainDoesNotImportRegistryIndex 的说明）。
+      test 作用域不传递，所以依赖 intent-fastpath 的模块拿不到 OpenSearch——
+      「引擎不拖着索引走」这个目的仍然成立。作用域一旦改成 compile 就破了，
+      由 ModuleDependencyTest 钉住。
+    -->
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>search-opensearch</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!--
+      快路径的编排交给 OJ 图引擎（FastPathGraph）。排除项在 agent-bom 里统一声明。
+      注意这条依赖让「引擎升级」与「面客链路」绑在了一起：升 OJ 版本必须回归快路径，
+      优先看条件边那一处对 core.session.internal 的依赖。
+    -->
+    <dependency>
+      <groupId>com.openjiuwen</groupId>
+      <artifactId>agent-core-java</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.googlecode.aviator</groupId>
+      <artifactId>aviator</artifactId>
+    </dependency>
+    <!--
+      刻意不依赖 redisson。出口缓存是 @Spi（DecisionCache），本模块只提供「不缓存」的默认值，
+      Redis 基线实现在 cache-redis。引擎一旦编译期绑上 Redisson，每个复用引擎的 Agent
+      都会被拖进 Redis，包括自带缓存中间件的、和按监管要求不得把决策结论落到进程外的
+      （架构草案 §4.3 第 4 行）。这条由 ModuleDependencyTest 钉住。
+    -->
+    <dependency>
+      <groupId>com.hankcs</groupId>
+      <artifactId>hanlp</artifactId>
+    </dependency>
+  </dependencies>
+</project>

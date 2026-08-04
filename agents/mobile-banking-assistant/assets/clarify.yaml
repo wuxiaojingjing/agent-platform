@@ -1,0 +1,69 @@
+# 澄清话术（v0.7 §3.4：每次只问一个必要问题）。
+#
+# 按槽位组织而非按能力组织：同一个槽位在不同能力下问法应当一致，
+# 按能力组织会导致「换卡」和「补卡」问出两种措辞。
+
+slots:
+
+  cardType:
+    question: 请问您要更换的是信用卡还是借记卡？
+    options: [信用卡, 借记卡]
+    # 用户回答后用于填槽的取值映射，也供事件分类器识别 SUPPLEMENT
+    valueMapping:
+      信用卡: CREDIT
+      贷记卡: CREDIT
+      借记卡: DEBIT
+      储蓄卡: DEBIT
+      工资卡: DEBIT
+
+  cardRef:
+    question: 请问您要查询哪张信用卡的账单？
+    options: []
+
+  contextReconfirmation:
+    question: 办理期间相关信息已发生变化，请重新确认后继续。
+    options: []
+
+  contextReference:
+    question: 刚才展示的选项中没有这一项，请从现有选项中重新选择。
+    options: []
+
+  payee:
+    question: 请问您要转账给谁？
+    options: []
+
+  amount:
+    question: 请问转账金额是多少？
+    options: []
+
+# 澄清不收敛时的兜底话术。A 线达到澄清上限即走这里，不再重复追问
+exhausted:
+  templateKey: tpl.reject.clarify-exhausted
+  message: 抱歉，我还是没能确认您的需求。
+
+# 多任务降级引导（A 线 STATIC_PLAN 降级映射第 2 条：可拆解为单意图的引导逐项办理）
+multiTask:
+  templateKey: tpl.clarify.multi-task
+  question: 您这次提到了多件事，我们一件一件来办。请问先办哪一件？
+
+# 入口候选接近时展示业务名称，不向客户暴露 Top1/Top2、分数或能力 ID。
+intentChoice:
+  templateKey: tpl.clarify.slot
+  question: 我还不能确定您想办理的具体业务，可以再说明一下吗？
+  maxOptions: 3
+
+# 护栏拒绝原因的面客说法。
+#
+# 放在资产里而不是 Java 的 switch 里：这几句是要给客户看的，得走业务审核和版本管理。
+# 写在代码里的话，改一个字要发一次版，业务部也无从签署自己没见过的措辞。
+#
+# 键是护栏码。带冒号的复合码（MISSING_SLOT:payee）先按全码匹配，未命中再按冒号前的
+# 前缀匹配，都没有就用 default——面客话术宁可笼统，也不能把内部码摆到用户面前。
+guardrailReasons:
+  AMOUNT_LIMIT_EXCEEDED: 超出单笔限额
+  AMOUNT_UNPARSEABLE: 金额无法识别
+  CONFIRMATION_MISSING: 缺少确认
+  CAPABILITY_DISABLED: 该功能暂未开放
+  CAPABILITY_NOT_FOUND: 该功能暂未开放
+  MISSING_SLOT: 信息不完整
+  default: 安全策略限制

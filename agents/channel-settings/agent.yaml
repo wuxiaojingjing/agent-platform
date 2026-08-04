@@ -1,0 +1,10 @@
+agent:
+  id: agent.channel_settings
+  displayName: 渠道设置助手
+  roles: [domain]
+  domains: [channel_settings]
+implementation: { mode: scaffold }
+runtime: { intentEngine: default, context: enabled, taskOrchestrator: enabled }
+a2a: { inbound: true, delegation: { enabled: true } }
+assets: { path: ./assets }
+storage: { namespace: channel-settings }

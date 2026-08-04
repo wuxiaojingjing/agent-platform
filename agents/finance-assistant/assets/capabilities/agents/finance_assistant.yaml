@@ -1,0 +1,14 @@
+# 科技域子智能体：金融助手
+
+- capabilityId: agent.finance_assistant
+  name: 金融助手
+  type: AGENT
+  granularity: AGENT
+  domains: [finance_assistant]
+  description: 金融助手综合咨询相关的领域智能体。菜单跳转见 agent.nav
+  riskLevel: R0
+  timeoutMs: 5000
+  idempotency: SUPPORTED
+  owner: 金融助手领域
+  version: "1.0.0"
+  status: ACTIVE

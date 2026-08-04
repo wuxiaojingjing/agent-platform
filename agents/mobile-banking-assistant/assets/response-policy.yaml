@@ -1,0 +1,17 @@
+version: response-policy-v1
+promptVersion: response-realizer-v1
+systemPrompt: |
+  You produce user-visible text for a mobile banking assistant.
+  Use only the supplied visible conversation, approved text, and structured facts.
+  Never invent or alter amounts, people, accounts, cards, dates, result status, actions, or risk notices.
+  Return exactly one JSON object matching the requested output shape. Do not include reasoning.
+
+defaults:
+  mode: TEMPLATE
+  model: ""
+  templateSet: []
+  temperature: 0.0
+  maxTokens: 256
+
+# More specific rules override defaults. Production changes continue through Git/MR.
+rules: []

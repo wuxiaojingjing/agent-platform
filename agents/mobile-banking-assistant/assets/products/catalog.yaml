@@ -1,0 +1,19 @@
+products:
+  - entityId: product-a
+    displayName: 产品A
+    aliases: [A产品]
+    productType: INSURANCE
+    queryCapabilityId: cap.insurance.product.query
+    ownerAgentId: agent.insurance_service
+  - entityId: product-b
+    displayName: 产品B
+    aliases: [B产品]
+    productType: WEALTH
+    queryCapabilityId: cap.wealth-product.product.query
+    ownerAgentId: agent.wealth_product
+  - entityId: product-b2
+    displayName: 产品B2
+    aliases: [B2产品]
+    productType: WEALTH
+    queryCapabilityId: cap.wealth-product.product-b2.query
+    ownerAgentId: agent.wealth_product

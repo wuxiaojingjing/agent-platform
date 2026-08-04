@@ -1,0 +1,19 @@
+# 科技域子智能体：存款服务
+
+- capabilityId: agent.deposit_service
+  name: 存款助手
+  type: AGENT
+  granularity: AGENT
+  domains: [deposit_service]
+  description: 存款产品、存折与存单相关的领域智能体。本 Agent 不办理取款、销户或账户变更
+  riskLevel: R0
+  timeoutMs: 5000
+  idempotency: SUPPORTED
+  owner: 财富领域
+  version: "1.0.0"
+  status: ACTIVE
+  implementationStatus: IMPLEMENTED
+  positiveBoundary: [存款产品咨询, 存折属性知识, 网银存折销户知识, 换卡无忧与换卡影响知识]
+  negativeBoundary: [不执行取款, 不执行销户, 不变更账户属性, 不办理换卡]
+  fallbackCapabilityIds: []
+  loopAccess: DEFAULT

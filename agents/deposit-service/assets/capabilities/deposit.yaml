@@ -1,0 +1,20 @@
+- capabilityId: cap.deposit.product.query
+  name: 查询存款产品要素
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.deposit_service
+  domains: [deposit_service]
+  description: 查询当前存款产品的期限、利率和风险等公开要素。本能力不涉及开户、存入、支取或销户
+  supportedIntents: [查询存款产品, 查看定期存款产品]
+  utterances: [有什么存款产品, 看看定期存款, 查询存款产品要素]
+  keywords: [存款产品, 定期存款, 存款利率]
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 3000
+  idempotency: SUPPORTED
+  owner: 存款领域
+  version: "1.0.0"
+  status: ACTIVE
+  principalRequired: false
+  confirmationPolicy: NONE
+  loopAccess: DEFAULT

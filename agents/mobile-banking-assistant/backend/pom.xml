@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.huawei.finance</groupId>
+    <artifactId>agent-platform</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <!-- agents/mobile-banking-assistant：父 pom 在仓库根 -->
+    <relativePath>../../../pom.xml</relativePath>
+  </parent>
+  <!--
+    目录按 v0.4 §10 写作 agents/mobile-banking-assistant，但 artifactId 不能与根 pom 同名
+    （Maven 会报 duplicated in the reactor），故取 mobile-banking-assistant。
+  -->
+  <artifactId>mobile-banking-assistant</artifactId>
+  <name>mobile-banking-assistant</name>
+  <description>面客入口与装配：REST、观测、配置</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>asset-registry</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>search-opensearch</artifactId>
+    </dependency>
+    <!--
+      示范应用才装 Mock 领域 Agent。此前这一项挂在 task-orchestrator 上，是编译期依赖，
+      而 orchestrator 源码一处都没 import 它 —— 等于每家银行部署中控都被拖进一个演示实现的
+      jar，依赖方向也是倒的（核心依赖实现）。由入口 mobile-banking-assistant 显式声明才对。
+      Mock 是否生效另由 huawei.finance.sample.mock.enabled 决定，默认关。
+    -->
+    <!--
+      入口依赖网关；域叶子见下方。入口不得依赖域实现包——由 ThinEntryBoundaryTest 钉住。
+    -->
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>agent-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>a2a-client</artifactId>
+    </dependency>
+    <!--
+      勿在此声明 a2a-gateway-core（即便 test）：Maven 会把同坐标的传递 compile
+      （经 persistence-jdbc → JdbcDelegationStore）压成 test，fat jar 缺 DelegationStore，
+      进程起不来。联调/单测需要的类型由 persistence-jdbc 传递提供；入口源码仍不得
+      import gateway 实现（ThinEntryBoundaryTest / ModuleDependencyTest）。
+    -->
+    <!--
+      首批已交付科技域叶子（阶段 3a / 3b）。集成测需直接 new DomainAgent；
+      入口生产代码仍不得 import 域实现包（ThinEntryBoundaryTest）。
+    -->
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>account</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>transfer</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>creditcard</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>wealth-aggregate</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>fund-service</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>insurance-service</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>finance-assistant</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>deposit-service</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>loan-service</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>payroll-service</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>wealth-product</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>mock-agents-sample</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <!--
+      真实执行链路：按 huawei.finance.sample.openjiuwen.endpoints 把任务发给远端 OJ Agent Server，默认关。
+      它与上面那个 Mock 是互斥的两种部署姿态——生产是「oj 开、mock 关」，
+      演示是反过来。两个都开时会有两个 DomainAgent 争同一个能力，
+      而胜出的那个取决于 Bean 顺序，也就是取决于运气。
+    -->
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>openjiuwen-agent-sample</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <!--
+      声明式办理流程。示范应用依赖它有两个作用：一是行内可以直接把
+      huawei.finance.sample.workflow.enabled 打开试跑，二是让 StabilityBoundaryTest 的
+      classpath 覆盖到这个模块的 @Api/@Spi 面——不在这条 classpath 上的模块，
+      那套边界规则等于没生效。
+    -->
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>workflow-agent-sample</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <!--
+      OpenJiuwen 扩展点适配层。装上它，OJ 侧的模型调用与检索才会落到本行这条
+      带预算与熔断的通道上；不装则 OJ 组件会静默回落到直连客户端。
+      同样也是为了让 StabilityBoundaryTest 的 classpath 覆盖到它。
+    -->
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>openjiuwen-adapter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>discovery-nacos</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>stability-api</artifactId>
+    </dependency>
+    <!--
+      Redis 出口缓存的基线实现。示范应用装它，所以 Redisson 从这里进 classpath 而不是
+      从引擎进——引擎侧只有「不缓存」的默认值。行内换自研缓存时把这个依赖删掉即可。
+    -->
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>cache-redis</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>persistence-jdbc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-registry-prometheus</artifactId>
+    </dependency>
+    <!--
+      OTEL SDK 经 Micrometer Tracing 桥接（实施架构 §2.7「观测埋点」点名复用项）。
+      带来三件自研做不划算的事：W3C traceparent 的入站解析与出站透传、traceId/spanId
+      自动进 MDC、以及与行内 APM 同一套 trace 语义。
+      OTLP 导出器按需启用：Boot 4 仅在配了
+      management.opentelemetry.tracing.export.otlp.endpoint 时才创建导出 Bean，
+      本地不配 endpoint 不会往 localhost:4318 重试刷屏（FP-63）。
+    -->
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>observability-otel</artifactId>
+    </dependency>
+    <!--
+      TestRestTemplate 在 Boot 4 搬到了 spring-boot-resttestclient，且不再由
+      @SpringBootTest(RANDOM_PORT) 自动注册，改为 @AutoConfigureTestRestTemplate 显式开启；
+      它的自动配置又要 spring-boot-restclient 里的 RestTemplateBuilder 才能装配。
+    -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-resttestclient</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-restclient</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.tngtech.archunit</groupId>
+      <artifactId>archunit-junit5</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>agent-tck</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- 在 JUnit 里嵌套启动 JUnit：TckDetectsViolationsTest 要跑一批必须失败的用例 -->
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-launcher</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <skip>false</skip>
+          <mainClass>com.huawei.finance.product.mobilebanking.MobileBankingAssistantApplication</mainClass>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <!--
+      前端构建刻意不在默认生命周期里：默认 mvn 不应要求机器上装了 node。
+      后端开发者改一行 Java 就得等一次 npm install，是把工具链的成本摊给了
+      不需要它的人；而 CI 上多出的这段依赖，会在 npm 源抖动时把后端构建一起弄挂。
+
+      要带前端打包：mvn -Pconsole package
+    -->
+    <profile>
+      <id>console</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <version>1.15.1</version>
+            <configuration>
+              <workingDirectory>${project.basedir}/../frontend</workingDirectory>
+              <nodeVersion>v22.11.0</nodeVersion>
+            </configuration>
+            <executions>
+              <execution>
+                <id>install-node</id>
+                <goals><goal>install-node-and-npm</goal></goals>
+              </execution>
+              <execution>
+                <id>npm-install</id>
+                <goals><goal>npm</goal></goals>
+                <configuration><arguments>install</arguments></configuration>
+              </execution>
+              <execution>
+                <id>npm-build</id>
+                <goals><goal>npm</goal></goals>
+                <configuration><arguments>run build</arguments></configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

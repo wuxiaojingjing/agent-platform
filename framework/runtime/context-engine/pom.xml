@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.huawei.finance</groupId>
+    <artifactId>agent-platform</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <!-- 移进 framework/runtime/ 一层后父 pom 不再是默认的 ../pom.xml -->
+    <relativePath>../../../pom.xml</relativePath>
+  </parent>
+  <artifactId>context-engine</artifactId>
+  <name>context-engine</name>
+  <description>对话轮次存储与 ContextLease 编译：4K 最小工作集、超预算裁剪、上下文异常时停副作用</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>stability-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>agent-observability</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>agent-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>task-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>a2a-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-jdbc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+    </dependency>
+    <!--
+      只为 TokenCounter 而来。预算是按 token 记的，自己写一个「中文按字数、英文按 4 字符」
+      的估算器，等于让 ContextLease 的 4K 与模型实际消耗的 4K 是两回事——
+      裁剪看着生效了，模型那头照样超窗。计数口径必须与执行侧同源（ADR-002）。
+    -->
+    <dependency>
+      <groupId>com.openjiuwen</groupId>
+      <artifactId>agent-core-java</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

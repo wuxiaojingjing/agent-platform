@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <!--
+    继承 starter-parent 只为拿构建配置（编译器、surefire、资源过滤、插件版本）。
+    「用哪个版本」这件事已经全部搬到 agent-bom，本文件不再出现第三方版本号。
+    Boot 版本号本身也归 agent-bom 管，此处的 4.0.6 与那边由 import 解析强制一致。
+  -->
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>4.0.6</version>
+    <relativePath/>
+  </parent>
+
+  <groupId>com.huawei.finance</groupId>
+  <artifactId>agent-platform</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>agent-platform</name>
+  <description>Agent 平台 reactor（framework / infrastructure / agents）；薄入口为手机银行助手</description>
+
+  <properties>
+    <java.version>21</java.version>
+    <maven.compiler.release>21</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <modules>
+    <module>framework/bom/agent-bom</module>
+    <module>framework/contracts/stability-api</module>
+    <module>framework/observability/agent-observability</module>
+    <module>infrastructure/model/model-openai-compatible</module>
+    <module>framework/registry/asset-registry</module>
+    <module>framework/registry/capability-registry</module>
+    <module>infrastructure/search/search-opensearch</module>
+    <module>framework/intent-engine/intent-engine-api</module>
+    <module>framework/intent-engine/intent-fastpath</module>
+    <module>infrastructure/cache/cache-redis</module>
+    <module>framework/runtime/task-orchestrator</module>
+    <module>framework/runtime/context-engine</module>
+    <module>framework/runtime/response-engine</module>
+    <module>framework/runtime/agent-runtime-api</module>
+    <module>framework/runtime/agent-runtime-core</module>
+    <module>framework/runtime/agent-runtime-starter</module>
+    <module>framework/contracts/agent-api</module>
+    <module>framework/contracts/task-api</module>
+    <module>framework/contracts/a2a-api</module>
+    <module>infrastructure/a2a/a2a-client</module>
+    <module>infrastructure/a2a/a2a-client-starter</module>
+    <module>infrastructure/a2a/a2a-server</module>
+    <module>infrastructure/a2a/a2a-server-starter</module>
+    <module>infrastructure/a2a/a2a-gateway-core</module>
+    <module>infrastructure/a2a/a2a-gateway-app</module>
+    <module>infrastructure/persistence/persistence-jdbc</module>
+    <module>framework/testing/a2a-inprocess-testkit</module>
+    <module>framework/testing/agent-testkit</module>
+    <module>agents/account/backend</module>
+    <module>agents/transfer/backend</module>
+    <module>agents/creditcard/backend</module>
+    <module>agents/wealth-aggregate/backend</module>
+    <module>agents/fund-service/backend</module>
+    <module>agents/insurance-service/backend</module>
+    <module>agents/finance-assistant/backend</module>
+    <module>agents/deposit-service/backend</module>
+    <module>agents/loan-service/backend</module>
+    <module>agents/payroll-service/backend</module>
+    <module>agents/wealth-product/backend</module>
+    <module>samples/agents/mock</module>
+    <module>samples/agents/openjiuwen</module>
+    <module>samples/agents/workflow</module>
+    <module>samples/agents/banking-systems-simulator</module>
+    <module>infrastructure/workflow/openjiuwen-adapter</module>
+    <module>framework/intent-engine/intent-slowpath</module>
+    <module>framework/intent-engine/intent-engine-default</module>
+    <module>framework/intent-engine/intent-engine-starter</module>
+    <module>infrastructure/discovery/discovery-nacos</module>
+    <module>infrastructure/observability/observability-otel</module>
+    <module>framework/starters/agent-starter</module>
+    <module>framework/host/agent-host-app</module>
+    <module>framework/testing/agent-tck</module>
+    <module>agents/mobile-banking-assistant/backend</module>
+  </modules>
+
+  <dependencyManagement>
+    <dependencies>
+      <!--
+        版本全部来自 agent-bom。子模块因此只写 groupId + artifactId，
+        新增依赖必须先进 agent-bom 才能用，版本漂移在评审时就能看见。
+      -->
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>agent-bom</artifactId>
+        <version>${project.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <configuration>
+            <systemPropertyVariables>
+              <huawei.finance.agent.home>${maven.multiModuleProjectDirectory}/agents/mobile-banking-assistant</huawei.finance.agent.home>
+              <HUAWEI_FINANCE_AGENT_REQUIRE_LIVE_MODEL>${HUAWEI_FINANCE_AGENT_REQUIRE_LIVE_MODEL}</HUAWEI_FINANCE_AGENT_REQUIRE_LIVE_MODEL>
+            </systemPropertyVariables>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <configuration>
+            <!-- 库模块不打可执行 jar，只有入口 agents/mobile-banking-assistant（mobile-banking-assistant）覆盖此配置 -->
+            <skip>true</skip>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+</project>

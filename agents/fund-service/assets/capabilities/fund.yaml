@@ -1,0 +1,35 @@
+# 基金产品查询（场景 4）。AGENT 父卡见 agents/fund_service.yaml。
+
+- capabilityId: cap.fund.product.query
+  name: 查询基金产品C
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.fund_service
+  domains: [fund_service]
+  description: 查询基金产品C的风险等级、参考收益率与期限等公开要素。本能力不涉及产品申购与赎回、不提供投资建议与产品推荐
+  supportedIntents:
+    - 查询基金产品
+    - 查看基金产品C要素
+  utterances:
+    - 查询基金产品C
+    - 基金产品C怎么样
+    - 看看基金产品C
+  keywords: [基金产品C, 基金]
+  outputSchema:
+    type: object
+    additionalProperties: false
+    required: [productCode, name, domain, riskLevel, returnRate, term]
+    properties:
+      productCode: {type: string, minLength: 1, maxLength: 64}
+      name: {type: string, minLength: 1, maxLength: 128}
+      domain: {type: string, const: 基金}
+      riskLevel: {type: string, minLength: 1, maxLength: 16}
+      returnRate: {type: string, minLength: 1, maxLength: 128}
+      term: {type: string, minLength: 1, maxLength: 64}
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 3000
+  idempotency: SUPPORTED
+  owner: 基金领域
+  version: "1.0.0"
+  status: ACTIVE

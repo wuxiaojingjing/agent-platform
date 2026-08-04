@@ -1,0 +1,9 @@
+# ConfigData 的两个扩展点在 Boot 4 里仍然只认 spring.factories（Boot 自己的
+# spring-boot-4.0.6.jar 里也是这么注册 StandardConfigDataLocationResolver 的）。
+# 这不是遗留写法，别「顺手」改成 AutoConfiguration.imports——那个文件只管自动配置类，
+# 改过去的后果是 nacos: 前缀无人解析，而 Boot 会把它当成一个本地文件路径去找。
+org.springframework.boot.context.config.ConfigDataLocationResolver=\
+com.huawei.finance.nacos.config.NacosConfigDataLocationResolver
+
+org.springframework.boot.context.config.ConfigDataLoader=\
+com.huawei.finance.nacos.config.NacosConfigDataLoader

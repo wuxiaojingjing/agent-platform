@@ -1,0 +1,62 @@
+- capabilityId: cap.wealth-product.product.query
+  name: 查询理财产品要素
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.wealth_product
+  domains: [wealth_product]
+  description: 查询已发布目录中的理财产品B，返回风险等级、期限和业绩比较基准等公开要素。本能力不涉及投资建议、具体产品推荐、收益承诺、购买或赎回
+  supportedIntents: [查询理财产品, 了解理财产品]
+  utterances: [查询产品B, 产品B怎么样, 看看理财产品B, 有什么理财产品, 看看理财产品, 查询稳健理财产品要素]
+  keywords: [产品B, 对比, 理财产品, 风险等级, 产品期限]
+  outputSchema:
+    type: object
+    additionalProperties: false
+    required: [productCode, name, domain, riskLevel, returnRate, term]
+    properties:
+      productCode: {type: string, minLength: 1, maxLength: 64}
+      name: {type: string, minLength: 1, maxLength: 128}
+      domain: {type: string, const: 理财}
+      riskLevel: {type: string, minLength: 1, maxLength: 16}
+      returnRate: {type: string, minLength: 1, maxLength: 128}
+      term: {type: string, minLength: 1, maxLength: 64}
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 3000
+  idempotency: SUPPORTED
+  owner: 财富领域
+  version: "1.0.0"
+  status: ACTIVE
+  principalRequired: false
+  confirmationPolicy: NONE
+  loopAccess: DEFAULT
+- capabilityId: cap.wealth-product.product-b2.query
+  name: 查询理财产品B2要素
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.wealth_product
+  domains: [wealth_product]
+  description: 查询已发布目录中的理财产品B2，返回风险等级、期限和业绩比较基准等公开要素。本能力不涉及投资建议、具体产品推荐、收益承诺、购买或赎回
+  supportedIntents: [查询理财产品B2, 了解理财产品B2]
+  utterances: [查询产品B2, 产品B2怎么样, 看看理财产品B2]
+  keywords: [产品B2, B2产品, 理财产品]
+  outputSchema:
+    type: object
+    additionalProperties: false
+    required: [productCode, name, domain, riskLevel, returnRate, term]
+    properties:
+      productCode: {type: string, minLength: 1, maxLength: 64}
+      name: {type: string, const: 产品B2}
+      domain: {type: string, const: 理财}
+      riskLevel: {type: string, minLength: 1, maxLength: 16}
+      returnRate: {type: string, minLength: 1, maxLength: 128}
+      term: {type: string, minLength: 1, maxLength: 64}
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 3000
+  idempotency: SUPPORTED
+  owner: 财富领域
+  version: "1.0.0"
+  status: ACTIVE
+  principalRequired: false
+  confirmationPolicy: NONE
+  loopAccess: DEFAULT

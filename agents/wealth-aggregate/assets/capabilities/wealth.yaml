@@ -1,0 +1,25 @@
+# 财富聚合 TOOL。AGENT 父卡见 agents/wealth_aggregate.yaml。
+
+- capabilityId: cap.wealth.holding.query
+  name: 查询理财持仓
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.wealth_aggregate
+  domains: [wealth_aggregate]
+  # 「不提供投资建议」这一句同时是合规边界：问「买什么基金好」不该落到这张只读查询卡上。
+  description: 查询本人持有的理财产品市值、收益与到期日。本能力不涉及产品申购与赎回、不提供投资建议与产品推荐
+  supportedIntents:
+    - 查询理财持仓
+    - 查看投资收益
+  utterances:
+    - 我买的理财现在多少钱
+    - 理财收益怎么样
+    - 查一下我的持仓
+  keywords: [理财, 持仓, 收益, 基金, 净值]
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 3000
+  idempotency: SUPPORTED
+  owner: 财富领域
+  version: "1.0.0"
+  status: ACTIVE

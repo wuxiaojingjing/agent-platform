@@ -1,0 +1,387 @@
+x-host-environment: &host-environment
+  SERVER_PORT: 8080
+  SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/agent_platform
+  SPRING_DATASOURCE_USERNAME: agent_platform
+  SPRING_DATASOURCE_PASSWORD: agent_platform
+  SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "2"
+  SPRING_FLYWAY_ENABLED: "false"
+  SPRING_DATA_REDIS_HOST: redis
+  SPRING_DATA_REDIS_PORT: 6379
+  HUAWEI_FINANCE_AGENT_NACOS_ENABLED: "true"
+  HUAWEI_FINANCE_AGENT_NACOS_SERVER_ADDR: nacos:8848
+  HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_GROUP: HUAWEI_FINANCE_AGENT
+  A2A_GATEWAY_URL: http://a2a-gateway:8086
+  HUAWEI_FINANCE_AGENT_A2A_REMOTE_GATEWAY_URL: http://a2a-gateway:8086
+  SERVER_TOMCAT_THREADS_MAX: 16
+  SERVER_TOMCAT_THREADS_MIN_SPARE: 1
+  MALLOC_ARENA_MAX: 2
+  MANAGEMENT_OPENTELEMETRY_TRACING_EXPORT_OTLP_ENDPOINT: http://jaeger:4318/v1/traces
+  MANAGEMENT_TRACING_SAMPLING_PROBABILITY: "1.0"
+  LOGGING_STRUCTURED_FORMAT_CONSOLE: logstash
+  LOGGING_CONFIG: classpath:logback-spring.xml
+  JAVA_TOOL_OPTIONS: -Xms48m -Xmx192m -Xss256k -XX:MaxMetaspaceSize=128m -XX:MaxDirectMemorySize=64m -XX:+UseSerialGC -Dio.netty.eventLoopThreads=2 -Dio.netty.allocator.numDirectArenas=2
+
+x-extension-environment: &extension-environment
+  <<: *host-environment
+  HUAWEI_FINANCE_AGENT_SLOWPATH_EXECUTION_MODE: AUTO_READ_ONLY
+  HUAWEI_FINANCE_AGENT_SLOWPATH_MAX_AUTO_STEPS: ${SLOWPATH_MAX_AUTO_STEPS:-5}
+  HUAWEI_FINANCE_AGENT_SLOWPATH_ENABLED: ${SLOWPATH_PLANNER_ENABLED:-true}
+  HUAWEI_FINANCE_BACKENDS_ACCOUNT_BASE_URL: http://banking-systems-simulator:8090
+  HUAWEI_FINANCE_BACKENDS_TRANSFER_BASE_URL: http://banking-systems-simulator:8090
+  HUAWEI_FINANCE_BACKENDS_CREDITCARD_BASE_URL: http://banking-systems-simulator:8090
+  HUAWEI_FINANCE_BACKENDS_WEALTH_BASE_URL: http://banking-systems-simulator:8090
+  HUAWEI_FINANCE_BACKENDS_FUND_BASE_URL: http://banking-systems-simulator:8090
+  HUAWEI_FINANCE_BACKENDS_INSURANCE_BASE_URL: http://banking-systems-simulator:8090
+  HUAWEI_FINANCE_BACKENDS_DEPOSIT_BASE_URL: http://banking-systems-simulator:8090
+  HUAWEI_FINANCE_BACKENDS_LOAN_BASE_URL: http://banking-systems-simulator:8090
+  HUAWEI_FINANCE_BACKENDS_PAYROLL_BASE_URL: http://banking-systems-simulator:8090
+  HUAWEI_FINANCE_BACKENDS_WEALTH_PRODUCT_BASE_URL: http://banking-systems-simulator:8090
+
+x-agent-host: &agent-host
+  image: agent-platform/agent-host:0.1.0-SNAPSHOT
+  build:
+    context: ../..
+    dockerfile: dev/local/Dockerfile.host
+  entrypoint: ["java", "-jar", "/opt/dist/agent-host-app.jar"]
+  restart: "on-failure:3"
+  expose: ["8080"]
+  mem_limit: 384m
+  volumes:
+    - "./.dist:/opt/dist:ro"
+  depends_on:
+    postgres: { condition: service_healthy }
+    redis: { condition: service_healthy }
+    nacos: { condition: service_healthy }
+  healthcheck:
+    test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -q '\"status\":\"UP\"'"]
+    interval: 10s
+    timeout: 5s
+    retries: 30
+    start_period: 30s
+
+x-extension-host: &extension-host
+  <<: *agent-host
+  depends_on:
+    postgres: { condition: service_healthy }
+    redis: { condition: service_healthy }
+    nacos: { condition: service_healthy }
+    banking-systems-simulator: { condition: service_healthy }
+
+services:
+  banking-systems-simulator:
+    image: agent-platform/banking-systems-simulator:0.1.0-SNAPSHOT
+    build: { context: ../.., dockerfile: dev/local/Dockerfile.simulator }
+    entrypoint: ["java", "-jar", "/opt/dist/banking-systems-simulator.jar"]
+    restart: "on-failure:3"
+    mem_limit: 192m
+    environment:
+      JAVA_TOOL_OPTIONS: -Xms24m -Xmx96m -XX:+UseSerialGC
+    expose: ["8090"]
+    volumes:
+      - "./.dist:/opt/dist:ro"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8090/actuator/health | grep -q '\"status\":\"UP\"'"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: agent_platform
+      POSTGRES_USER: agent_platform
+      POSTGRES_PASSWORD: agent_platform
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agent_platform -d agent_platform"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    ports: ["127.0.0.1:5432:5432"]
+    volumes: ["agent-platform-postgres-data:/var/lib/postgresql/data"]
+
+  redis:
+    image: redis:7.4-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    ports: ["127.0.0.1:6379:6379"]
+    volumes: ["agent-platform-redis-data:/data"]
+
+  opensearch:
+    image: opensearchproject/opensearch:2.19.1
+    restart: "on-failure:3"
+    mem_limit: 1g
+    environment:
+      discovery.type: single-node
+      bootstrap.memory_lock: "true"
+      OPENSEARCH_JAVA_OPTS: -Xms256m -Xmx256m
+      DISABLE_SECURITY_PLUGIN: "true"
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+    ulimits:
+      memlock: { soft: -1, hard: -1 }
+      nofile: { soft: 65536, hard: 65536 }
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:9200/_cluster/health | grep -qE '\"status\":\"(green|yellow)\"'"]
+      interval: 10s
+      retries: 30
+      start_period: 30s
+    ports: ["127.0.0.1:9200:9200"]
+    volumes: ["agent-platform-opensearch-data:/usr/share/opensearch/data"]
+
+  nacos:
+    image: ${NACOS_IMAGE:-nacos/nacos-server:v2.5.1}
+    restart: "on-failure:3"
+    mem_limit: 768m
+    environment:
+      MODE: standalone
+      NACOS_AUTH_ENABLE: "false"
+      JVM_XMS: 128m
+      JVM_XMX: 256m
+      JVM_XMN: 64m
+      JVM_MS: 64m
+      JVM_MMS: 128m
+    ports: ["8848:8848", "9848:9848"]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8848/nacos/v1/console/health/readiness"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+    volumes: ["agent-platform-nacos-data:/home/nacos/data"]
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.64.0
+    restart: "on-failure:3"
+    mem_limit: 128m
+    environment: { COLLECTOR_OTLP_ENABLED: "true" }
+    ports: ["16686:16686"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:16686/ >/dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  a2a-gateway:
+    image: agent-platform/a2a-gateway:0.1.0-SNAPSHOT
+    build: { context: ../.., dockerfile: dev/local/Dockerfile.gateway }
+    entrypoint: ["java", "-jar", "/opt/dist/a2a-gateway-app.jar"]
+    restart: "on-failure:3"
+    mem_limit: 320m
+    environment:
+      MALLOC_ARENA_MAX: 2
+      SERVER_TOMCAT_THREADS_MAX: 16
+      SERVER_TOMCAT_THREADS_MIN_SPARE: 1
+      JAVA_TOOL_OPTIONS: -Xms48m -Xmx160m -Xss256k -XX:MaxMetaspaceSize=112m -XX:MaxDirectMemorySize=48m -XX:+UseSerialGC -Dio.netty.eventLoopThreads=2 -Dio.netty.allocator.numDirectArenas=2
+      MANAGEMENT_OPENTELEMETRY_TRACING_EXPORT_OTLP_ENDPOINT: http://jaeger:4318/v1/traces
+      MANAGEMENT_TRACING_SAMPLING_PROBABILITY: "1.0"
+      MANAGEMENT_METRICS_TAGS_AGENT_ID: agent.a2a-gateway
+      MANAGEMENT_METRICS_TAGS_IMPLEMENTATION_MODE: gateway
+      MANAGEMENT_METRICS_TAGS_ROLE: gateway
+      LOGGING_STRUCTURED_FORMAT_CONSOLE: logstash
+      LOGGING_CONFIG: classpath:logback-spring.xml
+      NACOS_ENABLED: "true"
+      NACOS_SERVER_ADDR: nacos:8848
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/agent_platform
+      SPRING_DATASOURCE_USERNAME: agent_platform
+      SPRING_DATASOURCE_PASSWORD: agent_platform
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "2"
+      SPRING_FLYWAY_ENABLED: "false"
+      AGENT_HOME: /opt/agents/mobile-banking-assistant
+    volumes:
+      - "../../agents:/opt/agents:ro"
+      - "./.dist:/opt/dist:ro"
+    ports: ["8086:8086"]
+    depends_on:
+      postgres: { condition: service_healthy }
+      nacos: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8086/actuator/health | grep -q '\"status\":\"UP\"'"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  mobile-banking-assistant:
+    image: agent-platform/mobile-banking-assistant:0.1.0-SNAPSHOT
+    build: { context: ../.., dockerfile: dev/local/Dockerfile.mobile }
+    entrypoint: ["java", "-jar", "/opt/dist/mobile-banking-assistant.jar"]
+    restart: "on-failure:3"
+    mem_limit: 768m
+    environment:
+      MALLOC_ARENA_MAX: 2
+      SERVER_TOMCAT_THREADS_MAX: 32
+      SERVER_TOMCAT_THREADS_MIN_SPARE: 2
+      JAVA_TOOL_OPTIONS: -Xms128m -Xmx384m -Xss256k -XX:MaxMetaspaceSize=192m -XX:MaxDirectMemorySize=64m -XX:+UseSerialGC -Dio.netty.eventLoopThreads=4 -Dio.netty.allocator.numDirectArenas=2
+      MANAGEMENT_OPENTELEMETRY_TRACING_EXPORT_OTLP_ENDPOINT: http://jaeger:4318/v1/traces
+      MANAGEMENT_TRACING_SAMPLING_PROBABILITY: "1.0"
+      MANAGEMENT_METRICS_TAGS_AGENT_ID: agent.mobile-banking-assistant
+      MANAGEMENT_METRICS_TAGS_IMPLEMENTATION_MODE: application
+      MANAGEMENT_METRICS_TAGS_ROLE: entry
+      LOGGING_STRUCTURED_FORMAT_CONSOLE: logstash
+      LOGGING_CONFIG: classpath:logback-spring.xml
+      SILICONFLOW_API_KEY: ${SILICONFLOW_API_KEY:-}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      AGENT_HOME: /opt/agents/mobile-banking-assistant
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/agent_platform
+      SPRING_DATASOURCE_USERNAME: agent_platform
+      SPRING_DATASOURCE_PASSWORD: agent_platform
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "4"
+      SPRING_DATA_REDIS_HOST: redis
+      HUAWEI_FINANCE_AGENT_NACOS_ENABLED: "true"
+      HUAWEI_FINANCE_AGENT_NACOS_SERVER_ADDR: nacos:8848
+      HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_GROUP: HUAWEI_FINANCE_AGENT
+      HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_SERVICE_NAME: agent.mobile-banking-assistant
+      HUAWEI_FINANCE_AGENT_IMPLEMENTATION_MODE: application
+      HUAWEI_FINANCE_AGENT_A2A_DELEGATION_ENABLED: "true"
+      HUAWEI_FINANCE_AGENT_SLOWPATH_MAX_AUTO_STEPS: ${SLOWPATH_MAX_AUTO_STEPS:-5}
+      HUAWEI_FINANCE_AGENT_INSTANCE_ID: ${MOBILE_BANKING_INSTANCE_ID:-local-mobile-banking-assistant}
+      HUAWEI_FINANCE_AGENT_SLOWPATH_ENABLED: ${SLOWPATH_PLANNER_ENABLED:-true}
+      HUAWEI_FINANCE_AGENT_LOOP_ENABLED: "true"
+      HUAWEI_FINANCE_MOBILE_BANKING_CONSOLE_WRITE_ENABLED: "true"
+      A2A_GATEWAY_URL: http://a2a-gateway:8086
+      HUAWEI_FINANCE_AGENT_REGISTRY_OPENSEARCH_URL: http://opensearch:9200
+    volumes:
+      - "../../agents:/opt/agents:ro"
+      - "../../tools/promptopt/out:/opt/promptopt-out:ro"
+      - "./.dist:/opt/dist:ro"
+    ports: ["8080:8080"]
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+      opensearch: { condition: service_healthy }
+      nacos: { condition: service_healthy }
+      a2a-gateway: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -q '\"status\":\"UP\"'"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+
+  account:
+    <<: *extension-host
+    environment: { <<: *extension-environment, AGENT_HOME: /opt/agents/account, LOADER_PATH: /opt/extension/account.jar, HUAWEI_FINANCE_AGENT_ASSETS_PATH: /opt/agents/mobile-banking-assistant/assets, HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_SERVICE_NAME: agent.account }
+    volumes: ["./.dist:/opt/dist:ro", "../../agents:/opt/agents:ro", "./.dist/extensions:/opt/extension:ro"]
+  transfer:
+    <<: *extension-host
+    environment: { <<: *extension-environment, AGENT_HOME: /opt/agents/transfer, LOADER_PATH: /opt/extension/transfer.jar, HUAWEI_FINANCE_AGENT_ASSETS_PATH: /opt/agents/mobile-banking-assistant/assets, HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_SERVICE_NAME: agent.transfer }
+    volumes: ["./.dist:/opt/dist:ro", "../../agents:/opt/agents:ro", "./.dist/extensions:/opt/extension:ro"]
+  creditcard:
+    <<: *extension-host
+    environment: { <<: *extension-environment, AGENT_HOME: /opt/agents/creditcard, LOADER_PATH: /opt/extension/creditcard.jar, HUAWEI_FINANCE_AGENT_ASSETS_PATH: /opt/agents/mobile-banking-assistant/assets, HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_SERVICE_NAME: agent.creditcard }
+    volumes: ["./.dist:/opt/dist:ro", "../../agents:/opt/agents:ro", "./.dist/extensions:/opt/extension:ro"]
+  wealth-aggregate:
+    <<: *extension-host
+    environment: { <<: *extension-environment, AGENT_HOME: /opt/agents/wealth-aggregate, LOADER_PATH: /opt/extension/wealth-aggregate.jar, HUAWEI_FINANCE_AGENT_ASSETS_PATH: /opt/agents/mobile-banking-assistant/assets, HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_SERVICE_NAME: agent.wealth_aggregate }
+    volumes: ["./.dist:/opt/dist:ro", "../../agents:/opt/agents:ro", "./.dist/extensions:/opt/extension:ro"]
+  fund-service:
+    <<: *extension-host
+    environment: { <<: *extension-environment, AGENT_HOME: /opt/agents/fund-service, LOADER_PATH: /opt/extension/fund-service.jar, HUAWEI_FINANCE_AGENT_ASSETS_PATH: /opt/agents/mobile-banking-assistant/assets, HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_SERVICE_NAME: agent.fund_service }
+    volumes: ["./.dist:/opt/dist:ro", "../../agents:/opt/agents:ro", "./.dist/extensions:/opt/extension:ro"]
+  insurance-service:
+    <<: *extension-host
+    environment: { <<: *extension-environment, AGENT_HOME: /opt/agents/insurance-service, LOADER_PATH: /opt/extension/insurance-service.jar, HUAWEI_FINANCE_AGENT_ASSETS_PATH: /opt/agents/mobile-banking-assistant/assets, HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_SERVICE_NAME: agent.insurance_service }
+    volumes: ["./.dist:/opt/dist:ro", "../../agents:/opt/agents:ro", "./.dist/extensions:/opt/extension:ro"]
+  finance-assistant:
+    <<: *extension-host
+    environment: { <<: *extension-environment, AGENT_HOME: /opt/agents/finance-assistant, LOADER_PATH: /opt/extension/finance-assistant.jar, HUAWEI_FINANCE_AGENT_ASSETS_PATH: /opt/agents/mobile-banking-assistant/assets, HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_SERVICE_NAME: agent.finance_assistant }
+    volumes: ["./.dist:/opt/dist:ro", "../../agents:/opt/agents:ro", "./.dist/extensions:/opt/extension:ro"]
+
+  advisory-service: { <<: *agent-host, mem_limit: 256m, environment: { <<: *host-environment, JAVA_TOOL_OPTIONS: "-Xms24m -Xmx96m -Xss256k -XX:MaxMetaspaceSize=96m -XX:MaxDirectMemorySize=32m -XX:+UseSerialGC -Dio.netty.eventLoopThreads=2 -Dio.netty.allocator.numDirectArenas=2", AGENT_HOME: /opt/agent, HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_SERVICE_NAME: agent.advisory_service }, volumes: ["./.dist:/opt/dist:ro", "../../agents/advisory-service:/opt/agent:ro"] }
+  benefits-ops: { <<: *agent-host, mem_limit: 256m, environment: { <<: *host-environment, JAVA_TOOL_OPTIONS: "-Xms24m -Xmx96m -Xss256k -XX:MaxMetaspaceSize=96m -XX:MaxDirectMemorySize=32m -XX:+UseSerialGC -Dio.netty.eventLoopThreads=2 -Dio.netty.allocator.numDirectArenas=2", AGENT_HOME: /opt/agent, HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_SERVICE_NAME: agent.benefits_ops }, volumes: ["./.dist:/opt/dist:ro", "../../agents/benefits-ops:/opt/agent:ro"] }
+  bond-service: { <<: *agent-host, mem_limit: 256m, environment: { <<: *host-environment, JAVA_TOOL_OPTIONS: "-Xms24m -Xmx96m -Xss256k -XX:MaxMetaspaceSize=96m -XX:MaxDirectMemorySize=32m -XX:+UseSerialGC -Dio.netty.eventLoopThreads=2 -Dio.netty.allocator.numDirectArenas=2", AGENT_HOME: /opt/agent, HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_SERVICE_NAME: agent.bond_service }, volumes: ["./.dist:/opt/dist:ro", "../../agents/bond-service:/opt/agent:ro"] }
+  branch-service: { <<: *agent-host, mem_limit: 256m, environment: { <<: *host-environment, JAVA_TOOL_OPTIONS: "-Xms24m -Xmx96m -Xss256k -XX:MaxMetaspaceSize=96m -XX:MaxDirectMemorySize=32m -XX:+UseSerialGC -Dio.netty.eventLoopThreads=2 -Dio.netty.allocator.numDirectArenas=2", AGENT_HOME: /opt/agent, HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_SERVICE_NAME: agent.branch_service }, volumes: ["./.dist:/opt/dist:ro", "../../agents/branch-service:/opt/agent:ro"] }
+  channel-settings: { <<: *agent-host, mem_limit: 256m, environment: { <<: *host-environment, JAVA_TOOL_OPTIONS: "-Xms24m -Xmx96m -Xss256k -XX:MaxMetaspaceSize=96m -XX:MaxDirectMemorySize=32m -XX:+UseSerialGC -Dio.netty.eventLoopThreads=2 -Dio.netty.allocator.numDirectArenas=2", AGENT_HOME: /opt/agent, HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_SERVICE_NAME: agent.channel_settings }, volumes: ["./.dist:/opt/dist:ro", "../../agents/channel-settings:/opt/agent:ro"] }
+  deposit-service: { <<: *extension-host, environment: { <<: *extension-environment, AGENT_HOME: /opt/agents/deposit-service, LOADER_PATH: /opt/extension/deposit-service.jar, HUAWEI_FINANCE_AGENT_ASSETS_PATH: /opt/agents/mobile-banking-assistant/assets, HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_SERVICE_NAME: agent.deposit_service }, volumes: ["./.dist:/opt/dist:ro", "../../agents:/opt/agents:ro", "./.dist/extensions:/opt/extension:ro"] }
+  e-cny: { <<: *agent-host, mem_limit: 256m, environment: { <<: *host-environment, JAVA_TOOL_OPTIONS: "-Xms24m -Xmx96m -Xss256k -XX:MaxMetaspaceSize=96m -XX:MaxDirectMemorySize=32m -XX:+UseSerialGC -Dio.netty.eventLoopThreads=2 -Dio.netty.allocator.numDirectArenas=2", AGENT_HOME: /opt/agent, HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_SERVICE_NAME: agent.e_cny }, volumes: ["./.dist:/opt/dist:ro", "../../agents/e-cny:/opt/agent:ro"] }
+  enterprise-service: { <<: *agent-host, mem_limit: 256m, environment: { <<: *host-environment, JAVA_TOOL_OPTIONS: "-Xms24m -Xmx96m -Xss256k -XX:MaxMetaspaceSize=96m -XX:MaxDirectMemorySize=32m -XX:+UseSerialGC -Dio.netty.eventLoopThreads=2 -Dio.netty.allocator.numDirectArenas=2", AGENT_HOME: /opt/agent, HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_SERVICE_NAME: agent.enterprise_service }, volumes: ["./.dist:/opt/dist:ro", "../../agents/enterprise-service:/opt/agent:ro"] }
+  fx-service: { <<: *agent-host, mem_limit: 256m, environment: { <<: *host-environment, JAVA_TOOL_OPTIONS: "-Xms24m -Xmx96m -Xss256k -XX:MaxMetaspaceSize=96m -XX:MaxDirectMemorySize=32m -XX:+UseSerialGC -Dio.netty.eventLoopThreads=2 -Dio.netty.allocator.numDirectArenas=2", AGENT_HOME: /opt/agent, HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_SERVICE_NAME: agent.fx_service }, volumes: ["./.dist:/opt/dist:ro", "../../agents/fx-service:/opt/agent:ro"] }
+  life-service: { <<: *agent-host, mem_limit: 256m, environment: { <<: *host-environment, JAVA_TOOL_OPTIONS: "-Xms24m -Xmx96m -Xss256k -XX:MaxMetaspaceSize=96m -XX:MaxDirectMemorySize=32m -XX:+UseSerialGC -Dio.netty.eventLoopThreads=2 -Dio.netty.allocator.numDirectArenas=2", AGENT_HOME: /opt/agent, HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_SERVICE_NAME: agent.life_service }, volumes: ["./.dist:/opt/dist:ro", "../../agents/life-service:/opt/agent:ro"] }
+  livelihood-service: { <<: *agent-host, mem_limit: 256m, environment: { <<: *host-environment, JAVA_TOOL_OPTIONS: "-Xms24m -Xmx96m -Xss256k -XX:MaxMetaspaceSize=96m -XX:MaxDirectMemorySize=32m -XX:+UseSerialGC -Dio.netty.eventLoopThreads=2 -Dio.netty.allocator.numDirectArenas=2", AGENT_HOME: /opt/agent, HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_SERVICE_NAME: agent.livelihood_service }, volumes: ["./.dist:/opt/dist:ro", "../../agents/livelihood-service:/opt/agent:ro"] }
+  loan-service: { <<: *extension-host, environment: { <<: *extension-environment, AGENT_HOME: /opt/agents/loan-service, LOADER_PATH: /opt/extension/loan-service.jar, HUAWEI_FINANCE_AGENT_ASSETS_PATH: /opt/agents/mobile-banking-assistant/assets, HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_SERVICE_NAME: agent.loan_service }, volumes: ["./.dist:/opt/dist:ro", "../../agents:/opt/agents:ro", "./.dist/extensions:/opt/extension:ro"] }
+  payment: { <<: *agent-host, mem_limit: 256m, environment: { <<: *host-environment, JAVA_TOOL_OPTIONS: "-Xms24m -Xmx96m -Xss256k -XX:MaxMetaspaceSize=96m -XX:MaxDirectMemorySize=32m -XX:+UseSerialGC -Dio.netty.eventLoopThreads=2 -Dio.netty.allocator.numDirectArenas=2", AGENT_HOME: /opt/agent, HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_SERVICE_NAME: agent.payment }, volumes: ["./.dist:/opt/dist:ro", "../../agents/payment:/opt/agent:ro"] }
+  payroll-service: { <<: *extension-host, environment: { <<: *extension-environment, AGENT_HOME: /opt/agents/payroll-service, LOADER_PATH: /opt/extension/payroll-service.jar, HUAWEI_FINANCE_AGENT_ASSETS_PATH: /opt/agents/mobile-banking-assistant/assets, HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_SERVICE_NAME: agent.payroll_service }, volumes: ["./.dist:/opt/dist:ro", "../../agents:/opt/agents:ro", "./.dist/extensions:/opt/extension:ro"] }
+  personal-info: { <<: *agent-host, mem_limit: 256m, environment: { <<: *host-environment, JAVA_TOOL_OPTIONS: "-Xms24m -Xmx96m -Xss256k -XX:MaxMetaspaceSize=96m -XX:MaxDirectMemorySize=32m -XX:+UseSerialGC -Dio.netty.eventLoopThreads=2 -Dio.netty.allocator.numDirectArenas=2", AGENT_HOME: /opt/agent, HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_SERVICE_NAME: agent.personal_info }, volumes: ["./.dist:/opt/dist:ro", "../../agents/personal-info:/opt/agent:ro"] }
+  precious-metal: { <<: *agent-host, mem_limit: 256m, environment: { <<: *host-environment, JAVA_TOOL_OPTIONS: "-Xms24m -Xmx96m -Xss256k -XX:MaxMetaspaceSize=96m -XX:MaxDirectMemorySize=32m -XX:+UseSerialGC -Dio.netty.eventLoopThreads=2 -Dio.netty.allocator.numDirectArenas=2", AGENT_HOME: /opt/agent, HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_SERVICE_NAME: agent.precious_metal }, volumes: ["./.dist:/opt/dist:ro", "../../agents/precious-metal:/opt/agent:ro"] }
+  security-service: { <<: *agent-host, mem_limit: 256m, environment: { <<: *host-environment, JAVA_TOOL_OPTIONS: "-Xms24m -Xmx96m -Xss256k -XX:MaxMetaspaceSize=96m -XX:MaxDirectMemorySize=32m -XX:+UseSerialGC -Dio.netty.eventLoopThreads=2 -Dio.netty.allocator.numDirectArenas=2", AGENT_HOME: /opt/agent, HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_SERVICE_NAME: agent.security_service }, volumes: ["./.dist:/opt/dist:ro", "../../agents/security-service:/opt/agent:ro"] }
+  vip-service: { <<: *agent-host, mem_limit: 256m, environment: { <<: *host-environment, JAVA_TOOL_OPTIONS: "-Xms24m -Xmx96m -Xss256k -XX:MaxMetaspaceSize=96m -XX:MaxDirectMemorySize=32m -XX:+UseSerialGC -Dio.netty.eventLoopThreads=2 -Dio.netty.allocator.numDirectArenas=2", AGENT_HOME: /opt/agent, HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_SERVICE_NAME: agent.vip_service }, volumes: ["./.dist:/opt/dist:ro", "../../agents/vip-service:/opt/agent:ro"] }
+  wealth-product: { <<: *extension-host, environment: { <<: *extension-environment, AGENT_HOME: /opt/agents/wealth-product, LOADER_PATH: /opt/extension/wealth-product.jar, HUAWEI_FINANCE_AGENT_ASSETS_PATH: /opt/agents/mobile-banking-assistant/assets, HUAWEI_FINANCE_AGENT_NACOS_DISCOVERY_SERVICE_NAME: agent.wealth_product }, volumes: ["./.dist:/opt/dist:ro", "../../agents:/opt/agents:ro", "./.dist/extensions:/opt/extension:ro"] }
+
+  prometheus:
+    image: ${PROMETHEUS_IMAGE:-prom/prometheus:v3.5.0}
+    restart: "on-failure:3"
+    mem_limit: 256m
+    cpus: 0.5
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=7d
+      - --web.enable-lifecycle
+    volumes:
+      - "./observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
+      - "./.dist/observability/prometheus-targets.json:/etc/prometheus/targets/prometheus-targets.json:ro"
+      - "agent-platform-prometheus-data:/prometheus"
+    ports: ["9090:9090"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:9090/-/healthy | grep -q 'Prometheus Server is Healthy'"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  loki:
+    image: ${LOKI_IMAGE:-grafana/loki:3.5.3}
+    restart: "on-failure:3"
+    mem_limit: 320m
+    cpus: 0.5
+    command: ["-config.file=/etc/loki/local-config.yaml"]
+    volumes:
+      - "./observability/loki.yml:/etc/loki/local-config.yaml:ro"
+      - "agent-platform-loki-data:/loki"
+    ports: ["3100:3100"]
+
+  alloy:
+    image: ${ALLOY_IMAGE:-grafana/alloy:v1.10.1}
+    restart: "on-failure:3"
+    mem_limit: 160m
+    cpus: 0.25
+    command: ["run", "/etc/alloy/config.alloy", "--storage.path=/var/lib/alloy"]
+    volumes:
+      - "./observability/config.alloy:/etc/alloy/config.alloy:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "agent-platform-alloy-data:/var/lib/alloy"
+    depends_on: [loki]
+
+  grafana:
+    image: ${GRAFANA_IMAGE:-grafana/grafana:12.1.0}
+    restart: "on-failure:3"
+    mem_limit: 320m
+    cpus: 0.5
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+      GF_AUTH_DISABLE_LOGIN_FORM: "true"
+      GF_USERS_DEFAULT_THEME: light
+    volumes:
+      - "./observability/grafana/provisioning:/etc/grafana/provisioning:ro"
+      - "./observability/grafana/dashboards:/var/lib/grafana/dashboards:ro"
+      - "agent-platform-grafana-data:/var/lib/grafana"
+    ports: ["3000:3000"]
+    depends_on: [prometheus, loki, jaeger]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/api/health | grep -q '\"database\": \"ok\"'"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  agent-platform-nacos-data:
+  agent-platform-opensearch-data:
+  agent-platform-redis-data:
+  agent-platform-postgres-data:
+  agent-platform-prometheus-data:
+  agent-platform-loki-data:
+  agent-platform-alloy-data:
+  agent-platform-grafana-data:

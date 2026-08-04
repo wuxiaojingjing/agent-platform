@@ -1,0 +1,21 @@
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} %-5level %logger{0} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <!--
+    办理流程里的失败（超限、缺信息）在业务上是正常结局，但 OpenJiuwen 会把节点抛出的异常
+    按 ERROR 连堆栈打两遍。注意压不住它的常见误解：把这几个 logger 设成 WARN 没用，
+    WARN 阈值照样放行 ERROR，只有 OFF 才拦得住。
+    这里设 OFF 是为了让测试输出可读；业务失败由 com.huawei.finance 侧按 WARN 记，信息不丢。
+  -->
+  <logger name="graph" level="OFF"/>
+  <logger name="workflow" level="OFF"/>
+  <logger name="session" level="OFF"/>
+
+  <root level="INFO">
+    <appender-ref ref="STDOUT"/>
+  </root>
+</configuration>

@@ -1,0 +1,6 @@
+target/
+
+# 优化器产出的候选提示词：是一次运行的结果，不是仓库要长期保存的资产。
+# 真要采用，走的是「人工逐字读过 → 覆盖 assets/prompts/arbitration-skill.yaml → 手工升 version」，
+# 进版本库的应该是那次改动，而不是工具的中间产物。
+out/

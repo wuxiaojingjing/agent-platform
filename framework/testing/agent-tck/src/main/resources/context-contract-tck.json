@@ -1,0 +1,12 @@
+{
+  "version": "context-contract-tck-v1",
+  "protocol": "a2a/2",
+  "requiredSchemas": ["subtask-context-envelope.schema.json", "context-delta.schema.json"],
+  "invariants": [
+    "fullHistoryForwarded=false",
+    "delta.baseStateVersion=envelope.baseStateVersion",
+    "USER_TURN is forbidden across Agent boundaries",
+    "stale delta is rejected with CONTEXT_VERSION_CONFLICT",
+    "STATELESS_READ_ONLY targets accept only R0 TASK"
+  ]
+}

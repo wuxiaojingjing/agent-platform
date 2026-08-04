@@ -1,0 +1,18 @@
+# 科技域子智能体：债券服务
+
+- capabilityId: agent.bond_service
+  name: 债券助手
+  type: AGENT
+  granularity: AGENT
+  domains: [bond_service]
+  description: 债券产品与交易相关的领域智能体。本期面客 TOOL 未开放
+  riskLevel: R0
+  timeoutMs: 5000
+  idempotency: SUPPORTED
+  owner: 财富领域
+  version: "1.0.0"
+  status: DISABLED
+  implementationStatus: SCAFFOLD
+  positiveBoundary: [债券产品咨询, 柜台债券, 储蓄国债]
+  negativeBoundary: [本期不执行债券购买, 本期不执行债券交易]
+  fallbackCapabilityIds: [cap.nav.bond_service_储蓄国债]

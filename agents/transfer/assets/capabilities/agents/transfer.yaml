@@ -1,0 +1,14 @@
+# 科技域子智能体：转账服务
+
+- capabilityId: agent.transfer
+  name: 转账助手
+  type: AGENT
+  granularity: AGENT
+  domains: [transfer]
+  description: 转账汇款相关的领域智能体
+  riskLevel: R0
+  timeoutMs: 8000
+  idempotency: REQUIRED
+  owner: 支付领域
+  version: "1.0.0"
+  status: ACTIVE

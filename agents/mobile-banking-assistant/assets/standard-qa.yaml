@@ -1,0 +1,323 @@
+# 标准问答库（FP-1I：与小 i 共存）。
+#
+# 命中即直接念答案，不召回、不调模型、不建任务。所以这里的每一条都相当于一条
+# 恒定生效的规则，写宽了就是事故：一条过宽的模版会把大片流量吸进来，
+# 而它们本该走能力召回。
+#
+# 句法模版三个记号，其余字符字面匹配：
+#   {甲|乙}  择一，写同义说法
+#   [的]     可省，写虚词
+#   *        任意若干字，最多 20 字
+#
+# 匹配的是**整句**，不是片段：片段匹配下「我不想查余额」会命中「查余额」。
+# 吃的是用户**原话**，不是改写归一后的检索串。
+#
+# 与小 i 的关系：同一个标准问在两边的答案必须一致，否则用户换个入口就得到另一套说法。
+# 这份库是本侧的口径，对齐工作在运营侧做，工程不代填。
+#
+# 首批内容来自小 i 逐图复核表，并经小 i 资产映射设计与分阶段消费计划筛选。
+# 这里仅维护已批准的窄模板；原始 DSL、损坏记录和迁移状态见 xiaoi/migration-ledger.yaml。
+
+version: xiaoi-batch-1+screenshot-business-directory-1
+items:
+  - id: qa.transfer.error.26023
+    question: 汇款报错：26023
+    patterns:
+      - "{遇到|出现|提示}26023{怎么办|怎么处理}"
+      - "{汇款|转账}{报错|提示}26023"
+      - "26023{是什么意思|怎么解决}"
+    answer: "通过网银办理跨行汇款时，如遇“26023，系统错误，请联系工行”提示，请不要反复尝试，避免重复提交：先查询账户余额和明细；如果余额减少且明细显示支付成功，说明交易已完成，请关注收款入账。若两者未同时显示，请在24小时后再次查看；余额仍未变化时再重新提交。"
+    requiredSlots: []
+    actionCapabilityId: cap.account.transaction.query
+    actionLabel: 查询账户明细
+
+  - id: qa.card.replacement-care.open
+    question: 开通储蓄卡“换卡无忧”方法
+    patterns:
+      - "{怎么|如何}开通[储蓄卡][的]换卡无忧"
+      - "换卡无忧{怎么开通|在哪里开通}"
+    answer: "通过营业网点办理卡损换卡、升级换卡、到期换卡或挂失换卡时，均可为储蓄卡开通“换卡无忧”功能；换卡时未开通的，可持新卡在智能终端补开。"
+    requiredSlots: []
+    actionCapabilityId: cap.card.replace
+    actionLabel: 办理换卡
+
+  - id: qa.passbook.account-attribute.adjust
+    question: 调整存折账户属性的方法
+    patterns:
+      - "{怎么|如何}调整存折账户属性"
+      - "存折账户{怎么|如何}改成多币种"
+      - "调整存折账户属性[的]方法"
+    answer: "请携带单币种存折到开户地任意营业网点，申请调整为多币种账户。如开户行未开办外币业务，调整后的多币种账户仍无法办理外币业务。"
+    requiredSlots: []
+
+  - id: qa.passbook.close.online-banking
+    question: 通过网银将活期存折销户的方法
+    patterns:
+      - "{怎么|如何}通过网银{注销|销户}活期存折"
+      - "网银{能不能|可以}给活期存折销户"
+      - "通过网银将活期存折销户[的]方法"
+    answer: "如活期存折属于日均存款余额不足300元人民币（含300元）的小额账户，且已开通网银，可登录网上银行，选择“全部-银行卡.账户-小额账户销户”，尝试办理活期存折销户。"
+    requiredSlots: []
+
+  - id: qa.card.renumber.impact
+    question: 储蓄卡换卡换号受影响的业务
+    patterns:
+      - "{储蓄卡|借记卡}换卡换号会影响哪些业务"
+      - "{储蓄卡|借记卡}换号[后]哪些业务受影响"
+      - "了解换卡换号影响"
+    answer: "储蓄卡换卡换号后，第三方存管、银证/银期/银商转账、结售汇、跨行代收代付、第三方快捷支付及部分分行特色业务可能受影响，建议换卡时向网点确认迁移手续。代发工资、消费退货、贷款发放和还款、信用卡自动还款、电子银行及部分存款理财协议等，在满足原授权或已开通“换卡无忧”等条件时可迁移至新卡，具体以实际办理结果为准。"
+    requiredSlots: []
+    actionCapabilityId: cap.card.replace
+    actionLabel: 办理换卡
+
+  - id: qa.card.replacement-care.intro
+    question: 储蓄卡“换卡无忧”介绍
+    patterns:
+      - "{什么是|介绍一下}换卡无忧"
+      - "换卡无忧{有什么用|是什么功能}"
+      - "了解换卡无忧"
+    answer: "“换卡无忧”是针对卡片损坏、升级或到期等换卡换号场景提供的特色功能。储蓄卡开通后，换卡时可将部分业务自动迁移到新卡。"
+    requiredSlots: []
+
+  # 小 i 原记录的答案为占位符且指令损坏。这里只配置安全引导，不录入或补造业务答案。
+  - id: qa.card.same-number.blocked-guidance
+    question: 银行卡换卡不换号
+    status: BLOCKED_SOURCE_REVIEW
+    sourceRef: "xiaoiLedger:reviewed-workbook:standard-question:15"
+    patterns:
+      - "[银行卡]换卡不换号[怎么办]"
+      - "{可以|能不能|能否}原号{补办|换卡}[吗]"
+    guidance: "目前无法根据已复核知识确认是否支持原号换卡。您可以先了解相关知识；如继续办理，将进入普通换卡流程，不代表已确认可以保留原号，具体办理条件请以实际页面或网点审核结果为准。"
+    options:
+      - 了解换卡无忧
+      - 了解换卡换号影响
+      - 办理普通换卡
+    requiredSlots: []
+
+  # 以下条目来自 2026-08-02 手机银行页面截图复核。它们只回答“有哪些功能/属于哪里”，
+  # 不表示对应功能已经接入本 Agent，也不授予执行权限；执行仍以 CapabilityCard 为准。
+  - id: qa.mobile-banking.business-directory.overview
+    question: 手机银行业务分类有哪些
+    sourceRef: "screenshotLedger:mobile-banking-business-directory:images-1-4"
+    patterns:
+      - "手机银行{全部业务|业务分类}{有哪些|有什么}"
+      - "手机银行{有哪些|有什么}{业务分类|业务板块}"
+      - "手机银行[的]全部业务{分为哪些类|有哪些分类}"
+      - "手机银行[都]{有哪些|有什么}{业务|功能}"
+    answer: "截图所示手机银行“全部业务”包含账户管理、转账服务、支付管理、财富管理、信用卡、贷款服务、权益服务、生活服务、客户专享、网点服务和金融助手。截图未展示生活服务的下级功能；具体入口与可用范围可能随版本、地区、登录状态和实际页面变化。"
+    menuOptions:
+      - menu.account.账户管理
+      - menu.transfer.转账服务
+      - menu.payment.支付管理
+      - menu.wealth_aggregate.财富管理
+      - menu.creditcard_service.信用卡
+      - menu.loan_service.贷款服务
+      - menu.benefits_ops.权益服务
+      - menu.life_service.生活服务
+      - menu.vip_service.客户专享
+      - menu.branch_service.网点服务
+      - menu.finance_assistant.金融助手
+    requiredSlots: []
+
+  - id: qa.mobile-banking.business-directory.account
+    question: 账户管理有哪些功能
+    sourceRef: "screenshotLedger:mobile-banking-business-directory:image-1"
+    patterns:
+      - "账户管理[里]{有哪些功能|有什么功能|包括哪些功能}"
+      - "手机银行[的]账户管理[里]{有哪些功能|有什么功能|包括哪些功能|有哪些|有什么|包括什么}"
+    answer: "截图所示“账户管理”包括账户、收支、信使服务、电子工资单、e钱包和数字人民币。这里只说明页面功能归属，不代表所有功能都已接入当前助手；具体以实际页面为准。"
+    menuOptions:
+      - menu.account.账户
+      - menu.account.收支
+      - menu.finance_assistant.信使服务
+      - menu.payroll_service.电子工资单
+      - menu.e_cny.e钱包
+      - menu.e_cny.数字人民币
+    requiredSlots: []
+
+  - id: qa.mobile-banking.business-directory.transfer
+    question: 转账服务有哪些功能
+    sourceRef: "screenshotLedger:mobile-banking-business-directory:image-1"
+    patterns:
+      - "转账服务[里]{有哪些功能|有什么功能|包括哪些功能}"
+      - "手机银行[的]转账服务[里]{有哪些功能|有什么功能|包括哪些功能|有哪些|有什么|包括什么}"
+    answer: "截图所示“转账服务”包括转账汇款、境内汇款、跨境汇款、注册账户转账、收款人管理和他行卡转入。这里只说明页面功能归属，不代表当前助手可直接执行全部业务；具体以实际页面和已发布能力为准。"
+    menuOptions:
+      - menu.transfer.转账汇款
+      - menu.transfer.境内汇款
+      - menu.transfer.跨境汇款
+      - menu.transfer.注册账户转账
+      - menu.transfer.收款人管理
+      - menu.transfer.他行卡转入
+    requiredSlots: []
+
+  - id: qa.mobile-banking.business-directory.payment
+    question: 支付管理有哪些功能
+    sourceRef: "screenshotLedger:mobile-banking-business-directory:image-1"
+    patterns:
+      - "支付管理[里]{有哪些功能|有什么功能|包括哪些功能}"
+      - "手机银行[的]支付管理[里]{有哪些功能|有什么功能|包括哪些功能|有哪些|有什么|包括什么}"
+    answer: "截图所示“支付管理”包括支付、收款、一键绑卡、e支付、扫一扫和支付限额。这里只说明页面功能归属，不代表当前助手可直接执行全部业务；具体以实际页面和已发布能力为准。"
+    menuOptions:
+      - menu.payment.支付
+      - menu.transfer.收款
+      - menu.payment.一键绑卡
+      - menu.payment.e支付
+      - menu.finance_assistant.扫一扫
+      - menu.payment.支付限额
+    requiredSlots: []
+
+  - id: qa.mobile-banking.business-directory.wealth
+    question: 财富管理有哪些功能
+    sourceRef: "screenshotLedger:mobile-banking-business-directory:images-1-2"
+    patterns:
+      - "财富管理[里]{有哪些功能|有什么功能|包括哪些功能}"
+      - "手机银行[的]财富管理[里]{有哪些功能|有什么功能|包括哪些功能|有哪些|有什么|包括什么}"
+    answer: "截图所示“财富管理”包括资产、存款、理财、基金、保险、贵金属、结售汇、证券、期货、外币兑换、储蓄国债和柜台债券。这里只说明页面功能归属，不构成产品推荐或交易承诺；具体以实际页面和已发布能力为准。"
+    menuOptions:
+      - menu.wealth_aggregate.资产
+      - menu.deposit_service.存款
+      - menu.wealth_product.理财
+      - menu.fund_service.基金
+      - menu.insurance_service.保险
+      - menu.precious_metal.贵金属
+      - menu.wealth_aggregate.结售汇
+      - menu.wealth_aggregate.证券
+      - menu.wealth_aggregate.期货
+      - menu.wealth_aggregate.外币兑换
+      - menu.bond_service.储蓄国债
+      - menu.bond_service.柜台债券
+    requiredSlots: []
+
+  - id: qa.mobile-banking.business-directory.creditcard
+    question: 信用卡有哪些功能
+    sourceRef: "screenshotLedger:mobile-banking-business-directory:image-2"
+    patterns:
+      - "信用卡[里]{有哪些功能|有什么功能|包括哪些功能}"
+      - "手机银行[的]信用卡[里]{有哪些功能|有什么功能|包括哪些功能|有哪些|有什么|包括什么}"
+      - "信用卡服务[里]{有哪些功能|有什么功能|包括哪些功能}"
+    answer: "截图所示“信用卡”包括自动还款、申请办卡、卡片启用、申请进度、查额度、一键还款、分期付款、急用钱和数字卡。这里只说明页面功能归属，不代表当前助手可直接执行全部业务；具体以实际页面和已发布能力为准。"
+    menuOptions:
+      - menu.creditcard_service.自动还款
+      - menu.creditcard_service.申请办卡
+      - menu.creditcard_service.卡片启用
+      - menu.creditcard_service.申请进度
+      - menu.creditcard_service.查额度
+      - menu.creditcard_service.一键还款
+      - menu.creditcard_service.分期付款
+      - menu.creditcard_service.急用钱
+      - menu.creditcard_service.数字卡
+    requiredSlots: []
+
+  - id: qa.mobile-banking.business-directory.loan
+    question: 贷款服务有哪些功能
+    sourceRef: "screenshotLedger:mobile-banking-business-directory:image-3"
+    patterns:
+      - "贷款服务[里]{有哪些功能|有什么功能|包括哪些功能}"
+      - "手机银行[的]贷款服务[里]{有哪些功能|有什么功能|包括哪些功能|有哪些|有什么|包括什么}"
+    answer: "截图所示“贷款服务”包括贷款、财政贴息、信用贷款、购房贷款、经营快贷、房抵组合贷、助商组合贷、金融资产贷和信用报告。这里只说明页面功能归属，不表示授信、审批或放款结果；具体以实际页面和已发布能力为准。"
+    menuOptions:
+      - menu.loan_service.贷款
+      - menu.loan_service.财政贴息
+      - menu.loan_service.信用贷款
+      - menu.loan_service.购房贷款
+      - menu.loan_service.经营快贷
+      - menu.loan_service.房抵组合贷
+      - menu.loan_service.助商组合贷
+      - menu.wealth_aggregate.金融资产贷
+      - menu.personal_info.信用报告
+    requiredSlots: []
+
+  - id: qa.mobile-banking.business-directory.benefits
+    question: 权益服务有哪些功能
+    sourceRef: "screenshotLedger:mobile-banking-business-directory:image-3"
+    patterns:
+      - "权益服务[里]{有哪些功能|有什么功能|包括哪些功能}"
+      - "手机银行[的]权益服务[里]{有哪些功能|有什么功能|包括哪些功能|有哪些|有什么|包括什么}"
+    answer: "截图所示“权益服务”包括热门活动、权益中心、工行消费季、任务中心、工银i豆乐园、工银i豆商城、金融教育、绿色空间、数字藏品和升金有礼。活动和权益可能随时间、地区及客户资格变化，具体以实际页面为准。"
+    menuOptions:
+      - menu.benefits_ops.热门活动
+      - menu.benefits_ops.权益中心
+      - menu.benefits_ops.工行消费季
+      - menu.benefits_ops.任务中心
+      - menu.benefits_ops.工银i豆乐园
+      - menu.benefits_ops.工银i豆商城
+      - menu.finance_assistant.金融教育
+      - menu.benefits_ops.绿色空间
+      - menu.benefits_ops.数字藏品
+      - menu.benefits_ops.升金有礼
+    requiredSlots: []
+
+  - id: qa.mobile-banking.business-directory.customer
+    question: 客户专享有哪些功能
+    sourceRef: "screenshotLedger:mobile-banking-business-directory:image-4"
+    patterns:
+      - "客户专享[里]{有哪些功能|有什么功能|包括哪些功能}"
+      - "手机银行[的]客户专享[里]{有哪些功能|有什么功能|包括哪些功能|有哪些|有什么|包括什么}"
+    answer: "截图所示“客户专享”包括薪管家、跨境金融、随军行、爱宝贝、新市民和私人银行。具体入口与适用资格可能因客户、地区和登录状态不同，以实际页面为准。"
+    menuOptions:
+      - menu.payroll_service.薪管家
+      - menu.fx_service.跨境金融
+      - menu.vip_service.随军行
+      - menu.vip_service.爱宝贝
+      - menu.vip_service.新市民
+      - menu.wealth_aggregate.私人银行
+    requiredSlots: []
+
+  - id: qa.mobile-banking.business-directory.branch
+    question: 网点服务有哪些功能
+    sourceRef: "screenshotLedger:mobile-banking-business-directory:image-4"
+    patterns:
+      - "网点服务[里]{有哪些功能|有什么功能|包括哪些功能}"
+      - "手机银行[的]网点服务[里]{有哪些功能|有什么功能|包括哪些功能|有哪些|有什么|包括什么}"
+    answer: "截图所示“网点服务”包括云网点、e通办、预约/取号、纪念币预约、外币预约、大额人民币预约、资信证明、扫码取款和借记卡换卡。这里只说明页面功能归属；是否可线上办理及实际受理范围以页面和网点为准。"
+    menuOptions:
+      - menu.branch_service.云网点
+      - menu.branch_service.e通办
+      - menu.branch_service.预约取号
+      - menu.branch_service.纪念币预约
+      - menu.branch_service.外币预约
+      - menu.branch_service.大额人民币预约
+      - menu.account.资信证明
+      - menu.branch_service.扫码取款
+      - menu.account.借记卡换卡
+    requiredSlots: []
+
+  - id: qa.mobile-banking.business-directory.finance-assistant
+    question: 金融助手有哪些功能
+    sourceRef: "screenshotLedger:mobile-banking-business-directory:image-4"
+    patterns:
+      - "金融助手[里]{有哪些功能|有什么功能|包括哪些功能}"
+      - "手机银行[的]金融助手[里]{有哪些功能|有什么功能|包括哪些功能|有哪些|有什么|包括什么}"
+    answer: "截图所示“金融助手”包括远程办、安全中心、云保管、存贷利率、月度账单和登录管理。这里只说明页面功能归属，不代表当前助手可直接执行全部业务；具体以实际页面和已发布能力为准。"
+    menuOptions:
+      - menu.vip_service.远程办
+      - menu.security_service.安全中心
+      - menu.security_service.云保管
+      - menu.wealth_aggregate.存贷利率
+      - menu.life_service.月度账单
+      - menu.channel_settings.登录管理
+    requiredSlots: []
+
+  - id: qa.branch.appointment.supported-businesses
+    question: 网点预约支持哪些业务
+    sourceRef: "screenshotLedger:branch-appointment:image-5"
+    patterns:
+      - "网点预约{可以办理哪些业务|支持哪些业务|有哪些可预约业务}"
+      - "预约[办理][的]全部业务{有哪些|包括什么}"
+      - "网点{有哪些业务可以预约|可以预约哪些业务}"
+    answer: "截图所示网点预约“全部业务”一次至多选择2项。现金业务包括人民币预约取现、存款、取款、零钱包预约、外币预约和残币小票兑换业务；账户服务包括开户、销户、账户解锁和账户挂失；其他包括军人业务和通用业务。页面提供“预约办理”和“立即取号”，实际可预约项目可能随地区、网点、版本和登录状态变化，以当前页面及网点受理为准。"
+    menuOptions:
+      - menu.branch_service.人民币预约取现
+      - menu.branch_service.预约存款
+      - menu.branch_service.预约取款
+      - menu.branch_service.零钱包预约
+      - menu.branch_service.外币预约
+      - menu.branch_service.残币小票兑换业务
+      - menu.branch_service.预约开户
+      - menu.branch_service.预约销户
+      - menu.branch_service.账户解锁
+      - menu.branch_service.预约账户挂失
+      - menu.branch_service.军人业务
+      - menu.branch_service.通用业务
+    requiredSlots: []

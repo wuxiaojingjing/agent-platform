@@ -1,0 +1,10 @@
+agent:
+  id: agent.payment
+  displayName: 支付助手
+  roles: [domain, routing]
+  domains: [payment]
+implementation: { mode: scaffold }
+runtime: { intentEngine: default, context: enabled, taskOrchestrator: enabled }
+a2a: { inbound: true, delegation: { enabled: true } }
+assets: { path: ./assets }
+storage: { namespace: payment }

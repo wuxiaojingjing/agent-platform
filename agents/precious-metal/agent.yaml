@@ -1,0 +1,10 @@
+agent:
+  id: agent.precious_metal
+  displayName: 贵金属助手
+  roles: [domain]
+  domains: [precious_metal]
+implementation: { mode: scaffold }
+runtime: { intentEngine: default, context: enabled, taskOrchestrator: enabled }
+a2a: { inbound: true, delegation: { enabled: true } }
+assets: { path: ./assets }
+storage: { namespace: precious-metal }

@@ -1,0 +1,89 @@
+version: screenshot-sources-2026-08-02-v1
+reviewedAt: "2026-08-02"
+usagePolicy:
+  purpose: "作为手机银行页面功能归属和网点预约范围的知识证据"
+  executionAuthority: "NONE"
+  constraints:
+    - "不得据此推断某项业务已由当前 Agent、Workflow 或 Capability 实现"
+    - "不得据此声称已完成办理、预约、取号或交易"
+    - "执行权限和风险等级只以已发布 CapabilityCard 为准"
+    - "页面内容可能随版本、地区、网点、登录状态和客户资格变化"
+
+sourceGroups:
+  - sourceId: mobile-banking-business-directory:images-1-4
+    memberSourceIds:
+      - mobile-banking-business-directory:image-1
+      - mobile-banking-business-directory:image-2
+      - mobile-banking-business-directory:image-3
+      - mobile-banking-business-directory:image-4
+  - sourceId: mobile-banking-business-directory:images-1-2
+    memberSourceIds:
+      - mobile-banking-business-directory:image-1
+      - mobile-banking-business-directory:image-2
+
+sources:
+  - sourceId: mobile-banking-business-directory:image-1
+    file: evidence/2026-08-02/mobile-bank-business-directory-1.jpg
+    sha256: 465b1680363c8dd75b528fff386d560849975c796653549dc3397eeefd2b6a03
+    page: "手机银行全部业务"
+    reviewedFacts:
+      accountManagement: [账户, 收支, 信使服务, 电子工资单, e钱包, 数字人民币]
+      transferService: [转账汇款, 境内汇款, 跨境汇款, 注册账户转账, 收款人管理, 他行卡转入]
+      paymentManagement: [支付, 收款, 一键绑卡, e支付, 扫一扫, 支付限额]
+      wealthManagementVisiblePart: [资产, 存款, 理财]
+    targetQaIds:
+      - qa.mobile-banking.business-directory.overview
+      - qa.mobile-banking.business-directory.account
+      - qa.mobile-banking.business-directory.transfer
+      - qa.mobile-banking.business-directory.payment
+      - qa.mobile-banking.business-directory.wealth
+
+  - sourceId: mobile-banking-business-directory:image-2
+    file: evidence/2026-08-02/mobile-bank-business-directory-2.jpg
+    sha256: f4d3ec2ab8eb4d4e80f8ded09f6d6543d1c2fd5a325c76c821fe79767da3e01f
+    page: "手机银行全部业务"
+    reviewedFacts:
+      wealthManagement: [资产, 存款, 理财, 基金, 保险, 贵金属, 结售汇, 证券, 期货, 外币兑换, 储蓄国债, 柜台债券]
+      creditCard: [自动还款, 申请办卡, 卡片启用, 申请进度, 查额度, 一键还款, 分期付款, 急用钱, 数字卡]
+    targetQaIds:
+      - qa.mobile-banking.business-directory.wealth
+      - qa.mobile-banking.business-directory.creditcard
+
+  - sourceId: mobile-banking-business-directory:image-3
+    file: evidence/2026-08-02/mobile-bank-business-directory-3.jpg
+    sha256: d11472be23ef4d6d247707053ae21abd65eccdc50b6a330ff4e94da1063f98fb
+    page: "手机银行全部业务"
+    reviewedFacts:
+      loanService: [贷款, 财政贴息, 信用贷款, 购房贷款, 经营快贷, 房抵组合贷, 助商组合贷, 金融资产贷, 信用报告]
+      benefitsService: [热门活动, 权益中心, 工行消费季, 任务中心, 工银i豆乐园, 工银i豆商城, 金融教育, 绿色空间, 数字藏品, 升金有礼]
+      lifeService: "截图只显示一级分类，未显示下级功能"
+    targetQaIds:
+      - qa.mobile-banking.business-directory.overview
+      - qa.mobile-banking.business-directory.loan
+      - qa.mobile-banking.business-directory.benefits
+
+  - sourceId: mobile-banking-business-directory:image-4
+    file: evidence/2026-08-02/mobile-bank-business-directory-4.jpg
+    sha256: fd650c76205ff1593eda7ed8bcdb0db50612aa0fce2d4f93c145b051808f75a6
+    page: "手机银行全部业务"
+    reviewedFacts:
+      customerExclusive: [薪管家, 跨境金融, 随军行, 爱宝贝, 新市民, 私人银行]
+      branchService: [云网点, e通办, 预约/取号, 纪念币预约, 外币预约, 大额人民币预约, 资信证明, 扫码取款, 借记卡换卡]
+      financeAssistant: [远程办, 安全中心, 云保管, 存贷利率, 月度账单, 登录管理]
+    targetQaIds:
+      - qa.mobile-banking.business-directory.customer
+      - qa.mobile-banking.business-directory.branch
+      - qa.mobile-banking.business-directory.finance-assistant
+
+  - sourceId: branch-appointment:image-5
+    file: evidence/2026-08-02/branch-appointment-all-businesses.jpg
+    sha256: 55a244d0904fc7e798510cd4301303028f33a6683e3a893f955eaf82a5275ddf
+    page: "网点预约-全部业务"
+    reviewedFacts:
+      maximumSelectedBusinesses: 2
+      cashBusiness: [人民币预约取现, 存款, 取款, 零钱包预约, 外币预约, 残币小票兑换业务]
+      accountService: [开户, 销户, 账户解锁, 账户挂失]
+      other: [军人业务, 通用业务]
+      visibleActions: [预约办理, 立即取号]
+    targetQaIds:
+      - qa.branch.appointment.supported-businesses

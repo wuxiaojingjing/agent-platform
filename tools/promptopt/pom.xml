@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <!--
+    仲裁提示词优化工具（SkillOpt 式：轨迹驱动编辑、验证门控、产出候选而不直接上线）。
+
+    ★ 它**不是**运行时反应堆的模块，`tools/` 整个目录都不在 agent-platform 的 <modules> 里。
+      开发态工具与运行时分开，理由不是洁癖：
+        1. 它的依赖（YAML 解析、优化器要调的模型、以后可能加的绘图库）不该有任何机会
+           出现在生产 classpath 上。混在一个反应堆里，只要有人一时手快加一条 compile 依赖，
+           它就跟着进镜像了，而这种事在评审里极难看出来。
+        2. `mvn package` 打的是要上线的东西。工具编译失败不该拦住发布，
+           反过来发布的紧急修复也不该被工具的编译错误挡在门外。
+        3. 它要花钱调模型、要写文件。这两件事都不该是构建流程的一部分。
+
+    构建方式（先装好运行时模块，让工具能从本地仓取到它们）：
+      cd agent-platform && mvn -pl framework/bom/agent-bom,framework/contracts/agent-api,framework/registry/asset-registry,infrastructure/model/model-openai-compatible -am install -DskipTests
+      cd tools/promptopt && mvn package
+
+    运行见 PromptOptimizer 的类注释。
+  -->
+  <groupId>com.huawei.finance.agent.tools</groupId>
+  <artifactId>promptopt</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <name>promptopt</name>
+
+  <properties>
+    <maven.compiler.release>21</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <huawei.finance.agent.version>0.1.0-SNAPSHOT</huawei.finance.agent.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>agent-bom</artifactId>
+        <version>${huawei.finance.agent.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>agent-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>asset-registry</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>model-openai-compatible</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-yaml</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

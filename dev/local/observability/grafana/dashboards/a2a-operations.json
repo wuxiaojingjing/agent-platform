@@ -1,0 +1,11 @@
+{
+  "uid": "agent-platform-a2a", "title": "Agent Platform - A2A Operations",
+  "schemaVersion": 41, "version": 1, "refresh": "10s", "time": {"from": "now-30m", "to": "now"},
+  "panels": [
+    {"id": 1, "type": "timeseries", "title": "A2A Calls by Outcome", "datasource": {"type": "prometheus", "uid": "prometheus"}, "targets": [{"refId": "A", "expr": "sum by (outcome) (rate(huawei_finance_agent_a2a_delegation_total[5m]))"}], "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}},
+    {"id": 2, "type": "timeseries", "title": "A2A Success Ratio", "datasource": {"type": "prometheus", "uid": "prometheus"}, "targets": [{"refId": "A", "expr": "sum(rate(huawei_finance_agent_a2a_delegation_total{outcome=\"SUCCEEDED\"}[5m])) / clamp_min(sum(rate(huawei_finance_agent_a2a_delegation_total[5m])), 1e-9)"}], "fieldConfig": {"defaults": {"unit": "percentunit"}}, "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}},
+    {"id": 3, "type": "timeseries", "title": "A2A P95 by Segment", "datasource": {"type": "prometheus", "uid": "prometheus"}, "targets": [{"refId": "A", "expr": "histogram_quantile(0.95, sum by (le, segment) (rate(huawei_finance_agent_a2a_segment_latency_seconds_bucket[5m])))"}], "fieldConfig": {"defaults": {"unit": "s"}}, "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}},
+    {"id": 4, "type": "timeseries", "title": "A2A Failure Reasons", "datasource": {"type": "prometheus", "uid": "prometheus"}, "targets": [{"refId": "A", "expr": "sum by (reason, segment) (rate(huawei_finance_agent_a2a_failure_total[5m]))"}], "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}},
+    {"id": 5, "type": "logs", "title": "A2A Correlated Logs", "datasource": {"type": "loki", "uid": "loki"}, "targets": [{"refId": "A", "expr": "{compose_service=~\"mobile-banking-assistant|a2a-gateway|account|transfer|creditcard|wealth-aggregate|fund-service|insurance-service|finance-assistant\"} | json"}], "gridPos": {"h": 10, "w": 24, "x": 0, "y": 16}}
+  ]
+}

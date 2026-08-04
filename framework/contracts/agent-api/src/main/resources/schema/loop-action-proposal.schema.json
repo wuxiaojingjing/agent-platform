@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://huawei.finance.agent.com/schema/loop-action-proposal.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["actionType", "parameters", "inputProvenance", "proposalReasonCode"],
+  "properties": {
+    "actionType": {"type": "string", "enum": ["SEARCH_KNOWLEDGE", "RESOLVE_MENU", "CALL_CAPABILITY", "DELEGATE_GOAL", "ASK_USER", "FINISH", "HANDOFF"]},
+    "targetId": {"type": ["string", "null"]},
+    "parameters": {"type": "object"},
+    "inputProvenance": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^(CONFIRMED_SLOT|FACT:[A-Za-z0-9._:-]+)$"
+      }
+    },
+    "proposalReasonCode": {"type": "string"}
+  }
+}

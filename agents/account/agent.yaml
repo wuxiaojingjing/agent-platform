@@ -1,0 +1,10 @@
+agent:
+  id: agent.account
+  displayName: 账户助手
+  roles: [domain]
+  domains: [account]
+implementation: { mode: extension, artifact: "com.huawei.finance:account" }
+runtime: { intentEngine: default, context: enabled, taskOrchestrator: enabled }
+a2a: { inbound: true, delegation: { enabled: true } }
+assets: { path: ./assets }
+storage: { namespace: account }

@@ -1,0 +1,79 @@
+# 融合权重、分流阈值与通道开关。
+#
+# v0.7 §3.2 明确要求「权重、阈值和通道开关必须配置化，不能写死在代码中」。
+# §3.3 的分流阈值标注为「技术穿刺初值，M1 用验证集标定后冻结」——下面的数值就是那批初值，
+# 未经标定，不得当作生产门槛引用。
+
+# 各召回通道权重。语义通道不可用时，其权重按比例分摊给规则与 BM25，
+# 而不是让总分整体塌陷（否则一断网所有请求都变成 NO_CANDIDATE）。
+weights:
+  semantic: 0.45
+  bm25: 0.25
+  rule: 0.30
+  graph: 0.0          # 图谱召回本期未建设，权重置零而非删除通道，保留接线位
+
+channels:
+  semanticEnabled: true
+  bm25Enabled: true
+  ruleEnabled: true
+  graphEnabled: false
+  # 重排（FP-1H）：默认关。置 true 后融合 Top-N 会再过一次 rerank 模型，多一次网关往返。
+  # 次数硬门已废（ADR-003）；是否启用看延迟与效果。网关侧 huawei.finance.agent.model.rerank.enabled 也须打开，
+  # 否则调用返回 unavailable，召回记 degraded=rerank 并保留融合序。
+  rerankEnabled: false
+
+# 分流阈值（v0.7 §3.3 初始分流规则表）
+thresholds:
+  # Top1 达标线：低于此值不允许 EXECUTE_CAPABILITY
+  top1Min: 0.55
+  # Top1 与 Top2 的间隔线：间隔不足说明候选冲突，判 LOW_MARGIN
+  marginMin: 0.12
+  # 领域分数接近的判定线，触发 routingMode=MULTI
+  domainCloseMargin: 0.08
+  # 续轮新意图探测线。必须高于 top1Min：把槽位补充误判成新意图会中断在办任务，
+  # 而漏判只是多问一轮。调 top1Min 时记得一并复核这条的相对关系
+  intentSignalMin: 0.7
+
+topN:
+  candidates: 5
+  domains: 3
+
+# 通道分数归一化。
+#
+# 不能用「除以本次结果最大值」这种相对归一：那样 Top1 恒为 1.0，
+# 下面的 top1Min 阈值会永远满足，弱匹配也会被判成 EXECUTE_CAPABILITY。
+# 所以两个通道都用保留绝对量级的映射：
+#   BM25 用饱和函数 score/(score+saturation)，单调有界且不抹掉绝对强度
+#   向量用 OpenSearch cosinesimil 分数反解回余弦值并在 0 处截断
+normalization:
+  bm25Saturation: 8.0
+
+# 多任务信号（v0.7 §3.2：多任务、跨域关系触发 MULTI）
+# 单靠模型判多意图不够稳，检测到这些信号后即便模型判 EXECUTE_CAPABILITY 也会被 fail-safe 拦下
+multiTask:
+  conjunctions: ["再", "然后", "顺便", "并且", "同时", "另外", "接着"]
+  conditionals: ["不足就", "不够就", "没到账，就", "如果", "否则", "要是", "的话就"]
+  minDistinctCapabilities: 2
+  # 上面连词表里表示「先后」的那几个，切分子意图时据此判依赖还是并列（S4 要求两者分别可判）。
+  # 是 conjunctions 的子集，不另立全量表——检测口径已随 15 条负例冻结，复制一份两边必漂。
+  # 不在本表内的连词按并列处理：并列在下游只是不共享上一步输出，不会造成错序执行。
+  sequentialMarkers: ["再", "然后", "接着"]
+
+# 多意图规则计划给 Planner 的逐步骤约束。规则只负责锚定与候选，不替模型处理歧义。
+planning:
+  preferredMin: 0.20
+  maxCandidatesPerStep: 3
+  navigationMarkers: ["打开", "进入", "跳转", "菜单", "页面", "去"]
+  diagnosticMarkers: ["排查原因", "帮我排查", "查明原因", "为什么"]
+
+clarify:
+  # 连续澄清上限。达到上限仍不收敛时，A 线一律 HANDOFF，
+  # 不得再降为 CLARIFY——否则形成澄清死循环（v0.7 §3.3 降级映射第 1 条）
+  maxRounds: 2
+
+cache:
+  # 一级出口缓存 TTL
+  ttlSeconds: 600
+  # 参与缓存键的用户状态维度。v0.7 §3.3 要求 M1 冻结枚举，
+  # 「禁止无边界塞入全量画像」——画像字段一多，缓存命中率会归零，缓存也就名存实亡
+  userStateDimensions: [loginStatus, customerTier]

@@ -1,0 +1,21 @@
+- capabilityId: cap.payroll.status.query
+  name: 查询工资代发状态
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.payroll_service
+  domains: [payroll_service]
+  description: 查询本人最近一次工资代发状态、到账日期与代发单位。本能力只读，不处理工资补发、金额争议或单位薪资纠纷
+  supportedIntents: [查询工资代发状态, 查看最近工资到账信息]
+  utterances: [查一下工资代发状态, 最近一次工资什么时候到账, 查询工资到账记录]
+  keywords: [工资代发, 工资到账, 最近工资]
+  requiredSlots: []
+  preconditions: [已登录]
+  sideEffects: []
+  riskLevel: R0
+  timeoutMs: 3000
+  idempotency: SUPPORTED
+  owner: 工资领域
+  version: "1.0.0"
+  status: ACTIVE
+  confirmationPolicy: NONE
+  loopAccess: DEFAULT

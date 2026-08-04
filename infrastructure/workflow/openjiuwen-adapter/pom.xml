@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.huawei.finance</groupId>
+    <artifactId>agent-platform</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <!-- 移进 infrastructure/ 一层后父 pom 不再是默认的 ../pom.xml -->
+    <relativePath>../../../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>openjiuwen-adapter</artifactId>
+  <name>openjiuwen-adapter</name>
+  <description>把本工程的模型网关、向量化与 OpenSearch 检索注册进 OpenJiuwen 的扩展点，让 OJ 侧的组件也能用上带预算与熔断的那条通道</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>stability-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>model-openai-compatible</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>capability-registry</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.huawei.finance</groupId>
+      <artifactId>search-opensearch</artifactId>
+    </dependency>
+    <!--
+      刻意不依赖 task-orchestrator。本模块只做一件事：把本行实现注册进 OJ 的扩展点。
+      注册是向下的，中控是向上的，压在一起的后果是只想用模型/向量适配器的模块
+      （比如领域 Agent）被迫拖进整个中控。需要落回中控执行的 CapabilityTool
+      已挪去 intent-slowpath——那里本来就是策略层。
+    -->
+
+    <!--
+      排除项在 agent-bom 里统一声明，此处不重复也不得覆写。
+      本模块是全工程对 OJ 内部类型依赖最深的一处，升 OJ 版本优先回归这里。
+    -->
+    <dependency>
+      <groupId>com.openjiuwen</groupId>
+      <artifactId>agent-core-java</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

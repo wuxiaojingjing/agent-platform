@@ -1,0 +1,105 @@
+version: "model-knowledge-admission-v0.1.0"
+
+cases:
+  - id: knowledge.admit.stable-domain-gap
+    status: locked
+    setup:
+      activation: EVALUATED_GAP
+      baselineModelHealthy: true
+      baselineModelVersion: model-baseline-v1
+      baselinePromptVersion: prompt-baseline-v1
+      failureCategory: MODEL_SEMANTIC_FAILURE
+      gapType: DOMAIN_KNOWLEDGE_GAP
+      failedEvaluationIds: [eval-baseline-17]
+      failedParaphraseCaseIds: [paraphrase-a, paraphrase-b]
+      positiveRegressionCaseIds: [positive-17]
+      negativeRegressionCaseIds: [negative-17]
+    expect: ADMIT
+    evidence:
+      - "ArbitrationSkillKnowledgeTest#onlyEvaluatedGapsWithPositiveAndNegativeRegressionsReachTheModel"
+      - "AssetLintTest#evaluatedGapWithCompleteEvidenceIsAccepted"
+      - "ArbitrationFallbackTest#taskShapePromptInjectsOnlyEvaluatedKnowledgeAndCallsModelOnce"
+
+  - id: knowledge.reject.infrastructure-unavailable
+    status: locked
+    setup: {failureCategory: INFRA_UNAVAILABLE}
+    expect: REJECT
+    evidence:
+      - "ArbitrationSkillKnowledgeTest#infrastructureContractPolicyAndRuntimeFailuresNeverBecomeKnowledge"
+      - "ModelContextualQueryRewriterTest#unavailableModelFallsBackWithoutASecondKnowledgeGuess"
+
+  - id: knowledge.reject.contract-invalid
+    status: locked
+    setup: {failureCategory: CONTRACT_INVALID}
+    expect: REJECT
+    evidence:
+      - "ArbitrationSkillKnowledgeTest#infrastructureContractPolicyAndRuntimeFailuresNeverBecomeKnowledge"
+      - "ModelContextualQueryRewriterTest#invalidJsonFallsBackToIdentity"
+
+  - id: knowledge.reject.policy-or-runtime
+    status: locked
+    setup:
+      failureCategories: [POLICY_REJECTED, RUNTIME_UNRESOLVED]
+    expect: REJECT
+    evidence:
+      - "ArbitrationSkillKnowledgeTest#infrastructureContractPolicyAndRuntimeFailuresNeverBecomeKnowledge"
+
+  - id: knowledge.reject.one-off-failure
+    status: locked
+    setup:
+      failedParaphraseCaseIds: [only-one]
+    expect: REJECT
+    evidence:
+      - "ArbitrationSkillKnowledgeTest#oneOffFailureAndGeneralModelCapabilityGapRemainInert"
+
+  - id: knowledge.reject.unhealthy-baseline
+    status: locked
+    setup: {baselineModelHealthy: false}
+    expect: REJECT
+    evidence:
+      - "ArbitrationSkillKnowledgeTest#metadataReproducibilityAndBothRegressionSidesAreAllRequired"
+
+  - id: knowledge.reject.missing-baseline-version
+    status: locked
+    setup:
+      baselineModelVersion: ""
+      baselinePromptVersion: ""
+    expect: REJECT
+    evidence:
+      - "ArbitrationSkillKnowledgeTest#metadataReproducibilityAndBothRegressionSidesAreAllRequired"
+
+  - id: knowledge.reject.duplicate-paraphrases
+    status: locked
+    setup:
+      failedParaphraseCaseIds: [same-case, same-case]
+    expect: REJECT
+    evidence:
+      - "ArbitrationSkillKnowledgeTest#metadataReproducibilityAndBothRegressionSidesAreAllRequired"
+
+  - id: knowledge.reject.missing-positive-regression
+    status: locked
+    setup: {positiveRegressionCaseIds: []}
+    expect: REJECT
+    evidence:
+      - "ArbitrationSkillKnowledgeTest#metadataReproducibilityAndBothRegressionSidesAreAllRequired"
+
+  - id: knowledge.reject.general-model-capability
+    status: locked
+    setup: {gapType: MODEL_CAPABILITY_GAP}
+    expect: REJECT
+    evidence:
+      - "ArbitrationSkillKnowledgeTest#oneOffFailureAndGeneralModelCapabilityGapRemainInert"
+
+  - id: knowledge.reject.missing-negative-regression
+    status: locked
+    setup: {negativeRegressionCaseIds: []}
+    expect: REJECT
+    evidence:
+      - "AssetLintTest#evaluatedGapWithoutCompleteEvidenceIsRejected"
+
+  - id: knowledge.inert.draft
+    status: locked
+    setup: {activation: DRAFT}
+    expect: INERT
+    evidence:
+      - "ArbitrationSkillKnowledgeTest#draftNeverReachesTheModelEvenWhenItHasEvidenceFields"

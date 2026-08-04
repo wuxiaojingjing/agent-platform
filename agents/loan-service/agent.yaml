@@ -1,0 +1,10 @@
+agent:
+  id: agent.loan_service
+  displayName: 贷款助手
+  roles: [domain]
+  domains: [loan_service]
+implementation: { mode: extension, artifact: "com.huawei.finance:loan-service" }
+runtime: { intentEngine: default, context: enabled, taskOrchestrator: enabled }
+a2a: { inbound: true, delegation: { enabled: true } }
+assets: { path: ./assets }
+storage: { namespace: loan-service }

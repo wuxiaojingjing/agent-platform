@@ -1,0 +1,19 @@
+# 科技域子智能体：薪资服务
+
+- capabilityId: agent.payroll_service
+  name: 薪资助手
+  type: AGENT
+  granularity: AGENT
+  domains: [payroll_service]
+  description: 代发工资状态与工资未到账排查相关的领域智能体。本 Agent 不处理单位薪资争议或工资补发
+  riskLevel: R0
+  timeoutMs: 5000
+  idempotency: SUPPORTED
+  owner: 客户专享领域
+  version: "1.0.0"
+  status: ACTIVE
+  implementationStatus: IMPLEMENTED
+  positiveBoundary: [工资代发状态查询, 固定条件计划, 开放式工资未到账排查]
+  negativeBoundary: [不处理单位薪资争议, 不执行工资补发, 不修改代发记录]
+  fallbackCapabilityIds: [cap.payroll.arrival.query, cap.account.card.status.query]
+  loopAccess: DEFAULT

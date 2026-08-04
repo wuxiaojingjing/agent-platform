@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <!--
+    版本硬门：全工程「用哪个版本」只在这一个文件里回答。
+
+    单独成模块而不是继续留在根 pom，是为了基线的二次开发场景：银行写自己的
+    领域 Agent / 护栏实现时，模块不会挂在我们的 reactor 下，也不该被迫继承
+    我们的 parent（他们通常有行内自己的 parent pom）。BOM 是唯一能让他们
+    只 import 版本约束、不继承构建配置的形态。
+
+    刻意不声明 <parent>：根 pom 要 import 本模块，若本模块反过来又以根 pom
+    为 parent，Maven 建模时就成了环。代价是 <version> 必须与 reactor 手写重复
+    一次；漂移不会静默——根 pom 是以 ${project.version} 来 import 本模块的，
+    两边一旦不等，import 直接解析不到，构建立刻失败。
+  -->
+  <groupId>com.huawei.finance</groupId>
+  <artifactId>agent-bom</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>agent-bom</name>
+  <description>Agent 平台公共依赖版本硬门，供各 Agent 与行内扩展模块 import</description>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <!--
+      Boot 基线定在 4.x 是为了与 OpenJiuwen Agent Server 对齐：agent-runtime-java v0.1.0
+      的 parent 就是 spring-boot-starter-parent 4.0.6，且其 tag 版本没有 3.x 分支。
+      行内若停在 3.5，领域 Agent 就只能另起一个 Boot 4 的独立 reactor，
+      等于为了一个依赖把工程劈成两半（实施架构 §1.1.1 明令禁止形成双轨）。
+    -->
+    <spring-boot.version>4.0.6</spring-boot.version>
+    <nacos-client.version>3.2.3</nacos-client.version>
+
+    <opensearch-java.version>2.25.0</opensearch-java.version>
+    <redisson.version>3.50.0</redisson.version>
+    <aviator.version>5.4.3</aviator.version>
+    <json-schema-validator.version>1.5.6</json-schema-validator.version>
+    <resilience4j.version>2.3.0</resilience4j.version>
+    <hanlp.version>portable-1.8.6</hanlp.version>
+    <!--
+      OpenJiuwen 双仓。两者都在 Maven Central 上，不需要源码构建——
+      早前判断「Central 上没有、必须按 tag 自建双仓」是错的，实测 com/openjiuwen 下
+      八个制品齐全。这一点值钱：交给银行的基线若要求先自建两个外部仓库，
+      供应链审查和构建可复现性都要另开一轮。
+      agent-runtime-java 0.1.0 的 parent 就是 spring-boot-starter-parent 4.0.6，
+      与本工程一致（这也是当初把 Boot 升到 4.0.6 的原因）。
+    -->
+    <openjiuwen-core.version>0.1.13</openjiuwen-core.version>
+    <openjiuwen-service.version>0.1.0</openjiuwen-service.version>
+
+    <!-- 架构守卫。Boot BOM 不管这个坐标，必须自己 pin -->
+    <archunit.version>1.4.1</archunit.version>
+  </properties>
+
+  <!--
+    顺序有语义：dependencyManagement 里先声明者胜，所以本工程的显式选型必须排在
+    spring-boot-dependencies 的 import 之前。反过来放，Boot 管到的坐标就会静默
+    压掉我们的 pin —— flyway 已经这样中过一次（详见下方 flyway 注释）。
+  -->
+  <dependencyManagement>
+    <dependencies>
+      <!-- 本工程模块：${project.version} 在此解析为 agent-bom 自身版本，与 reactor 同步发布 -->
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>stability-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>agent-tck</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>agent-testkit</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>agent-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>agent-observability</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>observability-otel</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>model-openai-compatible</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>asset-registry</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>capability-registry</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>search-opensearch</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>intent-engine-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>intent-fastpath</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>cache-redis</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>task-orchestrator</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>context-engine</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>response-engine</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>agent-runtime-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>agent-runtime-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>agent-runtime-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>agent-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>task-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>a2a-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>a2a-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>a2a-client-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>a2a-server</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>a2a-server-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>a2a-gateway-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>a2a-gateway-app</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>persistence-jdbc</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>a2a-inprocess-testkit</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>openjiuwen-adapter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>intent-slowpath</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>intent-engine-default</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>intent-engine-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>discovery-nacos</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.huawei.finance</groupId>
+        <artifactId>agent-host-app</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <!--
+        agent-core-java 裸装是 101 个 jar / 162 MB：里面有 Milvus SDK、Pulsar client、
+        POI、PDFBox、SQLite、openai-java（单个 30 MB），全是 compile 作用域、无一 optional。
+        我们只用它的工作流引擎（Pregel 图与条件边），连它的 HTTP 组件与中断续跑都没用
+        （理由见 README「办理流程交给 OpenJiuwen 图引擎」），上面这些更是一个都不碰，
+        但它们会进银行的 SBOM、进 CVE 扫描、进镜像体积，等于我们替银行背了一堆不用的账。
+        实测排掉这批后引擎照跑（工作流探针与本模块测试均通过），降到 28 个 jar / 27 MB。
+
+        logback-classic 必须排：它在 agent-core-java 里是 compile 作用域，会盖掉 Boot
+        管的版本，也会与 Boot 自己的日志装配抢 SLF4J provider（探针里已经报过
+        「multiple SLF4J providers」）。日志实现该由应用决定，不该由一个库钉死。
+
+        排除项写在 dependencyManagement 里，因此银行 import agent-bom 后自动继承，
+        不必在每个模块重复抄一遍——抄漏一处，那 100 个 jar 就又回来了。
+        WorkflowFootprintTest 会守住这份清单不被悄悄改动。
+      -->
+      <dependency>
+        <groupId>com.openjiuwen</groupId>
+        <artifactId>agent-core-java</artifactId>
+        <version>${openjiuwen-core.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>io.milvus</groupId>
+            <artifactId>milvus-sdk-java</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.apache.pulsar</groupId>
+            <artifactId>pulsar-client</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.openai</groupId>
+            <artifactId>openai-java</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.alibaba</groupId>
+            <artifactId>dashscope-sdk-java</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.pgvector</groupId>
+            <artifactId>pgvector</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <!-- 契约包，不依赖 Spring。OjQueryCodec 只该对着它编译，不碰 app -->
+      <dependency>
+        <groupId>com.openjiuwen</groupId>
+        <artifactId>agent-service-spec</artifactId>
+        <version>${openjiuwen-service.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.openjiuwen</groupId>
+        <artifactId>agent-service-app</artifactId>
+        <version>${openjiuwen-service.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.tngtech.archunit</groupId>
+        <artifactId>archunit-junit5</artifactId>
+        <version>${archunit.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.opensearch.client</groupId>
+        <artifactId>opensearch-java</artifactId>
+        <version>${opensearch-java.version}</version>
+      </dependency>
+      <!--
+        用 redisson 核心库而不是 redisson-spring-boot-starter：starter 3.50.0 里
+        @EnableConfigurationProperties(RedisProperties.class) 指向的
+        org.springframework.boot.autoconfigure.data.redis.RedisProperties
+        在 Boot 4 已随模块化拆走，starter 一上 classpath 整个上下文就起不来，
+        且 Redisson 至今没有发布 Boot 4 版本。
+        核心库不依赖 Spring，RedissonClient 由入口 mobile-banking-assistant 显式建 Bean。
+      -->
+      <dependency>
+        <groupId>org.redisson</groupId>
+        <artifactId>redisson</artifactId>
+        <version>${redisson.version}</version>
+      </dependency>
+      <!--
+        nacos-client 直用，不走 spring-cloud-starter-alibaba-nacos-*：那条链最新的
+        2025.1.0.0 对着 Spring Boot 3.5，与本工程锁定的 4.0.6 不兼容。
+      -->
+      <dependency>
+        <groupId>com.alibaba.nacos</groupId>
+        <artifactId>nacos-client</artifactId>
+        <version>${nacos-client.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.googlecode.aviator</groupId>
+        <artifactId>aviator</artifactId>
+        <version>${aviator.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.networknt</groupId>
+        <artifactId>json-schema-validator</artifactId>
+        <version>${json-schema-validator.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.github.resilience4j</groupId>
+        <artifactId>resilience4j-spring-boot3</artifactId>
+        <version>${resilience4j.version}</version>
+      </dependency>
+      <!--
+        HanLP portable：词典随 jar 内嵌，不需要外挂数据目录，也不引 Python 侧车
+        （实施架构 §2.5.6 NER 行、§2.7「中文 NER」点名项）。
+        portable 版精度弱于 2.x，但 A 线的实体真值本就靠词典与主数据链接，NER 只做候选。
+      -->
+      <dependency>
+        <groupId>com.hankcs</groupId>
+        <artifactId>hanlp</artifactId>
+        <version>${hanlp.version}</version>
+      </dependency>
+      <!--
+        flyway 刻意不 pin，交给 Boot 统一管（4.0.6 对应 11.14.1）。
+        此前根 pom 只钉了 flyway-database-postgresql=11.8.2，却从没钉 flyway-core，
+        Boot 4 升级后 core 跟着涨到 11.14.1，于是 core 与 database 模块跨了小版本；
+        Flyway 的 database 模块是按 core 内部 API 编的，这种错配属于运行期才炸的雷。
+        由一方统一管两个坐标才是一致的，而 Boot 已经这么做了。
+      -->
+
+      <!--
+        把 Boot 自己的 BOM 兜在最后，硬门才完整：银行只 import agent-bom 就同时锁定了
+        Boot 4.0.6 与我们的第三方选型，不会出现「基线跑 4.0.6、行内扩展模块悄悄跑 4.1」
+        这种只在集成时才炸的漂移。
+      -->
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+</project>

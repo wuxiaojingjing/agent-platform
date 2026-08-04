@@ -1,0 +1,10 @@
+agent:
+  id: agent.security_service
+  displayName: 安全助手
+  roles: [domain]
+  domains: [security_service]
+implementation: { mode: scaffold }
+runtime: { intentEngine: default, context: enabled, taskOrchestrator: enabled }
+a2a: { inbound: true, delegation: { enabled: true } }
+assets: { path: ./assets }
+storage: { namespace: security-service }

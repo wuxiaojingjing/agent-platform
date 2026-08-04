@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://huawei.finance.agent.com/schema/context-delta.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["baseStateVersion", "upserts", "invalidatedRefs", "pendingQuestions", "memorySuggestions"],
+  "properties": {
+    "baseStateVersion": {"type": "integer", "minimum": 0},
+    "upserts": {"type": "array", "items": {"type": "object", "required": ["ref", "kind", "value", "sensitivity"], "properties": {"ref": {"type": "string"}, "kind": {"type": "string", "enum": ["TOOL_FACT", "CONFIRMED_INPUT", "RUNTIME_STATE"]}, "value": {"type": "object"}, "sourceAgentId": {"type": ["string", "null"]}, "sourceTaskId": {"type": ["string", "null"]}, "sourceTurnRef": {"type": ["string", "null"]}, "observedAt": {"type": ["string", "null"], "format": "date-time"}, "validUntil": {"type": ["string", "null"], "format": "date-time"}, "sensitivity": {"type": "string", "enum": ["PUBLIC", "INTERNAL", "SENSITIVE", "RESTRICTED"]}}, "additionalProperties": false}},
+    "invalidatedRefs": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "pendingQuestions": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["slot", "options", "reasonCode"], "properties": {"slot": {"type": "string"}, "options": {"type": "array", "items": {"type": "string"}}, "reasonCode": {"type": "string"}}}},
+    "memorySuggestions": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["namespace", "factRef", "reasonCode"], "properties": {"namespace": {"type": "string"}, "factRef": {"type": "string"}, "reasonCode": {"type": "string"}}}}
+  }
+}

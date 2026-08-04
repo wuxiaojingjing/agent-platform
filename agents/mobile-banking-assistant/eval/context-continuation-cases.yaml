@@ -1,0 +1,204 @@
+version: "context-continuation-v0.1.0"
+
+# 多轮与跨 Agent 上下文契约集。locked 表示已有可执行证据并纳入发布门禁。
+cases:
+  - id: context.single.reference-second-card
+    status: locked
+    evidence:
+      - "Scene5WorkingMemoryTest#secondCardReferenceUsesContextualRewrite"
+      - "ContextualQueryRewriterTest#secondCardFollowUpConsumesAccountFact"
+    turns:
+      - query: "查一下余额"
+        expect:
+          capability: cap.account.balance.query
+          factRefs: ["fact:accounts"]
+      - query: "第二张呢"
+        truth:
+          standaloneQuery: "查询账户列表中第二个账户的余额"
+          eventType: SUPPLEMENT
+          usedContextRefs: ["fact:accounts"]
+    requiredSpans: [agent.context.compile, agent.context.rewrite, agent.intent.recall]
+    note: "历史被读取不等于被消费；第二轮必须携带事实引用和改写结果。"
+
+  - id: context.single.correction-payee
+    status: locked
+    evidence:
+      - "Scene5WorkingMemoryTest#correctionUpdatesPendingTransferWithoutExecuting"
+      - "ModelContinuationUnderstandingTest#modelMapsNaturalLanguageCorrectionToWhitelistedSlotUpdate"
+    turns:
+      - query: "给张三转1000"
+        expect:
+          capability: cap.transfer
+          responsePhase: CONFIRM
+      - query: "不是张三，是李四"
+        truth:
+          eventType: CORRECTION
+          standaloneQuery: "将待确认转账的收款人由张三更正为李四"
+          invalidatedFacts: ["task.confirmed.payee:张三"]
+          confirmedFacts: ["task.confirmed.payee:李四"]
+    requiredSpans: [agent.context.compile, agent.context.rewrite, agent.task.orchestrate]
+    note: "更正只能影响未执行动作，不得继承旧收款人或自动确认。"
+
+  - id: context.cross-agent.account-to-transfer
+    status: locked
+    evidence:
+      - "Scene5WorkingMemoryTest#secondCardHalfTransferNeedsConfirm"
+      - "ContextualQueryRewriterTest#halfBalanceIsOnlyARequeryBasis"
+      - "ContextLeaseCompilerTest#canonicalAliasPreservesDelegatedAuthority"
+    turns:
+      - query: "查一下余额"
+        expect:
+          delegationPath: [agent.mobile-banking-assistant, agent.account]
+          factRefs: ["fact:accounts", "fact:balance-snapshot"]
+      - query: "用第二张卡转一半给张三"
+        truth:
+          standaloneQuery: "使用第二个账户引用的最新可用余额一半转给张三"
+          usedContextRefs: ["fact:accounts", "fact:balance-snapshot"]
+          requiredRequery: cap.account.balance.query
+          responsePhase: CONFIRM
+      - action: CONFIRM
+        truth:
+          delegationPath: [agent.mobile-banking-assistant, agent.transfer]
+          outcome: SUCCEEDED
+    requiredAgents: [agent.mobile-banking-assistant, agent.account, agent.transfer]
+    requiredSpans:
+      - agent.context.compile
+      - agent.context.rewrite
+      - agent.a2a.client
+      - agent.a2a.gateway.route
+      - agent.a2a.server.execute
+      - agent.task.orchestrate
+    note: "事实经主 Agent 投影，不允许账户和转账 Agent 直接共享状态库；金额必须重查。"
+
+  - id: context.cross-agent.need-user-resume
+    status: locked
+    evidence:
+      - "Scene5WorkingMemoryTest#creditcardNeedUserResumesWithModelResolvedCardReference"
+      - "RuntimeBackedAgentNodeTest#needUserResumeUsesSameTargetSessionNewDelegationAndDoesNotReplayCompletion"
+      - "TaskOrchestratorMiddlewareTest#localNeedUserPersistsPendingSlotForContinuation"
+      - "TaskOrchestratorMiddlewareTest#a2aNeedUserPersistsPendingSlotForContinuation"
+    turns:
+      - query: "查信用卡账单"
+        expect:
+          targetAgent: agent.creditcard
+          outcome: NEED_USER
+          missingSlots: [cardRef]
+      - query: "尾号8821那张"
+        truth:
+          eventType: SUPPLEMENT
+          targetAgent: agent.creditcard
+          sameTargetSession: true
+          newDelegationId: true
+          replayCompletedActions: false
+    note: "补参必须恢复原目标侧会话，同时以新委托表达新一轮输入。"
+
+  - id: context.cross-agent.three-level-goal
+    status: locked
+    evidence:
+      - "MultiLevelContextDelegationTest#entryToWealthToFundKeepsLineageAndOnlyProjectsMinimalContext"
+    turns:
+      - query: "分析我的基金持仓并找出风险最高的产品"
+        truth:
+          delegationPath:
+            - agent.mobile-banking-assistant
+            - agent.wealth_aggregate
+            - agent.fund_service
+          independentTaskPerAgent: true
+          fullHistoryForwarded: false
+          contextDeltaRequired: true
+    requiredSpans:
+      - agent.a2a.gateway.route
+      - agent.a2a.target.runtime
+      - agent.context.compile
+      - agent.task.orchestrate
+    note: "每层只拥有自己的状态，通过最小上下文和 ContextDelta 继续委托。"
+
+  - id: context.heterogeneous.python-child
+    status: locked
+    evidence:
+      - "A2ACapabilityDelegatorTest#fullContextPythonTargetUsesLanguageNeutralA2a2JsonContracts"
+    turns:
+      - query: "查询外部研究 Agent 对产品A的公开评价"
+        truth:
+          targetRuntime: python
+          mode: TASK
+          risk: R0
+          schemaVersion: a2a/2
+          contextScopes: [SUBTASK, DOMAIN]
+          javaTypeDependency: false
+          structuredReceiptRequired: true
+    note: "异构只以 JSON Schema/TCK 对接；首期外部 Agent 不开放 R1/R2。"
+
+  - id: context.isolation.same-session-different-root-task
+    status: locked
+    evidence:
+      - "RuntimeBackedAgentNodeTest#sameSourceSessionWithDifferentRootsCannotSeePreviousRootFacts"
+    turns:
+      - query: "比较产品A和产品B"
+        truth:
+          rootTaskRef: root-1
+      - query: "新开一个任务，比较产品C和产品D"
+        truth:
+          rootTaskRef: root-2
+          previousTaskFactsVisible: false
+    note: "sourceSession 相同也必须按 rootTaskId 隔离目标侧临时会话。"
+
+  - id: context.conflict.stale-child-delta
+    status: locked
+    evidence:
+      - "A2ACapabilityDelegatorTest#staleDeltaAndContextIncapableR2TargetAreRejected"
+      - "ContextDeltaMergerTest#staleChildDeltaIsRejectedInsteadOfLastWriteWins"
+    setup:
+      mainStateVersion: 8
+      childBaseStateVersion: 7
+      conflictingKeys: [amount]
+    truth:
+      merge: REJECT
+      reasonCode: CONTEXT_VERSION_CONFLICT
+      askUserWhenUnresolved: true
+    note: "金额冲突禁止 last-write-wins。"
+
+  - id: context.safety.narrative-success-is-not-fact
+    status: locked
+    evidence:
+      - "A2AGatewayTest#successWithoutFactsIsFatal"
+    setup:
+      childReceipt:
+        outcome: SUCCEEDED
+        facts: {}
+        diagnostics: "已成功办理"
+    expect:
+      outcome: FATAL
+      reasonCode: A2A_RECEIPT_FACTS_EMPTY
+      factsPersisted: false
+    note: "自然语言成功不得污染主 Agent 事实集。"
+
+  - id: context.negative.ordinal-without-account-context
+    status: locked
+    evidence:
+      - "ContextualQueryRewriterTest#unknownModelReferenceIsRejectedByPolicy"
+    setup:
+      availableContextRefs: []
+    turns:
+      - query: "第二张呢"
+        truth:
+          usedContextRefs: []
+          slotUpdates: {}
+          fallback: IDENTITY_OR_CLARIFY
+    note: "序数表达不是无条件规则；没有权威账户上下文时不得生成账户引用。"
+
+  - id: context.negative.ordinal-out-of-range
+    status: locked
+    evidence:
+      - "ContextualQueryRewriterTest#ordinalOutsideAuthoritativeAccountListIsRejected"
+      - "AccountReferenceResolverTest#outOfRangeOrdinalDoesNotResolveAnAccount"
+    setup:
+      accountCount: 3
+    turns:
+      - query: "第四张呢"
+        truth:
+          accountOrdinal: 4
+          fromAccountResolved: false
+          amountResolved: false
+          executeDifferentAccount: false
+    note: "模型只输出语义序号；越界必须由账户域权威映射拒绝，不能回退到第一张卡。"

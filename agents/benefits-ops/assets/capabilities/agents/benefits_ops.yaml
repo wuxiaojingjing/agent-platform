@@ -1,0 +1,18 @@
+# 科技域子智能体：权益运营
+
+- capabilityId: agent.benefits_ops
+  name: 权益运营助手
+  type: AGENT
+  granularity: AGENT
+  domains: [benefits_ops]
+  description: 权益发放与运营相关的领域智能体。本期面客 TOOL 未开放
+  riskLevel: R0
+  timeoutMs: 5000
+  idempotency: SUPPORTED
+  owner: 权益领域
+  version: "1.0.0"
+  status: DISABLED
+  implementationStatus: SCAFFOLD
+  positiveBoundary: [权益查询, 权益运营]
+  negativeBoundary: [本期不发放权益, 本期不变更权益状态]
+  fallbackCapabilityIds: []

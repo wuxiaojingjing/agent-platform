@@ -1,0 +1,42 @@
+{
+  "uid": "agent-platform-overview",
+  "title": "Agent Platform Overview",
+  "schemaVersion": 41,
+  "version": 1,
+  "refresh": "10s",
+  "time": {"from": "now-30m", "to": "now"},
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Online Agents",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{"expr": "huawei_finance_agent_directory_count{dimension=\"online\"}", "refId": "A"}],
+      "gridPos": {"h": 6, "w": 6, "x": 0, "y": 0}
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "A2A Outcomes",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{"expr": "sum by (outcome) (rate(huawei_finance_agent_a2a_delegation_total[5m]))", "refId": "A"}],
+      "gridPos": {"h": 8, "w": 18, "x": 6, "y": 0}
+    },
+    {
+      "id": 3,
+      "type": "timeseries",
+      "title": "A2A P95 by Segment",
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [{"expr": "histogram_quantile(0.95, sum by (le, segment) (rate(huawei_finance_agent_a2a_segment_latency_seconds_bucket[5m])))", "refId": "A"}],
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+    },
+    {
+      "id": 4,
+      "type": "logs",
+      "title": "Correlated Logs",
+      "datasource": {"type": "loki", "uid": "loki"},
+      "targets": [{"expr": "{compose_service=~\"mobile-banking-assistant|a2a-gateway|account\"}", "refId": "A"}],
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
+    }
+  ]
+}

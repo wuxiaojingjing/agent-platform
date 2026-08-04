@@ -1,0 +1,121 @@
+# cap.nav.* → 菜单元数据，供 MockNavAgent 回显
+cap.nav.wealth_aggregate_查询我的资产:
+  menuId: menu.wealth_aggregate.查询我的资产
+  menuName: 查询我的资产
+  bksPath: 财富管理＞资产
+  techDomain: wealth_aggregate
+cap.nav.wealth_aggregate_资产诊断:
+  menuId: menu.wealth_aggregate.资产诊断
+  menuName: 资产诊断
+  bksPath: 财富管理＞资产
+  techDomain: wealth_aggregate
+cap.nav.fund_service_查询基金持仓:
+  menuId: menu.fund_service.查询基金持仓
+  menuName: 查询基金持仓
+  bksPath: 财富管理＞财富＞基金
+  techDomain: fund_service
+cap.nav.fund_service_查询基金收益:
+  menuId: menu.fund_service.查询基金收益
+  menuName: 查询基金收益
+  bksPath: 财富管理＞财富＞基金
+  techDomain: fund_service
+cap.nav.fund_service_看基金行情:
+  menuId: menu.fund_service.看基金行情
+  menuName: 看基金行情
+  bksPath: 财富管理＞财富＞基金
+  techDomain: fund_service
+cap.nav.fund_service_看基金资讯:
+  menuId: menu.fund_service.看基金资讯
+  menuName: 看基金资讯
+  bksPath: 财富管理＞财富＞基金
+  techDomain: fund_service
+cap.nav.fund_service_基金选品:
+  menuId: menu.fund_service.基金选品
+  menuName: 基金选品
+  bksPath: 财富管理＞财富＞基金
+  techDomain: fund_service
+cap.nav.fund_service_基金解读:
+  menuId: menu.fund_service.基金解读
+  menuName: 基金解读
+  bksPath: 财富管理＞财富＞基金
+  techDomain: fund_service
+cap.nav.fund_service_基金对比:
+  menuId: menu.fund_service.基金对比
+  menuName: 基金对比
+  bksPath: 财富管理＞财富＞基金
+  techDomain: fund_service
+cap.nav.wealth_aggregate_基金财富学苑:
+  menuId: menu.wealth_aggregate.基金财富学苑
+  menuName: 基金财富学苑
+  bksPath: 财富管理＞财富＞基金
+  techDomain: wealth_aggregate
+cap.nav.wealth_product_理财选品购买:
+  menuId: menu.wealth_product.理财选品购买
+  menuName: 理财选品购买
+  bksPath: 财富管理＞财富＞理财
+  techDomain: wealth_product
+cap.nav.wealth_product_查询理财持仓:
+  menuId: menu.wealth_product.查询理财持仓
+  menuName: 查询理财持仓
+  bksPath: 财富管理＞财富＞理财
+  techDomain: wealth_product
+cap.nav.creditcard_service_信用卡还款:
+  menuId: menu.creditcard_service.信用卡还款
+  menuName: 信用卡还款
+  bksPath: 信用卡＞信用卡
+  techDomain: creditcard_service
+cap.nav.account_查询账户余额:
+  menuId: menu.account.查询账户余额
+  menuName: 查询账户余额
+  bksPath: 账户管理＞账户
+  techDomain: account
+cap.nav.account_查询开户行:
+  menuId: menu.account.查询开户行
+  menuName: 查询开户行
+  bksPath: 账户管理＞账户
+  techDomain: account
+cap.nav.account_查询收支明细:
+  menuId: menu.account.查询收支明细
+  menuName: 查询收支明细
+  bksPath: 账户管理＞收支
+  techDomain: account
+cap.nav.account_收支分析:
+  menuId: menu.account.收支分析
+  menuName: 收支分析
+  bksPath: 账户管理＞收支
+  techDomain: account
+cap.nav.transfer_快速转账:
+  menuId: menu.transfer.快速转账
+  menuName: 快速转账
+  bksPath: 转账服务＞转账汇款
+  techDomain: transfer
+cap.nav.wealth_aggregate_产品信息查询:
+  menuId: menu.wealth_aggregate.产品信息查询
+  menuName: 产品信息查询
+  bksPath: 财富管理＞财富
+  techDomain: wealth_aggregate
+cap.nav.wealth_aggregate_风险评测:
+  menuId: menu.wealth_aggregate.风险评测
+  menuName: 风险评测
+  bksPath: 财富管理＞财富
+  techDomain: wealth_aggregate
+cap.nav.wealth_product_理财交易记录:
+  menuId: menu.wealth_product.理财交易记录
+  menuName: 理财交易记录
+  bksPath: 财富管理＞财富＞理财
+  techDomain: wealth_product
+cap.nav.wealth_product_理财定投:
+  menuId: menu.wealth_product.理财定投
+  menuName: 理财定投
+  bksPath: 财富管理＞财富＞理财
+  techDomain: wealth_product
+cap.nav.fund_service_基金定投:
+  menuId: menu.fund_service.基金定投
+  menuName: 基金定投
+  bksPath: 财富管理＞财富＞基金
+  techDomain: fund_service
+cap.nav.creditcard_service_信用卡账单:
+  menuId: menu.creditcard_service.信用卡账单
+  menuName: 信用卡账单
+  bksPath: 信用卡＞信用卡
+  techDomain: creditcard_service

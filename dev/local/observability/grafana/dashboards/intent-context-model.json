@@ -1,0 +1,10 @@
+{
+  "uid": "agent-platform-intent-context", "title": "Agent Platform - Intent, Context and Model",
+  "schemaVersion": 41, "version": 1, "refresh": "10s", "time": {"from": "now-30m", "to": "now"},
+  "panels": [
+    {"id": 1, "type": "timeseries", "title": "Intent Decisions", "datasource": {"type": "prometheus", "uid": "prometheus"}, "targets": [{"refId": "A", "expr": "sum by (decision) (rate(huawei_finance_agent_arbitration_decision_total[5m]))"}], "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}},
+    {"id": 2, "type": "timeseries", "title": "Fast Path P95 by Phase", "datasource": {"type": "prometheus", "uid": "prometheus"}, "targets": [{"refId": "A", "expr": "histogram_quantile(0.95, sum by (le, phase) (rate(huawei_finance_agent_fastpath_phase_latency_seconds_bucket[5m])))"}], "fieldConfig": {"defaults": {"unit": "s"}}, "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}},
+    {"id": 3, "type": "timeseries", "title": "Model Gateway Outcomes", "datasource": {"type": "prometheus", "uid": "prometheus"}, "targets": [{"refId": "A", "expr": "sum by (purpose, outcome) (rate(huawei_finance_agent_gateway_latency_seconds_count[5m]))"}], "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}},
+    {"id": 4, "type": "timeseries", "title": "Context Degraded and Trimmed", "datasource": {"type": "prometheus", "uid": "prometheus"}, "targets": [{"refId": "A", "expr": "sum(rate(huawei_finance_agent_context_degraded_total[5m]))"}, {"refId": "B", "expr": "sum(rate(huawei_finance_agent_context_trimmed_total[5m]))"}], "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}}
+  ]
+}

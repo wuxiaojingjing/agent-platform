@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://huawei.finance.agent.com/schema/recall-result.schema.json",
+  "title": "RecallResult",
+  "description": "召回组 → 仲裁组（v0.7 附录 B）",
+  "type": "object",
+  "required": ["domainRouting", "candidates"],
+  "properties": {
+    "domainRouting": {
+      "type": "object",
+      "required": ["routingMode"],
+      "properties": {
+        "routingMode": {"type": "string", "enum": ["SINGLE", "MULTI", "UNKNOWN"]},
+        "domainCandidates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["domain", "score"],
+            "properties": {
+              "domain": {"type": "string"},
+              "score": {"type": "number"},
+              "evidence": {"type": "array", "items": {"type": "string"}}
+            }
+          }
+        },
+        "requiresFederatedRetrieval": {"type": "boolean"}
+      }
+    },
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["candidateId", "candidateType", "scores", "riskLevel"],
+        "properties": {
+          "candidateId": {"type": "string", "minLength": 1},
+          "candidateType": {"type": "string", "enum": ["INTENT", "TOOL", "SKILL", "WORKFLOW", "AGENT"]},
+          "domains": {"type": "array", "items": {"type": "string"}},
+          "scores": {
+            "type": "object",
+            "required": ["semantic", "rule", "graph", "negative"],
+            "properties": {
+              "semantic": {"type": "number"},
+              "rule": {"type": "number"},
+              "graph": {"type": "number"},
+              "negative": {"type": "number"}
+            }
+          },
+          "matchedEvidence": {"type": "array", "items": {"type": "string"}},
+          "requiredSlots": {"type": "array", "items": {"type": "string"}},
+          "riskLevel": {"type": "string", "enum": ["R0", "R1", "R2"]},
+          "sourceVersions": {"type": "object", "additionalProperties": {"type": "string"}}
+        }
+      }
+    },
+    "degradedChannels": {"type": "array", "items": {"type": "string"}}
+  }
+}

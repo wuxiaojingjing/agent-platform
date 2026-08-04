@@ -1,0 +1,1 @@
+请确认转账信息：<#if fromAccount?? && fromAccount?has_content>用 ${fromAccount}</#if>向 ${payee} 转账 <#if amount?? && amount?has_content>${currency}${amount}<#elseif amountBasis?? && amountBasis == "REQUERY_THEN_HALF">该账户执行时权威可用余额的一半</#if>。确认无误请回复"确认"，需要修改请直接告诉我。

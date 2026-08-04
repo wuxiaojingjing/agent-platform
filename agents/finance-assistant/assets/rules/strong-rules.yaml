@@ -1,0 +1,9 @@
+rules:
+  - ruleId: rule.finance-assistant.fund-product-query
+    description: 金融助手将基金产品查询识别为基金领域叶子能力
+    category: STRONG_BUSINESS
+    priority: 50
+    when: "agentId == 'agent.finance_assistant' && string.contains(query,'基金') && string.contains(query,'产品')"
+    decision: EXECUTE_CAPABILITY
+    capabilityId: cap.fund.product.query
+    reasonCode: SHORT_CIRCUIT_STRONG_RULE

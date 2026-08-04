@@ -1,0 +1,63 @@
+# 模块改名映射（架构草案 v0.1 §9 + v0.2 §4.4 + v0.4 §10）
+#
+# 三列：旧目录  当前路径  依据
+# 依据取值：
+#   DOC   = v0.1 §9 映射表明写
+#   DOC*  = v0.1 §9 有此行，但按 v0.2 §4.4 / README §26 调整（见下）
+#   规则  = 按映射表已确立的命名规则推导
+#
+# 第二列是**当前路径**，不是「上一次改成什么」。分多轮落地：
+#   第一轮  去 agent-platform- 前缀 + 建 adapters/ domains/ applications/ 三个分组目录
+#   第二轮  平摊模块进 platform/ intent-engine/ registry/ runtime/
+#   D0      applications→agents/mobile-banking-assistant；domains/{account,mock,oj,workflow}→agents|infrastructure/samples
+#   D1      业务卡→agents/*/assets/
+#   D2–D4   adapters→infrastructure；a2a-gateway→infrastructure/a2a；
+#           platform|registry|runtime|intent-engine→framework/
+#   D5      根目录 / 根 artifactId：mobile-banking-assistant-agent → agent-platform（groupId 仍 com.huawei.finance）
+# 叶子模块 artifactId 未改——叶子目录名与 artifactId 仍然相同
+# （唯一例外 agents/mobile-banking-assistant，artifactId 是 mobile-banking-assistant-app）。
+#
+# 分组目录**不放聚合 pom**，根 pom 直接列 framework/agent-common 这样的路径。
+#
+# 两处**刻意留着旧名**，不要「顺手改掉」：
+#   context-engine/.../V2__conversation_turn.sql  注释里的 agent-platform-orchestrator
+#   task-orchestrator/.../V3__intent_plan.sql     注释里的 agent-platform-context
+# Flyway 的校验和算的是整个文件，注释也在内。
+#
+# 运行期标识也不在改名范围内：
+#   OpenSearch 索引前缀 agent-platform-capability / agent-platform-agent-entry-capability
+#   容器名 agent-platform-nacos / agent-platform-redis / agent-platform-opensearch / agent-platform-postgres
+#   Workspace 目录名 agent-platform-slowpath-workspace
+#   Spring 配置键前缀 huawei.finance.agent.*
+
+agent-platform-contracts               framework/agent-contracts               DOC
+agent-platform-context                 framework/runtime/context-engine        DOC
+agent-platform-orchestrator            framework/runtime/task-orchestrator     DOC
+agent-platform-response                framework/runtime/response-engine       DOC
+agent-platform-capability-registry     framework/registry/capability-registry  DOC
+agent-platform-model-gateway           infrastructure/model-openai-compatible  DOC
+agent-platform-nacos                   infrastructure/discovery-nacos          DOC
+agent-platform-oj-adapters             infrastructure/openjiuwen               DOC
+agent-platform-app                     agents/mobile-banking-assistant                      DOC
+agent-platform-fastpath                framework/intent-engine/intent-fastpath DOC*
+agent-platform-slowpath                framework/intent-engine/intent-slowpath DOC*
+agent-platform-bom                     framework/agent-bom                     规则
+agent-platform-stability               framework/agent-stability               规则
+agent-platform-common                  framework/agent-common                  规则
+agent-platform-obs                     framework/agent-obs                     规则
+agent-platform-tck                     framework/agent-tck                     规则
+agent-platform-asset                   framework/registry/asset-registry       规则
+agent-platform-a2a                     infrastructure/a2a/a2a-gateway          规则
+agent-platform-cache-redis             infrastructure/cache-redis              规则
+agent-platform-agent-domain-account    agents/account                          规则
+agent-platform-agent-domain-mock       infrastructure/samples/mock             规则
+agent-platform-agent-domain-oj         infrastructure/samples/oj               规则
+agent-platform-agent-domain-workflow   infrastructure/samples/workflow         规则
+
+# 分组目录（v0.4 §10）：
+#   framework/        可复用库：地基 + 意图 + 资产注册 + 运行时
+#   infrastructure/   A2A 网关、向下适配、samples 演示实现
+#   agents/           入口与科技域 Agent（代码 + assets）
+#
+# 唯一的新模块（不是改名）：
+#   framework/intent-engine/intent-engine-api   包名 com.huawei.finance.agent.intent

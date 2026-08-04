@@ -1,0 +1,10 @@
+agent:
+  id: agent.livelihood_service
+  displayName: 民生助手
+  roles: [domain]
+  domains: [livelihood_service]
+implementation: { mode: scaffold }
+runtime: { intentEngine: default, context: enabled, taskOrchestrator: enabled }
+a2a: { inbound: true, delegation: { enabled: true } }
+assets: { path: ./assets }
+storage: { namespace: livelihood-service }

@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: a2a-gateway
+  autoconfigure:
+    exclude:
+      - com.huawei.finance.intent.bootstrap.IntentEngineAutoConfiguration
+      - com.huawei.finance.runtime.bootstrap.AgentRuntimeAutoConfiguration
+      - com.huawei.finance.fastpath.FastPathConfiguration
+      - com.huawei.finance.slowpath.SlowPathConfiguration
+      - com.huawei.finance.orchestrator.OrchestratorConfiguration
+      - com.huawei.finance.context.ContextConfiguration
+      - com.huawei.finance.response.ResponseConfiguration
+      - com.huawei.finance.registry.asset.AssetRegistryAutoConfiguration
+      - com.huawei.finance.persistence.JdbcPersistenceAutoConfiguration
+      - com.huawei.finance.cache.redis.RedissonClientAutoConfiguration
+      - com.huawei.finance.cache.redis.RedisSessionLockAutoConfiguration
+      - com.huawei.finance.cache.redis.RedisDecisionCacheConfiguration
+      - com.huawei.finance.a2a.client.A2AClientAutoConfiguration
+      - com.huawei.finance.gateway.ModelGatewayConfiguration
+      - com.huawei.finance.registry.SearchOpenSearchAutoConfiguration
+server:
+  port: 8086
+management:
+  endpoints.web.exposure.include: health,info,prometheus
+logging:
+  structured:
+    format.console: logstash
+    json:
+      add:
+        service: ${spring.application.name}
+        agentId: ${huawei.finance.agent.id}
+        implementationMode: gateway
+        role: gateway
+huawei:
+  finance:
+    agent:
+      id: agent.a2a-gateway
+      nacos:
+        enabled: ${NACOS_ENABLED:false}
+        server-addr: ${NACOS_SERVER_ADDR:127.0.0.1:8848}
+        discovery:
+          register: false
+          group: HUAWEI_FINANCE_AGENT

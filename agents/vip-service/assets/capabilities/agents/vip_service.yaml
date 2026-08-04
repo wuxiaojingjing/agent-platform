@@ -1,0 +1,18 @@
+# 科技域子智能体：客户专享
+
+- capabilityId: agent.vip_service
+  name: 客户专享助手
+  type: AGENT
+  granularity: AGENT
+  domains: [vip_service]
+  description: 贵宾与专属权益相关的领域智能体。本期面客 TOOL 未开放
+  riskLevel: R0
+  timeoutMs: 5000
+  idempotency: SUPPORTED
+  owner: 客户专享领域
+  version: "1.0.0"
+  status: DISABLED
+  implementationStatus: SCAFFOLD
+  positiveBoundary: [贵宾服务, 专属权益]
+  negativeBoundary: [本期不办理贵宾升级, 本期不发放专属权益]
+  fallbackCapabilityIds: []

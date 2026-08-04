@@ -1,0 +1,10 @@
+agent:
+  id: agent.fund_service
+  displayName: 基金助手
+  roles: [domain]
+  domains: [fund_service]
+implementation: { mode: extension, artifact: "com.huawei.finance:fund-service" }
+runtime: { intentEngine: default, context: enabled, taskOrchestrator: enabled }
+a2a: { inbound: true, delegation: { enabled: true } }
+assets: { path: ./assets }
+storage: { namespace: fund-service }

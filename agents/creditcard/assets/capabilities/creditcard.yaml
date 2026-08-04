@@ -1,0 +1,128 @@
+# 信用卡 TOOL。AGENT 父卡见 agents/creditcard.yaml。
+#
+# 注意这里没有「信用卡额度调整」能力：额度调整在本期未开放，
+# 缺卡本身不足以保证拒绝——召回不到会走 NO_CANDIDATE 而不是 POLICY_BLOCK，
+# 措辞与后续引导完全不同。真正的拒绝由 rules/strong-rules.yaml 的策略规则给出。
+
+- capabilityId: cap.creditcard.bill.query
+  name: 查询信用卡账单
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.creditcard
+  domains: [creditcard_service]
+  description: 查询信用卡当期或历史账单金额、账单日与还款日。本能力不涉及借记卡余额、不支持调整额度或办理分期
+  supportedIntents:
+    - 查询信用卡账单
+    - 查看应还金额
+  utterances:
+    - 查一下我的信用卡账单
+    - 这个月要还多少
+    - 信用卡账单日是哪天
+    - 我的应还款金额
+  keywords: [账单, 应还, 还款日, 账单日, 信用卡]
+  requiredSlots: [cardRef]
+  inputSchema:
+    type: object
+    additionalProperties: false
+    required: [cardRef]
+    properties:
+      cardRef: {type: string, minLength: 1}
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 信用卡领域
+  version: "1.0.0"
+  status: ACTIVE
+
+- capabilityId: cap.creditcard.repay
+  name: 信用卡还款
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.creditcard
+  domains: [creditcard_service]
+  description: 用本人借记卡账户为信用卡还款。本能力不涉及向他人转账、不支持为他人的信用卡代还
+  supportedIntents:
+    - 信用卡还款
+  utterances:
+    - 我要还信用卡
+    - 帮我还款
+    - 还一下信用卡的钱
+  keywords: [还款, 还钱, 还信用卡]
+  requiredSlots: [amount]
+  inputSchema:
+    type: object
+    additionalProperties: false
+    required: [amount]
+    properties:
+      amount:
+        anyOf:
+          - {type: number, exclusiveMinimum: 0}
+          - {type: string, pattern: "^[0-9]+(?:\\.[0-9]{1,2})?$"}
+  sideEffects: [资金划转]
+  riskLevel: R2
+  timeoutMs: 5000
+  idempotency: REQUIRED
+  owner: 信用卡领域
+  version: "1.0.0"
+  status: ACTIVE
+
+- capabilityId: cap.card.replace
+  name: 换卡
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.creditcard
+  domains: [creditcard_service, account]
+  description: 因到期、损坏或磁条失效办理普通卡片更换，需先确定是信用卡还是借记卡。本能力不涉及挂失与冻结、不支持新开卡与销卡，也不承诺保留原卡号；用户提出保号诉求时必须先说明知识口径和办理边界
+  supportedIntents:
+    - 换卡
+    - 补办卡片
+  utterances:
+    - 换卡
+    - 我要换张卡
+    - 我要换信用卡
+    - 卡坏了要换
+    - 卡片到期换新
+  keywords: [换卡, 补卡, 换张卡, 卡片更换]
+  # cardType 是路由必需信息而非执行细节：信用卡与借记卡换卡走的是两条完全不同的后台流程。
+  # v0.7 §3.8 对「换卡」的验收就是「只问信用卡还是借记卡」。
+  requiredSlots: [cardType]
+  inputSchema:
+    type: object
+    additionalProperties: false
+    required: [cardType]
+    properties:
+      cardType: {type: string, enum: [信用卡, 借记卡]}
+  riskLevel: R1
+  confirmationPolicy: REVIEW_ONLY
+  timeoutMs: 5000
+  idempotency: SUPPORTED
+  owner: 信用卡领域
+  version: "1.0.0"
+  status: ACTIVE
+
+- capabilityId: workflow.creditcard.replace
+  name: 信用卡换卡流程
+  type: WORKFLOW
+  granularity: WORKFLOW
+  parentCapabilityId: agent.creditcard
+  domains: [creditcard_service]
+  description: 用户明确要求启动完整信用卡换卡流程时进入；本工作流不处理普通“换卡”，该入口仍由换卡能力承接
+  supportedIntents: [启动信用卡换卡流程]
+  utterances:
+    - 启动信用卡换卡流程
+    - 按信用卡换卡流程办理
+  keywords: [启动换卡流程, 信用卡换卡流程, 按流程办理]
+  requiredSlots: [cardType]
+  inputSchema:
+    type: object
+    additionalProperties: false
+    required: [cardType]
+    properties:
+      cardType: {type: string, enum: [信用卡]}
+  riskLevel: R1
+  confirmationPolicy: REVIEW_ONLY
+  timeoutMs: 5000
+  idempotency: SUPPORTED
+  owner: 信用卡领域
+  version: "1.0.0"
+  status: ACTIVE

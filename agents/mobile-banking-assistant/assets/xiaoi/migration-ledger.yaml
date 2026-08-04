@@ -1,0 +1,29 @@
+version: xiaoi-ledger-v1
+source:
+  systemAnalysis: 小I_iBot8系统解析与下一步建议 (4).pptx
+  reviewedWorkbook: 小i真实知识逐图复核A-V完整总表.xlsx
+  mappingDesign: agent-platform/docs/小i知识资产组织与现有意图体系映射设计.md
+  rolloutPlan: agent-platform/docs/小i分阶段消费计划_v0.1.md
+sampleFacts: {standardQuestions: 21, visibleRecords: 154, extendedQuestionRecords: 145, blockedDslRows: 9}
+items:
+  - {question: "汇款报错：26023", sourceStatus: REVIEWED, answerQuality: APPROVED, targetAssetId: qa.transfer.error.26023, blockedReason: null, lineage: "reviewed-workbook:standard-question:01", migrationStage: INTERNALIZED_BATCH_1}
+  - {question: "网银登录报错：7845", sourceStatus: REVIEWED, answerQuality: PLACEHOLDER, targetAssetId: null, blockedReason: "答案为!!!", lineage: "reviewed-workbook:standard-question:02", migrationStage: BLOCKED_SOURCE_REVIEW}
+  - {question: "利添利账户理财业务的介绍", sourceStatus: REVIEWED, answerQuality: MISSING, targetAssetId: null, blockedReason: "样本无标准答案", lineage: "reviewed-workbook:standard-question:03", migrationStage: BLOCKED_ANSWER_APPROVAL}
+  - {question: "开通储蓄卡“换卡无忧”方法", sourceStatus: REVIEWED, answerQuality: APPROVED, targetAssetId: qa.card.replacement-care.open, blockedReason: null, lineage: "reviewed-workbook:standard-question:04", migrationStage: INTERNALIZED_BATCH_1}
+  - {question: "调整存折账户属性的方法", sourceStatus: REVIEWED, answerQuality: APPROVED, targetAssetId: qa.passbook.account-attribute.adjust, blockedReason: null, lineage: "reviewed-workbook:standard-question:05", migrationStage: INTERNALIZED_BATCH_1}
+  - {question: "账户基本金属的获利挂单", sourceStatus: REVIEWED, answerQuality: MISSING, targetAssetId: null, blockedReason: "样本无标准答案", lineage: "reviewed-workbook:standard-question:06", migrationStage: BLOCKED_ANSWER_APPROVAL}
+  - {question: "预结汇汇款金额要求", sourceStatus: REVIEWED, answerQuality: MISSING, targetAssetId: null, blockedReason: "答案缺失且指令截断", lineage: "reviewed-workbook:standard-question:07", migrationStage: BLOCKED_SOURCE_REVIEW}
+  - {question: "通过网银将活期存折销户的方法", sourceStatus: REVIEWED, answerQuality: APPROVED, targetAssetId: qa.passbook.close.online-banking, blockedReason: null, lineage: "reviewed-workbook:standard-question:08", migrationStage: INTERNALIZED_BATCH_1}
+  - {question: "储蓄卡换卡换号受影响的业务", sourceStatus: REVIEWED, answerQuality: APPROVED, targetAssetId: qa.card.renumber.impact, blockedReason: null, lineage: "reviewed-workbook:standard-question:09", migrationStage: INTERNALIZED_BATCH_1}
+  - {question: "冲正明细摘要解释", sourceStatus: REVIEWED, answerQuality: MISSING, targetAssetId: null, blockedReason: "样本无标准答案", lineage: "reviewed-workbook:standard-question:10", migrationStage: BLOCKED_ANSWER_APPROVAL}
+  - {question: "企业手机银行登录方法", sourceStatus: REVIEWED, answerQuality: MISSING, targetAssetId: null, blockedReason: "样本无标准答案", lineage: "reviewed-workbook:standard-question:11", migrationStage: BLOCKED_ANSWER_APPROVAL}
+  - {question: "储蓄卡“换卡无忧”介绍", sourceStatus: REVIEWED, answerQuality: APPROVED, targetAssetId: qa.card.replacement-care.intro, blockedReason: null, lineage: "reviewed-workbook:standard-question:12", migrationStage: INTERNALIZED_BATCH_1}
+  - {question: "未成年人办理非开户业务规定", sourceStatus: REVIEWED, answerQuality: MISSING, targetAssetId: null, blockedReason: "样本无标准答案", lineage: "reviewed-workbook:standard-question:13", migrationStage: BLOCKED_ANSWER_APPROVAL}
+  - {question: "手机号规范化治理的介绍", sourceStatus: REVIEWED, answerQuality: MISSING, targetAssetId: null, blockedReason: "样本无标准答案", lineage: "reviewed-workbook:standard-question:14", migrationStage: BLOCKED_ANSWER_APPROVAL}
+  - {question: "银行卡换卡不换号", sourceStatus: REVIEWED, answerQuality: PLACEHOLDER, targetAssetId: null, blockedReason: "答案为-且指令nenu损坏", lineage: "reviewed-workbook:standard-question:15", migrationStage: BLOCKED_SOURCE_REVIEW}
+  - {question: "跨行汇款无法选择开户行名称的解决办法", sourceStatus: REVIEWED, answerQuality: MISSING, targetAssetId: null, blockedReason: "样本无标准答案", lineage: "reviewed-workbook:standard-question:16", migrationStage: BLOCKED_ANSWER_APPROVAL}
+  - {question: "企业法人基本户开户材料", sourceStatus: REVIEWED, answerQuality: MISSING, targetAssetId: null, blockedReason: "答案缺失且DSL截断", lineage: "reviewed-workbook:standard-question:17", migrationStage: BLOCKED_SOURCE_REVIEW}
+  - {question: "储蓄卡到期影响", sourceStatus: REVIEWED, answerQuality: CORRUPTED, targetAssetId: null, blockedReason: "答案标记与OCR损坏", lineage: "reviewed-workbook:standard-question:18", migrationStage: BLOCKED_SOURCE_REVIEW}
+  - {question: "查询银行卡办卡进度", sourceStatus: REVIEWED, answerQuality: MISSING, targetAssetId: null, blockedReason: "答案缺失且部分DSL截断", lineage: "reviewed-workbook:standard-question:19", migrationStage: BLOCKED_SOURCE_REVIEW}
+  - {question: "查询明细方法", sourceStatus: REVIEWED, answerQuality: MISSING, targetAssetId: null, blockedReason: "原图未显示标准答案", lineage: "reviewed-workbook:standard-question:20", migrationStage: BLOCKED_ANSWER_APPROVAL}
+  - {question: "存单取款密码忘记/冻结", sourceStatus: REVIEWED, answerQuality: MISSING, targetAssetId: null, blockedReason: "答案缺失且一条DSL截断", lineage: "reviewed-workbook:standard-question:21", migrationStage: BLOCKED_SOURCE_REVIEW}

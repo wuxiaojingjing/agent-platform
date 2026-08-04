@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://huawei.finance.agent.com/schema/route-decision.schema.json",
+  "type": "object",
+  "required": ["decision", "candidateIds", "taskShape", "confidence", "reasonCode"],
+  "properties": {
+    "decision": {"type": "string", "enum": ["DIRECT_KNOWLEDGE", "NAVIGATION", "EXECUTE_CAPABILITY", "START_WORKFLOW", "STATIC_PLAN", "DELEGATE_GOAL", "START_LOOP", "RESUME_TASK", "RESUME_LOOP", "CLARIFY", "CANCEL", "REJECT", "HANDOFF"]},
+    "target": {"type": ["object", "null"], "properties": {"type": {"type": "string"}, "id": {"type": ["string", "null"]}}},
+    "candidateIds": {"type": "array", "items": {"type": "string"}},
+    "taskShape": {"type": "string", "enum": ["SINGLE_ACTION", "FIXED_MULTI_STEP", "CONDITIONAL_PLAN", "OPEN_ENDED_DIAGNOSIS", "OBSERVATION_DRIVEN", "AMBIGUOUS_GOAL", "UNSUPPORTED_GOAL"]},
+    "missingSlots": {"type": "array", "items": {"type": "string"}},
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "reasonCode": {"type": "string"},
+    "evidenceRefs": {"type": "array", "items": {"type": "string"}},
+    "modelVersion": {"type": "string"},
+    "promptVersion": {"type": "string"},
+    "configVersion": {"type": "string"},
+    "shortCircuit": {"type": "string"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"decision": {"const": "EXECUTE_CAPABILITY"}}},
+      "then": {"properties": {"candidateIds": {"minItems": 1, "maxItems": 1}}}
+    },
+    {
+      "if": {"properties": {"decision": {"const": "CLARIFY"}, "reasonCode": {"const": "MISSING_SLOT"}}},
+      "then": {"properties": {"missingSlots": {"minItems": 1}}}
+    }
+  ]
+}

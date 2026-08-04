@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://huawei.finance.agent.com/schema/response-plan.schema.json",
+  "title": "ResponsePlan",
+  "description": "回复编排 → 渲染/融合回复层（v0.7 附录 B，字段语义见 §3.7）",
+  "type": "object",
+  "required": ["traceId", "responsePhase", "templateKey", "renderMode"],
+  "properties": {
+    "traceId": {"type": "string", "minLength": 1},
+    "taskId": {"type": "string"},
+    "sceneCode": {"type": "string"},
+    "responsePhase": {
+      "type": "string",
+      "enum": ["ACK", "PROGRESS", "CLARIFY", "REVIEW", "SWITCH_REVIEW", "CONFIRM", "FINAL", "ERROR"]
+    },
+    "templateKey": {"type": "string", "minLength": 1},
+    "templateVersion": {"type": "string"},
+    "renderMode": {"type": "string", "enum": ["TEMPLATE", "MODEL_SELECT", "POLISH", "GENERATE"]},
+    "responseModel": {"type": ["string", "null"]},
+    "approvedTemplateKeys": {"type": "array", "items": {"type": "string"}},
+    "responseTemperature": {"type": "number", "minimum": 0, "maximum": 2},
+    "responseMaxTokens": {"type": "integer", "minimum": 32},
+    "responsePolicyVersion": {"type": ["string", "null"]},
+    "responsePromptVersion": {"type": ["string", "null"]},
+    "slots": {"type": "object"},
+    "cardComponents": {"type": "array", "items": {"type": "string"}},
+    "actionCodes": {"type": "array", "items": {"type": "string"}},
+    "riskNoticeCodes": {"type": "array", "items": {"type": "string"}},
+    "channel": {"type": "string"},
+    "locale": {"type": "string"},
+    "fallbackTemplateKey": {"type": "string"}
+  }
+}

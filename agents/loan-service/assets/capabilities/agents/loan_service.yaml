@@ -1,0 +1,19 @@
+# 科技域子智能体：贷款服务
+
+- capabilityId: agent.loan_service
+  name: 贷款助手
+  type: AGENT
+  granularity: AGENT
+  domains: [loan_service]
+  description: 贷款产品咨询与申请入口相关的领域智能体。本 Agent 不审批贷款、不承诺额度或利率
+  riskLevel: R0
+  timeoutMs: 8000
+  idempotency: SUPPORTED
+  owner: 贷款领域
+  version: "1.0.0"
+  status: ACTIVE
+  implementationStatus: IMPLEMENTED
+  positiveBoundary: [贷款产品咨询, 还款信息说明, 贷款申请入口]
+  negativeBoundary: [不审批贷款, 不承诺额度, 不承诺最终利率, 不执行未开放申请]
+  fallbackCapabilityIds: []
+  loopAccess: DEFAULT

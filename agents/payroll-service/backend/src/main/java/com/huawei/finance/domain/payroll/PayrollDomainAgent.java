@@ -1,0 +1,8 @@
+package com.huawei.finance.domain.payroll;
+import com.huawei.finance.contracts.model.Enums; import com.huawei.finance.contracts.model.TaskResult; import com.huawei.finance.contracts.model.UnifiedTask; import com.huawei.finance.contracts.port.TechDomainAgent; import java.util.List; import java.util.Map; import java.util.Set;
+public final class PayrollDomainAgent implements TechDomainAgent {
+    private static final Set<String> SUPPORTED=Set.of("cap.payroll.status.query"); private final PayrollStatusPort port; public PayrollDomainAgent(PayrollStatusPort port){this.port=port;}
+    public String techDomainCode(){return "payroll_service";} public String agentId(){return "agent.payroll_service";} public boolean supports(String id){return SUPPORTED.contains(id);} public Set<String> advertisedCapabilities(){return SUPPORTED;}
+    public TaskResult execute(UnifiedTask task){if(!task.executable())return out(task,Enums.TaskStatus.FAILED,Enums.FailureClass.FATAL,Map.of("error","MISSING_IDEMPOTENCY_KEY"));String p=String.valueOf(task.parameters().getOrDefault("principalRef",""));if(p.isBlank())return out(task,Enums.TaskStatus.NEED_USER,Enums.FailureClass.NEED_USER,Map.of("missingSlots",List.of("principalRef")));try{var r=port.status(p);return out(task,Enums.TaskStatus.SUCCESS,Enums.FailureClass.NONE,Map.of("payrollStatus",r.status(),"lastArrivalDate",r.lastArrivalDate(),"employer",r.employer()));}catch(RuntimeException e){return out(task,Enums.TaskStatus.FAILED,Enums.FailureClass.RETRYABLE,Map.of("reasonCode","PAYROLL_BACKEND_UNAVAILABLE"));}}
+    private static TaskResult out(UnifiedTask t,Enums.TaskStatus s,Enums.FailureClass f,Map<String,Object> p){return new TaskResult(t.taskId(),s,f,p,t.idempotencyKey(),t.guardrailCheck());}
+}

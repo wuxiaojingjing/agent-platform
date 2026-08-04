@@ -1,0 +1,10 @@
+agent:
+  id: agent.finance_assistant
+  displayName: 金融助手
+  roles: [domain, routing]
+  domains: [finance_assistant]
+implementation: { mode: extension, artifact: "com.huawei.finance:finance-assistant" }
+runtime: { intentEngine: default, context: enabled, taskOrchestrator: enabled }
+a2a: { inbound: true, delegation: { enabled: true } }
+assets: { path: ./assets }
+storage: { namespace: finance-assistant }

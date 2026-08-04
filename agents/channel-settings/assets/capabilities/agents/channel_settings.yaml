@@ -1,0 +1,18 @@
+# 科技域子智能体：渠道设置
+
+- capabilityId: agent.channel_settings
+  name: 渠道设置助手
+  type: AGENT
+  granularity: AGENT
+  domains: [channel_settings]
+  description: 渠道偏好与通知设置相关的领域智能体。本期面客 TOOL 未开放
+  riskLevel: R0
+  timeoutMs: 5000
+  idempotency: SUPPORTED
+  owner: 金融助手领域
+  version: "1.0.0"
+  status: DISABLED
+  implementationStatus: SCAFFOLD
+  positiveBoundary: [渠道偏好, 通知设置]
+  negativeBoundary: [本期不修改渠道设置, 本期不修改通知设置]
+  fallbackCapabilityIds: []

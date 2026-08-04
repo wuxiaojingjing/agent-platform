@@ -1,0 +1,643 @@
+# 模板注册表。
+#
+# 每个模板显式声明变量 Schema，渲染前校验（实施架构 §5 第 5 条：
+# 渲染用 Freemarker，变量校验用 JSON Schema，严禁自研模板引擎）。
+#
+# 为什么变量要校验：模板缺变量时 Freemarker 默认抛异常或渲染出空白，
+# 在面客链路上表现为「金额那一栏什么都没有」——比直接报错更危险。
+# 校验不过就走 fallbackTemplateKey，宁可给一句保守的话，不给一句缺数字的话。
+
+templates:
+
+  - key: tpl.action.stale
+    file: action-stale.ftl
+    version: "1.0.0"
+    phase: REVIEW
+    variables: {type: object, properties: {}}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.resume.restored
+    file: resume-restored.ftl
+    version: "1.0.0"
+    phase: ACK
+    variables: {type: object, properties: {}}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.resume.review
+    file: resume-review.ftl
+    version: "1.0.0"
+    phase: REVIEW
+    variables:
+      type: object
+      required: [summary]
+      properties:
+        summary: {type: string}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.resume.confirm
+    file: resume-confirm.ftl
+    version: "1.0.0"
+    phase: CONFIRM
+    variables:
+      type: object
+      required: [summary]
+      properties:
+        summary: {type: string}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.resume.select
+    file: resume-select.ftl
+    version: "1.0.0"
+    phase: CLARIFY
+    variables:
+      type: object
+      required: [tasks]
+      properties:
+        tasks: {type: array, minItems: 2, items: {type: string}}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.switch.review
+    file: switch-review.ftl
+    version: "1.0.0"
+    phase: SWITCH_REVIEW
+    variables: {type: object, properties: {}}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.switch.rejected
+    file: switch-rejected.ftl
+    version: "1.0.0"
+    phase: ACK
+    variables: {type: object, properties: {}}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.switch.suspended-limit
+    file: switch-suspended-limit.ftl
+    version: "1.0.0"
+    phase: SWITCH_REVIEW
+    variables: {type: object, properties: {}}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.loop.clarify
+    file: loop-clarify.ftl
+    version: "1.0.0"
+    phase: CLARIFY
+    variables: &loopVariables
+      type: object
+      required: [summary, reason]
+      properties:
+        summary: {type: string}
+        reason: {type: string}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.loop.review
+    file: loop-review.ftl
+    version: "1.0.0"
+    phase: REVIEW
+    variables: *loopVariables
+    fallback: tpl.fallback.generic
+
+  - key: tpl.loop.confirm
+    file: loop-confirm.ftl
+    version: "1.0.0"
+    phase: CONFIRM
+    variables: *loopVariables
+    fallback: tpl.fallback.generic
+
+  - key: tpl.loop.final
+    file: loop-final.ftl
+    version: "1.0.0"
+    phase: FINAL
+    variables: *loopVariables
+    fallback: tpl.fallback.generic
+
+  - key: tpl.loop.handoff
+    file: loop-handoff.ftl
+    version: "1.0.0"
+    phase: FINAL
+    variables: *loopVariables
+    fallback: tpl.fallback.generic
+
+  - key: tpl.loop.error
+    file: loop-error.ftl
+    version: "1.0.0"
+    phase: ERROR
+    variables: *loopVariables
+    fallback: tpl.fallback.generic
+
+  - key: tpl.balance.result
+    file: balance-result.ftl
+    version: "1.0.0"
+    phase: FINAL
+    variables:
+      type: object
+      required: [accountAlias, availableBalance, currency]
+      properties:
+        accountAlias: {type: string}
+        availableBalance: {type: string}
+        currency: {type: string}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.bill.result
+    file: bill-result.ftl
+    version: "1.0.0"
+    phase: FINAL
+    variables:
+      type: object
+      required: [billAmount, currency, dueDate]
+      properties:
+        billAmount: {type: string}
+        currency: {type: string}
+        dueDate: {type: string}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.card-replace.review
+    file: card-replace-review.ftl
+    version: "1.0.0"
+    phase: REVIEW
+    variables:
+      type: object
+      required: [cardType]
+      properties:
+        cardType: {type: string, enum: [CREDIT, DEBIT]}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.payroll.result
+    file: payroll-result.ftl
+    version: "1.0.0"
+    phase: FINAL
+    variables:
+      type: object
+      required: [payrollArrived]
+      properties:
+        payrollArrived: {type: boolean}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.payroll-status.result
+    file: payroll-status-result.ftl
+    version: "1.0.0"
+    phase: FINAL
+    variables:
+      type: object
+      required: [payrollStatus, lastArrivalDate, employer]
+      properties:
+        payrollStatus: {type: string}
+        lastArrivalDate: {type: string}
+        employer: {type: string}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.card-status.result
+    file: card-status-result.ftl
+    version: "1.0.0"
+    phase: FINAL
+    variables:
+      type: object
+      required: [cardStatus]
+      properties:
+        cardStatus: {type: string}
+        accountAlias: {type: string}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.transaction.result
+    file: transaction-result.ftl
+    version: "1.0.0"
+    phase: FINAL
+    variables:
+      type: object
+      required: [accountAlias, transactions]
+      properties:
+        accountAlias: {type: string}
+        transactions:
+          type: array
+          items:
+            type: object
+            required: [date, description, amount]
+            properties:
+              date: {type: string}
+              description: {type: string}
+              amount: {type: string}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.wealth.result
+    file: wealth-result.ftl
+    version: "1.0.0"
+    phase: FINAL
+    variables:
+      type: object
+      required: [totalAsset, profit, currency]
+      properties:
+        totalAsset: {type: string}
+        profit: {type: string}
+        currency: {type: string}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.product.result
+    file: product-result.ftl
+    version: "1.0.0"
+    phase: FINAL
+    variables:
+      type: object
+      required: [name, domain, riskLevel, returnRate, term]
+      properties:
+        name: {type: string}
+        domain: {type: string}
+        riskLevel: {type: string}
+        returnRate: {type: string}
+        term: {type: string}
+    fallback: tpl.fallback.generic
+
+  # 跨域产品对比（场景 4）。缺字段用「—」，禁止模板侧编造可比数字
+  - key: tpl.product.compare
+    file: product-compare.ftl
+    version: "1.0.0"
+    phase: FINAL
+    variables:
+      type: object
+      required: [leftName, leftDomain, leftRiskLevel, leftReturnRate, leftTerm,
+                 rightName, rightDomain, rightRiskLevel, rightReturnRate, rightTerm]
+      properties:
+        leftName: {type: string}
+        leftDomain: {type: string}
+        leftRiskLevel: {type: string}
+        leftReturnRate: {type: string}
+        leftTerm: {type: string}
+        rightName: {type: string}
+        rightDomain: {type: string}
+        rightRiskLevel: {type: string}
+        rightReturnRate: {type: string}
+        rightTerm: {type: string}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.product.compare.incomparable
+    file: product-compare-incomparable.ftl
+    version: "1.0.0"
+    phase: CLARIFY
+    variables:
+      type: object
+      required: [leftName, leftType, rightName, rightType, options]
+      properties:
+        leftName: {type: string}
+        leftType: {type: string}
+        rightName: {type: string}
+        rightType: {type: string}
+        options: {type: array, minItems: 0, items: {type: string}}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.nav.open
+    file: nav-open.ftl
+    version: "1.0.0"
+    phase: FINAL
+    variables:
+      type: object
+      required: [menuName, action]
+      properties:
+        menuName: {type: string}
+        menuId: {type: string}
+        bksPath: {type: string}
+        action: {type: string}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.repay.confirm
+    file: repay-confirm.ftl
+    version: "1.0.0"
+    phase: CONFIRM
+    variables:
+      type: object
+      required: [amount, currency]
+      properties:
+        amount: {type: string}
+        currency: {type: string}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.repay.result
+    file: repay-result.ftl
+    version: "1.0.0"
+    phase: FINAL
+    variables:
+      type: object
+      required: [amount, currency, serialNo]
+      properties:
+        amount: {type: string}
+        currency: {type: string}
+        serialNo: {type: string}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.transfer.confirm
+    file: transfer-confirm.ftl
+    version: "1.0.0"
+    phase: CONFIRM
+    variables:
+      type: object
+      required: [payee, currency]
+      anyOf:
+        - required: [amount]
+        - required: [amountBasis]
+      properties:
+        payee: {type: string}
+        amount: {type: string}
+        amountBasis: {type: string, enum: [REQUERY_THEN_HALF]}
+        currency: {type: string}
+        fromAccount: {type: string}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.transfer.result
+    file: transfer-result.ftl
+    version: "1.0.0"
+    phase: FINAL
+    variables:
+      type: object
+      required: [payee, amount, currency, serialNo]
+      properties:
+        payee: {type: string}
+        amount: {type: string}
+        currency: {type: string}
+        serialNo: {type: string}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.card-replace.result
+    file: card-replace-result.ftl
+    version: "1.0.0"
+    phase: FINAL
+    variables:
+      type: object
+      required: [cardTypeName, applicationNo]
+      properties:
+        cardTypeName: {type: string}
+        applicationNo: {type: string}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.clarify.slot
+    file: clarify-slot.ftl
+    version: "1.0.0"
+    phase: CLARIFY
+    variables:
+      type: object
+      required: [question]
+      properties:
+        question: {type: string}
+        options:
+          type: array
+          items: {type: string}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.clarify.multi-task
+    file: clarify-multi-task.ftl
+    version: "1.0.0"
+    phase: CLARIFY
+    variables:
+      type: object
+      required: [question]
+      properties:
+        question: {type: string}
+        taskSummaries:
+          type: array
+          items: {type: string}
+    fallback: tpl.fallback.generic
+
+  # Slow Path 已经产出事实后是正常结果，不再回到「请选择一件」的澄清态。
+  # 领域化措辞留在产品资产里；Framework 只提供按能力命名的事实和计划进度。
+  - key: tpl.plan.progress
+    file: plan-progress.ftl
+    version: "1.0.0"
+    phase: FINAL
+    variables:
+      type: object
+      required: [capabilities, completedSummaries, remainingSummaries, completedCount, totalCount]
+      properties:
+        capabilities: {type: object}
+        completedSummaries:
+          type: array
+          items: {type: string}
+        remainingSummaries:
+          type: array
+          items: {type: string}
+        completedCount: {type: integer}
+        totalCount: {type: integer}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.plan.result
+    file: plan-result.ftl
+    version: "1.0.0"
+    phase: FINAL
+    variables:
+      type: object
+      required: [capabilities, completedSummaries, remainingSummaries, completedCount, totalCount]
+      properties:
+        capabilities: {type: object}
+        completedSummaries:
+          type: array
+          items: {type: string}
+        remainingSummaries:
+          type: array
+          items: {type: string}
+        completedCount: {type: integer}
+        totalCount: {type: integer}
+    fallback: tpl.fallback.generic
+
+  # 条件依赖判不出来时问回用户。判不了就问，不替用户决定——多意图计划里这类条件
+  # 常常挂在资金动作上，猜错的方向是「本该停下却转了账」
+  - key: tpl.clarify.condition
+    file: clarify-condition.ftl
+    version: "1.0.0"
+    phase: CLARIFY
+    variables:
+      type: object
+      required: [condition, taskSummary]
+      properties:
+        condition: {type: string}
+        taskSummary: {type: string}
+        options:
+          type: array
+          items: {type: string}
+    fallback: tpl.fallback.generic
+
+  # 条件判成「不做」。说清是按用户自己给的条件停的，否则看起来像系统漏办
+  - key: tpl.answer.condition-not-met
+    file: condition-not-met.ftl
+    version: "1.0.0"
+    phase: FINAL
+    variables:
+      type: object
+      required: [condition, taskSummary]
+      properties:
+        condition: {type: string}
+        taskSummary: {type: string}
+    fallback: tpl.fallback.generic
+
+  - key: tpl.reject.capability-not-open
+    file: reject-capability-not-open.ftl
+    version: "1.0.0"
+    phase: ERROR
+    variables:
+      type: object
+      required: [capabilityName]
+      properties:
+        capabilityName: {type: string}
+        alternativeEntry: {type: string}
+    fallback: tpl.fallback.handoff
+
+  - key: tpl.reject.clarify-exhausted
+    file: reject-clarify-exhausted.ftl
+    version: "1.0.0"
+    phase: ERROR
+    variables:
+      type: object
+      properties: {}
+    fallback: tpl.fallback.handoff
+
+  - key: tpl.reject.guardrail
+    file: reject-guardrail.ftl
+    version: "1.0.0"
+    phase: ERROR
+    variables:
+      type: object
+      required: [reasonText]
+      properties:
+        reasonText: {type: string}
+    fallback: tpl.fallback.handoff
+
+  - key: tpl.cancel.ack
+    file: cancel-ack.ftl
+    version: "1.0.0"
+    phase: FINAL
+    variables:
+      type: object
+      properties: {}
+    fallback: tpl.fallback.generic
+
+  # 标准问答直答（FP-1I）。模板体只有一个变量：措辞写在 standard-qa.yaml 的条目里，
+  # 不在这里。此处若写死任何一句话，等于给标准答案加了一层没人知道的外壳
+  - key: tpl.answer.standard
+    file: answer-standard.ftl
+    version: "1.0.0"
+    phase: FINAL
+    variables:
+      type: object
+      required: [answer]
+      properties:
+        answer: {type: string}
+        actionLabel: {type: string}
+        actionCapabilityId: {type: string}
+    fallback: tpl.fallback.generic
+
+  # 兜底模板不允许再有 fallback，否则可能形成回退环
+  - key: tpl.fallback.generic
+    file: fallback-generic.ftl
+    version: "1.0.0"
+    phase: ERROR
+    variables:
+      type: object
+      properties: {}
+
+  - key: tpl.fallback.handoff
+    file: fallback-handoff.ftl
+    version: "1.0.0"
+    phase: ERROR
+    variables:
+      type: object
+      properties: {}
+
+  # 结果未知（领域调用超时且能力有副作用）。与 generic 分开是因为这一类**不能引导重试**：
+  # 超时并没有撤回已经发出的操作，说「请重试」等于让用户再转一次钱。
+  # 措辞归业务部，但「不说失败、不引导重试」这条是设计约束，改词可以，改掉这层意思不行。
+  - key: tpl.fallback.uncertain
+    file: fallback-uncertain.ftl
+    version: "1.0.0"
+    phase: ERROR
+    variables:
+      type: object
+      properties: {}
+
+# 能力 → 各阶段模板。
+#
+# 这份映射放资产而不是写进回复层代码：新增一个能力时要配的是话术，不是发一次版本。
+# 按阶段而非只按能力索引，是因为同一个能力在确认阶段和完成阶段说的是两句完全不同的话，
+# 而 R2 能力必然要经过这两个阶段。
+capabilityTemplates:
+  cap.nav.bond_service_储蓄国债:
+    FINAL: tpl.nav.open
+  cap.account.balance.query:
+    FINAL: tpl.balance.result
+  cap.account.transaction.query:
+    FINAL: tpl.transaction.result
+  cap.payroll.arrival.query:
+    FINAL: tpl.payroll.result
+  cap.account.card.status.query:
+    FINAL: tpl.card-status.result
+  cap.wealth.holding.query:
+    FINAL: tpl.wealth.result
+  cap.fund.product.query:
+    FINAL: tpl.product.result
+  cap.deposit.product.query:
+    FINAL: tpl.product.result
+  cap.loan.product.query:
+    FINAL: tpl.product.result
+  cap.wealth-product.product.query:
+    FINAL: tpl.product.result
+  cap.wealth-product.product-b2.query:
+    FINAL: tpl.product.result
+  cap.payroll.status.query:
+    FINAL: tpl.payroll-status.result
+  cap.insurance.product.query:
+    FINAL: tpl.product.result
+  cap.creditcard.bill.query:
+    FINAL: tpl.bill.result
+  cap.creditcard.repay:
+    CONFIRM: tpl.repay.confirm
+    FINAL: tpl.repay.result
+  cap.card.replace:
+    REVIEW: tpl.card-replace.review
+    FINAL: tpl.card-replace.result
+  workflow.creditcard.replace:
+    REVIEW: tpl.card-replace.review
+    FINAL: tpl.card-replace.result
+  cap.transfer:
+    CONFIRM: tpl.transfer.confirm
+    FINAL: tpl.transfer.result
+  cap.nav.wealth_aggregate_查询我的资产:
+    FINAL: tpl.nav.open
+  cap.nav.wealth_aggregate_资产诊断:
+    FINAL: tpl.nav.open
+  cap.nav.fund_service_查询基金持仓:
+    FINAL: tpl.nav.open
+  cap.nav.fund_service_查询基金收益:
+    FINAL: tpl.nav.open
+  cap.nav.fund_service_看基金行情:
+    FINAL: tpl.nav.open
+  cap.nav.fund_service_看基金资讯:
+    FINAL: tpl.nav.open
+  cap.nav.fund_service_基金选品:
+    FINAL: tpl.nav.open
+  cap.nav.fund_service_基金解读:
+    FINAL: tpl.nav.open
+  cap.nav.fund_service_基金对比:
+    FINAL: tpl.nav.open
+  cap.nav.wealth_aggregate_基金财富学苑:
+    FINAL: tpl.nav.open
+  cap.nav.wealth_product_理财选品购买:
+    FINAL: tpl.nav.open
+  cap.nav.wealth_product_查询理财持仓:
+    FINAL: tpl.nav.open
+  cap.nav.creditcard_service_信用卡还款:
+    FINAL: tpl.nav.open
+  cap.nav.account_查询账户余额:
+    FINAL: tpl.nav.open
+  cap.nav.account_查询开户行:
+    FINAL: tpl.nav.open
+  cap.nav.account_查询收支明细:
+    FINAL: tpl.nav.open
+  cap.nav.account_收支分析:
+    FINAL: tpl.nav.open
+  cap.nav.transfer_快速转账:
+    FINAL: tpl.nav.open
+  cap.nav.wealth_aggregate_产品信息查询:
+    FINAL: tpl.nav.open
+  cap.nav.wealth_aggregate_风险评测:
+    FINAL: tpl.nav.open
+  cap.nav.wealth_product_理财交易记录:
+    FINAL: tpl.nav.open
+  cap.nav.wealth_product_理财定投:
+    FINAL: tpl.nav.open
+  cap.nav.fund_service_基金定投:
+    FINAL: tpl.nav.open
+  cap.nav.creditcard_service_信用卡账单:
+    FINAL: tpl.nav.open

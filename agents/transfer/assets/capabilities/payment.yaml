@@ -1,0 +1,46 @@
+# 转账 TOOL。AGENT 父卡见 agents/transfer.yaml（科技域：转账服务）。
+
+- capabilityId: cap.transfer
+  name: 转账
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.transfer
+  domains: [transfer]
+  description: 向指定收款人转账指定金额。本能力不涉及信用卡还款、不用于跨境汇款与外币购汇
+  supportedIntents:
+    - 转账
+    - 汇款
+    - 给某人打钱
+  utterances:
+    - 给张三转 1000
+    - 我要转账
+    - 帮我汇 500 给李四
+    - 转钱给老徐
+    # 场景 5：工作记忆指代。挂例句给规则通道满分，避免「第 N 张卡」被近邻域拉成跨域
+    - 用第二张卡转一半给张三
+    - 使用账户列表中第二个账户转一半给张三
+    - 使用已选账户向张三转账
+  keywords: [转账, 汇款, 转钱, 打钱, 转给, 转一半, 使用账户转]
+  requiredSlots: [payee, amount]
+  inputSchema:
+    type: object
+    additionalProperties: false
+    required: [payee, amount]
+    properties:
+      payee: {type: string, minLength: 1}
+      amount:
+        x-value-type: decimal
+        anyOf:
+          - {type: number, exclusiveMinimum: 0}
+          - {type: string, pattern: "^[0-9]+(?:\\.[0-9]{1,2})?$"}
+      accountOrdinal: {type: integer, minimum: 1}
+      amountBasis: {type: string, enum: [REQUERY_THEN_HALF]}
+      fromAccount: {type: string, minLength: 1}
+  sideEffects: [资金划转]
+  preconditions: [已登录, 已通过风控校验]
+  riskLevel: R2
+  timeoutMs: 8000
+  idempotency: REQUIRED
+  owner: 支付领域
+  version: "1.0.0"
+  status: ACTIVE

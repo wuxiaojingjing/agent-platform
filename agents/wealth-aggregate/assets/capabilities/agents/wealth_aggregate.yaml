@@ -1,0 +1,14 @@
+# 科技域子智能体：财富聚合服务
+
+- capabilityId: agent.wealth_aggregate
+  name: 财富聚合助手
+  type: AGENT
+  granularity: AGENT
+  domains: [wealth_aggregate]
+  description: 理财持仓与财富聚合查询相关的领域智能体
+  riskLevel: R0
+  timeoutMs: 5000
+  idempotency: SUPPORTED
+  owner: 财富领域
+  version: "1.0.0"
+  status: ACTIVE

@@ -1,0 +1,14 @@
+# 科技域子智能体：信用卡服务
+
+- capabilityId: agent.creditcard
+  name: 信用卡助手
+  type: AGENT
+  granularity: AGENT
+  domains: [creditcard_service]
+  description: 信用卡账单、还款、卡片服务相关的领域智能体
+  riskLevel: R0
+  timeoutMs: 5000
+  idempotency: SUPPORTED
+  owner: 信用卡领域
+  version: "1.0.0"
+  status: ACTIVE

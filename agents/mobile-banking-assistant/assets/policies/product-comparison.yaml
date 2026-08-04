@@ -1,0 +1,18 @@
+version: product-comparison-v1
+requireSameProductType: true
+intentMarkers: [对比, 比较]
+
+groups:
+  INSURANCE:
+    displayName: 保险产品
+    dimensions: [保障范围, 保费, 保障期限, 免责条款]
+  WEALTH:
+    displayName: 理财产品
+    dimensions: [风险等级, 产品期限, 业绩比较基准, 起购金额]
+
+onIncompatible:
+  decision: CLARIFY
+  reasonCode: INCOMPARABLE_PRODUCT_TYPE
+  templateKey: tpl.product.compare.incomparable
+  allowSeparateView: true
+  separateViewOptionTemplate: "查看%s"

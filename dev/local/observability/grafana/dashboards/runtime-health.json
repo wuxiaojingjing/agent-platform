@@ -1,0 +1,11 @@
+{
+  "uid": "agent-platform-runtime", "title": "Agent Platform - Runtime Health",
+  "schemaVersion": 41, "version": 1, "refresh": "10s", "time": {"from": "now-30m", "to": "now"},
+  "panels": [
+    {"id": 1, "type": "stat", "title": "Application Targets UP", "datasource": {"type": "prometheus", "uid": "prometheus"}, "targets": [{"refId": "A", "expr": "sum(up{job=\"agent-platform\"})"}], "gridPos": {"h": 6, "w": 6, "x": 0, "y": 0}},
+    {"id": 2, "type": "timeseries", "title": "Process CPU", "datasource": {"type": "prometheus", "uid": "prometheus"}, "targets": [{"refId": "A", "expr": "process_cpu_usage{job=\"agent-platform\"}"}], "fieldConfig": {"defaults": {"unit": "percentunit"}}, "gridPos": {"h": 8, "w": 18, "x": 6, "y": 0}},
+    {"id": 3, "type": "timeseries", "title": "JVM Heap Used", "datasource": {"type": "prometheus", "uid": "prometheus"}, "targets": [{"refId": "A", "expr": "sum by (application, agentId) (jvm_memory_used_bytes{job=\"agent-platform\",area=\"heap\"})"}], "fieldConfig": {"defaults": {"unit": "bytes"}}, "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}},
+    {"id": 4, "type": "timeseries", "title": "Live Threads", "datasource": {"type": "prometheus", "uid": "prometheus"}, "targets": [{"refId": "A", "expr": "jvm_threads_live_threads{job=\"agent-platform\"}"}], "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}},
+    {"id": 5, "type": "table", "title": "Process Start Time (restart evidence)", "datasource": {"type": "prometheus", "uid": "prometheus"}, "targets": [{"refId": "A", "expr": "process_start_time_seconds{job=\"agent-platform\"}", "format": "table", "instant": true}], "gridPos": {"h": 9, "w": 24, "x": 0, "y": 16}}
+  ]
+}

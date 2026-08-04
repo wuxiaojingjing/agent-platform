@@ -1,0 +1,37 @@
+# 转账办理流程（测试用声明，同时充当给行内看的样例）。
+#
+# 这份文件替掉的是「手写一个 TransferService，把查账户、校额度、提交、发通知串起来」
+# 那段代码。顺序在这里，业务动作在各自的 DomainOperation 里，两者都能单独评审。
+
+capabilityId: cap.transfer
+version: "1.0.0"
+description: 查默认付款账户 → 校本行限额 → 提交划转 → 按需发通知
+
+steps:
+  # 查账户失败多半是核心系统抖动，原样重放有意义
+  - id: account
+    operation: payment.resolveDefaultAccount
+    onError: RETRYABLE
+
+  # 超限是业务规则拒绝，重放不会有不同结果。判断本身写在操作里，
+  # 因为「超限」的口径需要单测，而 YAML 里的条件表达式没法测
+  - id: limit
+    operation: payment.checkLimit
+    onError: FATAL
+
+  - id: submit
+    operation: payment.submitTransfer
+    onError: FATAL
+
+  # 大额才发通知：条件不成立时这个节点根本不会被调度，Trace 里也不会有它的记录
+  - id: notify
+    operation: payment.sendNotice
+    when: submit.noticeRequired
+    onError: RETRYABLE
+
+result:
+  payee: params.payee
+  amount: params.amount
+  fromAccount: account.accountNo
+  serialNo: submit.serialNo
+  noticeId: notify.noticeId

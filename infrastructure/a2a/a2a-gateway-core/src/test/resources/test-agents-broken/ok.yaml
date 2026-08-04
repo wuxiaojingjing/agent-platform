@@ -1,0 +1,8 @@
+- capabilityId: agent.ok
+  name: 好卡
+  type: AGENT
+  granularity: AGENT
+  domains: [ok]
+  riskLevel: R0
+  timeoutMs: 1000
+  status: ACTIVE

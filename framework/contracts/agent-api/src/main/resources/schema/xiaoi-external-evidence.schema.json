@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://huawei.finance.agent.com/schema/xiaoi-external-evidence.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["callStatus", "matchStatus", "resultType", "dimension", "actionRefs", "sourceVersion"],
+  "properties": {
+    "callStatus": {"type": "string", "enum": ["SUCCEEDED", "TIMEOUT", "FAILED"]},
+    "matchStatus": {"type": "string", "enum": ["MATCHED", "UNMATCHED", "AMBIGUOUS"]},
+    "resultType": {"type": "string", "enum": ["KNOWLEDGE", "MENU", "SERVICE", "CLARIFY", "DEFAULT_REPLY"]},
+    "knowledgeId": {"type": ["string", "null"]},
+    "rawScore": {"type": ["number", "null"]},
+    "dimension": {"type": "object", "additionalProperties": {"type": "string"}},
+    "actionRefs": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "legacySessionRef": {"type": ["string", "null"]},
+    "sourceVersion": {"type": "string"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"resultType": {"const": "KNOWLEDGE"}, "matchStatus": {"const": "MATCHED"}}},
+      "then": {"required": ["knowledgeId"], "properties": {"knowledgeId": {"type": "string", "minLength": 1}}}
+    }
+  ]
+}

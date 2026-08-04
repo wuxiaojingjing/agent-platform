@@ -1,0 +1,1068 @@
+[
+  {
+    "id": "knowledge-direct",
+    "category": "快路径-知识",
+    "steps": [
+      {
+        "query": "遇到26023怎么办",
+        "expect": {
+          "decision": "DIRECT_KNOWLEDGE",
+          "phase": "FINAL",
+          "reasonCode": "STANDARD_ANSWER",
+          "template": "tpl.answer.standard",
+          "textContains": ["不要反复尝试"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "menu-navigation",
+    "category": "快路径-菜单",
+    "steps": [
+      {
+        "query": "打开理财交易记录",
+        "expect": {
+          "decision": "NAVIGATION",
+          "phase": "FINAL",
+          "candidate": "cap.nav.wealth_product_理财交易记录",
+          "template": "tpl.nav.open",
+          "actionCodes": ["OPEN_MENU"],
+          "cardComponents": ["NAVIGATION"],
+          "textContains": ["理财交易记录"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "xiaoi-card-replacement-care-intro",
+    "category": "小i知识-换卡无忧介绍",
+    "steps": [
+      {
+        "query": "什么是换卡无忧",
+        "expect": {
+          "decision": "DIRECT_KNOWLEDGE",
+          "phase": "FINAL",
+          "reasonCode": "STANDARD_ANSWER",
+          "template": "tpl.answer.standard",
+          "evidenceRefs": ["standardQa:qa.card.replacement-care.intro"],
+          "slotsAbsent": ["payee"],
+          "taskIdPresent": false,
+          "textContains": ["换卡无忧", "部分业务自动迁移到新卡"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "xiaoi-card-replacement-care-open",
+    "category": "小i知识-换卡无忧开通",
+    "steps": [
+      {
+        "query": "换卡无忧怎么开通",
+        "expect": {
+          "decision": "DIRECT_KNOWLEDGE",
+          "phase": "FINAL",
+          "reasonCode": "STANDARD_ANSWER",
+          "template": "tpl.answer.standard",
+          "evidenceRefs": ["standardQa:qa.card.replacement-care.open"],
+          "actionCodes": ["OPEN_CAPABILITY"],
+          "slotsAbsent": ["payee"],
+          "taskIdPresent": false,
+          "textContains": ["营业网点", "智能终端"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "xiaoi-card-renumber-impact",
+    "category": "小i知识-换号影响",
+    "steps": [
+      {
+        "query": "借记卡换卡换号会影响哪些业务",
+        "expect": {
+          "decision": "DIRECT_KNOWLEDGE",
+          "phase": "FINAL",
+          "reasonCode": "STANDARD_ANSWER",
+          "template": "tpl.answer.standard",
+          "evidenceRefs": ["standardQa:qa.card.renumber.impact"],
+          "actionCodes": ["OPEN_CAPABILITY"],
+          "slotsAbsent": ["payee"],
+          "taskIdPresent": false,
+          "textContains": ["第三方存管", "具体以实际办理结果为准"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "xiaoi-card-same-number-blocked",
+    "category": "小i知识-损坏来源受控降级",
+    "steps": [
+      {
+        "query": "银行卡换卡不换号怎么办",
+        "expect": {
+          "decision": "CLARIFY",
+          "phase": "CLARIFY",
+          "reasonCode": "POLICY_BLOCK",
+          "template": "tpl.clarify.slot",
+          "cardComponents": ["CHOICE_LIST"],
+          "evidenceRefs": [
+            "standardQaBlocked:qa.card.same-number.blocked-guidance",
+            "xiaoiLedger:reviewed-workbook:standard-question:15"
+          ],
+          "slotsAbsent": ["answer", "payee"],
+          "taskIdPresent": false,
+          "textContains": ["无法根据已复核知识确认"],
+          "textNotContains": ["自动迁移到新卡", "智能终端补开", "系统错误"]
+        }
+      },
+      {
+        "quickReplyFromPrevious": "了解换卡无忧",
+        "expect": {
+          "decision": "DIRECT_KNOWLEDGE",
+          "phase": "FINAL",
+          "reasonCode": "STANDARD_ANSWER",
+          "evidenceRefs": ["standardQa:qa.card.replacement-care.intro"],
+          "slotsAbsent": ["payee"],
+          "taskIdPresent": false,
+          "textContains": ["部分业务自动迁移到新卡"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "xiaoi-card-same-number-explicit-execution",
+    "category": "小i知识-阻断后明确办理",
+    "steps": [
+      {
+        "query": "换卡不换号",
+        "expect": {
+          "decision": "CLARIFY",
+          "phase": "CLARIFY",
+          "reasonCode": "POLICY_BLOCK",
+          "evidenceRefs": ["standardQaBlocked:qa.card.same-number.blocked-guidance"],
+          "cardComponents": ["CHOICE_LIST"],
+          "taskIdPresent": false,
+          "textContains": ["无法根据已复核知识确认", "普通换卡流程", "不代表已确认可以保留原号"]
+        }
+      },
+      {
+        "quickReplyFromPrevious": "办理普通换卡",
+        "expect": {
+          "decision": "CLARIFY",
+          "phase": "CLARIFY",
+          "reasonCode": "MISSING_SLOT",
+          "candidate": "cap.card.replace",
+          "cardComponents": ["CHOICE_LIST"],
+          "taskIdPresent": true,
+          "captureTaskIdAs": "sameNumberReplaceTask",
+          "textContains": ["信用卡", "借记卡"]
+        }
+      },
+      {
+        "quickReplyFromPrevious": "信用卡",
+        "expect": {
+          "decision": "RESUME_TASK",
+          "phase": "REVIEW",
+          "candidate": "cap.card.replace",
+          "template": "tpl.card-replace.review",
+          "cardComponents": ["REVIEW_SUMMARY"],
+          "responseActions": ["REVIEW_ACCEPT", "CANCEL"],
+          "taskIdEqualsCapture": "sameNumberReplaceTask",
+          "slotValues": {"cardType": "CREDIT"},
+          "textContains": ["普通换卡", "不承诺保留原卡号"]
+        }
+      },
+      {
+        "actionFromPrevious": "REVIEW_ACCEPT",
+        "expect": {
+          "decision": "RESUME_TASK",
+          "phase": "FINAL",
+          "candidate": "cap.card.replace",
+          "template": "tpl.card-replace.result",
+          "cardComponents": ["RESULT_SUMMARY"],
+          "taskIdEqualsCapture": "sameNumberReplaceTask",
+          "textContains": ["普通换卡申请", "不代表已确认保留原卡号"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "xiaoi-card-original-number-blocked",
+    "category": "小i知识-损坏扩展问受控降级",
+    "steps": [
+      {
+        "query": "可以原号补办吗",
+        "expect": {
+          "decision": "CLARIFY",
+          "phase": "CLARIFY",
+          "reasonCode": "POLICY_BLOCK",
+          "evidenceRefs": ["standardQaBlocked:qa.card.same-number.blocked-guidance"],
+          "slotsAbsent": ["answer", "payee"],
+          "taskIdPresent": false,
+          "textContains": ["无法根据已复核知识确认"],
+          "textNotContains": ["自动迁移到新卡", "智能终端补开", "系统错误"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "balance-result-card",
+    "category": "快路径-能力结果",
+    "steps": [
+      {
+        "query": "查一下余额",
+        "expect": {
+          "decision": "EXECUTE_CAPABILITY",
+          "phase": "FINAL",
+          "candidate": "cap.account.balance.query",
+          "template": "tpl.balance.result",
+          "cardComponents": ["RESULT_SUMMARY"],
+          "textContains": ["可用余额"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "transaction-result-card",
+    "category": "结果卡-交易明细",
+    "steps": [
+      {
+        "query": "查询账户明细",
+        "expect": {
+          "decision": "EXECUTE_CAPABILITY",
+          "phase": "FINAL",
+          "candidate": "cap.account.transaction.query",
+          "template": "tpl.transaction.result",
+          "cardComponents": ["RESULT_SUMMARY"],
+          "slotValues": {"accountAlias": "PRIMARY"},
+          "textContains": ["最近的交易", "超市消费", "工资入账"],
+          "textNotContains": ["暂时无法完成"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "product-result-card",
+    "category": "结果卡-产品信息",
+    "steps": [
+      {
+        "query": "查询基金产品C",
+        "expect": {
+          "decision": "EXECUTE_CAPABILITY",
+          "phase": "FINAL",
+          "candidate": "cap.fund.product.query",
+          "template": "tpl.product.result",
+          "cardComponents": ["RESULT_SUMMARY"],
+          "slotValues": {"name": "基金产品C", "riskLevel": "R3", "returnRate": "3.2%"},
+          "textContains": ["基金产品C", "R3", "3.2%"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "low-margin-choice-executes",
+    "category": "多选项-选择后执行",
+    "steps": [
+      {
+        "query": "查询处理结果",
+        "expect": {
+          "decision": "CLARIFY",
+          "phase": "CLARIFY",
+          "cardComponents": ["CHOICE_LIST"],
+          "slotValues": {
+            "options": ["查询工资代发状态", "查询银行卡状态", "查询工资到账记录"]
+          },
+          "taskIdPresent": false,
+          "textNotContains": ["Top1", "暂时无法完成"]
+        }
+      },
+      {
+        "quickReplyFromPrevious": "查询银行卡状态",
+        "expect": {
+          "decision": "EXECUTE_CAPABILITY",
+          "phase": "FINAL",
+          "candidate": "cap.account.card.status.query",
+          "template": "tpl.card-status.result",
+          "cardComponents": ["RESULT_SUMMARY"],
+          "textContains": ["当前状态", "ACTIVE"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "creditcard-bill-slot-resume",
+    "category": "澄清-自然语言补槽",
+    "steps": [
+      {
+        "query": "查信用卡账单",
+        "expect": {
+          "decision": "CLARIFY",
+          "phase": "CLARIFY",
+          "reasonCode": "MISSING_SLOT",
+          "candidate": "cap.creditcard.bill.query",
+          "taskIdPresent": true,
+          "captureTaskIdAs": "billTask",
+          "textContains": ["哪张信用卡"]
+        }
+      },
+      {
+        "query": "尾号8821那张",
+        "expect": {
+          "decision": "RESUME_TASK",
+          "phase": "FINAL",
+          "template": "tpl.bill.result",
+          "cardComponents": ["RESULT_SUMMARY"],
+          "taskIdEqualsCapture": "billTask",
+          "textContains": ["账单", "3,280.00"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "card-replace-three-turns",
+    "category": "澄清-Review-执行",
+    "steps": [
+      {
+        "query": "换卡",
+        "expect": {
+          "decision": "CLARIFY",
+          "phase": "CLARIFY",
+          "reasonCode": "MISSING_SLOT",
+          "cardComponents": ["CHOICE_LIST"],
+          "taskIdPresent": true,
+          "captureTaskIdAs": "replaceTask",
+          "textContains": ["信用卡", "借记卡"]
+        }
+      },
+      {
+        "quickReplyFromPrevious": "信用卡",
+        "expect": {
+          "decision": "RESUME_TASK",
+          "phase": "REVIEW",
+          "cardComponents": ["REVIEW_SUMMARY"],
+          "actionCodes": ["REVIEW_ACCEPT", "CANCEL"],
+          "responseActions": ["REVIEW_ACCEPT", "CANCEL"],
+          "actionRefsTaskId": ["REVIEW_ACCEPT", "CANCEL"],
+          "taskIdEqualsCapture": "replaceTask"
+        }
+      },
+      {
+        "actionFromPrevious": "REVIEW_ACCEPT",
+        "expect": {
+          "decision": "RESUME_TASK",
+          "phase": "FINAL",
+          "template": "tpl.card-replace.result",
+          "cardComponents": ["RESULT_SUMMARY"],
+          "taskIdEqualsCapture": "replaceTask",
+          "textContains": ["信用卡"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "collection-word-credit-card-alias",
+    "category": "集合词-贷记卡归一",
+    "steps": [
+      {
+        "query": "换卡",
+        "expect": {
+          "decision": "CLARIFY",
+          "phase": "CLARIFY",
+          "reasonCode": "MISSING_SLOT",
+          "cardComponents": ["CHOICE_LIST"],
+          "captureTaskIdAs": "creditAliasTask"
+        }
+      },
+      {
+        "query": "贷记卡",
+        "expect": {
+          "decision": "RESUME_TASK",
+          "phase": "REVIEW",
+          "cardComponents": ["REVIEW_SUMMARY"],
+          "taskIdEqualsCapture": "creditAliasTask",
+          "slotValues": {"cardType": "CREDIT"},
+          "textContains": ["信用卡"]
+        }
+      },
+      {
+        "actionFromPrevious": "CANCEL",
+        "expect": {
+          "decision": "CANCEL",
+          "phase": "FINAL",
+          "taskIdEqualsCapture": "creditAliasTask"
+        }
+      }
+    ]
+  },
+  {
+    "id": "collection-word-debit-card-alias",
+    "category": "集合词-工资卡归一",
+    "steps": [
+      {
+        "query": "换卡",
+        "expect": {
+          "decision": "CLARIFY",
+          "phase": "CLARIFY",
+          "reasonCode": "MISSING_SLOT",
+          "cardComponents": ["CHOICE_LIST"],
+          "captureTaskIdAs": "debitAliasTask"
+        }
+      },
+      {
+        "query": "工资卡",
+        "expect": {
+          "decision": "RESUME_TASK",
+          "phase": "REVIEW",
+          "cardComponents": ["REVIEW_SUMMARY"],
+          "taskIdEqualsCapture": "debitAliasTask",
+          "slotValues": {"cardType": "DEBIT"},
+          "textContains": ["借记卡"]
+        }
+      },
+      {
+        "actionFromPrevious": "CANCEL",
+        "expect": {
+          "decision": "CANCEL",
+          "phase": "FINAL",
+          "taskIdEqualsCapture": "debitAliasTask"
+        }
+      }
+    ]
+  },
+  {
+    "id": "transfer-confirm-cancel",
+    "category": "显式确认-取消",
+    "page": "transfer",
+    "steps": [
+      {
+        "query": "给张三转1000元",
+        "expect": {
+          "decision": "EXECUTE_CAPABILITY",
+          "phase": "CONFIRM",
+          "candidate": "cap.transfer",
+          "cardComponents": ["REVIEW_SUMMARY", "RISK_NOTICE"],
+          "responseActions": ["CONFIRM", "CANCEL"],
+          "textContains": ["张三", "1000"]
+        }
+      },
+      {
+        "actionFromPrevious": "CANCEL",
+        "expect": {
+          "decision": "CANCEL",
+          "phase": "FINAL",
+          "template": "tpl.cancel.ack"
+        }
+      }
+    ]
+  },
+  {
+    "id": "transfer-confirm-execute",
+    "category": "显式确认-执行",
+    "page": "transfer",
+    "steps": [
+      {
+        "query": "给张三转1000元",
+        "expect": {
+          "decision": "EXECUTE_CAPABILITY",
+          "phase": "CONFIRM",
+          "candidate": "cap.transfer",
+          "cardComponents": ["REVIEW_SUMMARY", "RISK_NOTICE"],
+          "responseActions": ["CONFIRM", "CANCEL"],
+          "actionRefsTaskId": ["CONFIRM", "CANCEL"],
+          "captureTaskIdAs": "transferTask",
+          "textContains": ["张三", "1000"]
+        }
+      },
+      {
+        "actionFromPrevious": "CONFIRM",
+        "expect": {
+          "decision": "RESUME_TASK",
+          "phase": "FINAL",
+          "template": "tpl.transfer.result",
+          "cardComponents": ["RESULT_SUMMARY"],
+          "taskIdEqualsCapture": "transferTask",
+          "textContains": ["已为您向", "张三", "1000", "交易流水号"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "repay-confirm-execute",
+    "category": "显式确认-信用卡还款",
+    "steps": [
+      {
+        "query": "还信用卡1000元",
+        "expect": {
+          "decision": "EXECUTE_CAPABILITY",
+          "phase": "CONFIRM",
+          "candidate": "cap.creditcard.repay",
+          "cardComponents": ["REVIEW_SUMMARY", "RISK_NOTICE"],
+          "responseActions": ["CONFIRM", "CANCEL"],
+          "actionRefsTaskId": ["CONFIRM", "CANCEL"],
+          "captureTaskIdAs": "repayTask"
+        }
+      },
+      {
+        "actionFromPrevious": "CONFIRM",
+        "expect": {
+          "decision": "RESUME_TASK",
+          "phase": "FINAL",
+          "template": "tpl.repay.result",
+          "cardComponents": ["RESULT_SUMMARY"],
+          "taskIdEqualsCapture": "repayTask",
+          "textContains": ["已为您完成信用卡还款", "1000", "交易流水号"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "explicit-workflow",
+    "category": "Workflow",
+    "steps": [
+      {
+        "query": "启动信用卡换卡流程",
+        "expect": {
+          "decision": "START_WORKFLOW",
+          "phase": "REVIEW",
+          "candidate": "workflow.creditcard.replace",
+          "cardComponents": ["REVIEW_SUMMARY"],
+          "responseActions": ["REVIEW_ACCEPT", "CANCEL"]
+        }
+      },
+      {
+        "actionFromPrevious": "CANCEL",
+        "expect": {
+          "decision": "CANCEL",
+          "phase": "FINAL"
+        }
+      }
+    ]
+  },
+  {
+    "id": "workflow-review-execute",
+    "category": "Workflow-Review后执行",
+    "steps": [
+      {
+        "query": "启动信用卡换卡流程",
+        "expect": {
+          "decision": "START_WORKFLOW",
+          "phase": "REVIEW",
+          "candidate": "workflow.creditcard.replace",
+          "cardComponents": ["REVIEW_SUMMARY"],
+          "responseActions": ["REVIEW_ACCEPT", "CANCEL"],
+          "actionRefsTaskId": ["REVIEW_ACCEPT", "CANCEL"],
+          "captureTaskIdAs": "workflowTask"
+        }
+      },
+      {
+        "actionFromPrevious": "REVIEW_ACCEPT",
+        "expect": {
+          "decision": "RESUME_TASK",
+          "phase": "FINAL",
+          "template": "tpl.card-replace.result",
+          "cardComponents": ["RESULT_SUMMARY"],
+          "taskIdEqualsCapture": "workflowTask",
+          "textContains": ["信用卡"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "static-result-rule",
+    "category": "Static Plan-条件",
+    "steps": [
+      {
+        "query": "工资没到账，就检查工资卡状态",
+        "expect": {
+          "decision": "STATIC_PLAN",
+          "reasonCode": "RESULT_RULE",
+          "taskShape": "CONDITIONAL_PLAN",
+          "cardComponents": ["TASK_PROGRESS"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "static-fixed-plan",
+    "category": "Static Plan-多步骤",
+    "steps": [
+      {
+        "query": "查一下余额，然后查询基金产品C",
+        "expect": {
+          "decision": "STATIC_PLAN",
+          "taskShape": "FIXED_MULTI_STEP",
+          "template": "tpl.plan.result",
+          "cardComponents": ["TASK_PROGRESS", "RESULT_SUMMARY"],
+          "taskIdPresent": true,
+          "slotValues": {
+            "completedSummaries": ["查询账户余额", "查询基金产品C"],
+            "remainingSummaries": [],
+            "completedCount": 2,
+            "totalCount": 2
+          },
+          "textContains": ["两项查询已完成"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "transfer-after-balance-check",
+    "category": "Todo-先查余额再条件转账",
+    "page": "transfer",
+    "steps": [
+      {
+        "query": "帮我转两千给张三，先查余额，不足就别转。",
+        "expect": {
+          "decision": "STATIC_PLAN",
+          "phase": "CONFIRM",
+          "reasonCode": "RESULT_RULE",
+          "taskShape": "CONDITIONAL_PLAN",
+          "template": "tpl.transfer.confirm",
+          "cardComponents": ["TASK_PROGRESS", "RESULT_SUMMARY", "REVIEW_SUMMARY", "RISK_NOTICE"],
+          "intentPlanCapabilities": ["cap.account.balance.query", "cap.transfer"],
+          "intentPlanRelations": ["PARALLEL", "CONDITIONAL"],
+          "responseActions": ["CONFIRM", "CANCEL"],
+          "slotValues": {"payee": "张三", "amount": "2000"},
+          "textContains": ["张三", "2000", "确认"]
+        }
+      },
+      {
+        "actionFromPrevious": "CONFIRM",
+        "expect": {
+          "decision": "STATIC_PLAN",
+          "phase": "FINAL",
+          "reasonCode": "CONTINUATION",
+          "template": "tpl.plan.result",
+          "cardComponents": ["TASK_PROGRESS", "RESULT_SUMMARY"],
+          "slotValues": {"completedCount": 2, "totalCount": 2},
+          "textContains": ["已完成"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "static-condition-complete",
+    "category": "Todo-条件同意后完整执行",
+    "steps": [
+      {
+        "query": "先查余额，不足就别转",
+        "expect": {
+          "decision": "STATIC_PLAN",
+          "phase": "CLARIFY",
+          "reasonCode": "RESULT_RULE",
+          "taskShape": "CONDITIONAL_PLAN",
+          "template": "tpl.clarify.condition",
+          "cardComponents": ["TASK_PROGRESS", "RESULT_SUMMARY", "RISK_NOTICE"],
+          "slotValues": {
+            "taskSummary": "转账",
+            "condition": "不足就别转",
+            "options": ["继续办理", "不办理"]
+          },
+          "textContains": ["不足就别转", "还需要办吗"]
+        }
+      },
+      {
+        "quickReplyFromPrevious": "继续办理",
+        "expect": {
+          "decision": "STATIC_PLAN",
+          "phase": "CLARIFY",
+          "reasonCode": "CONTINUATION",
+          "template": "tpl.clarify.slot",
+          "cardComponents": ["TASK_PROGRESS", "RISK_NOTICE"],
+          "slotValues": {"question": "请问您要转账给谁？", "options": []},
+          "textContains": ["转账给谁"]
+        }
+      },
+      {
+        "query": "张三",
+        "expect": {
+          "decision": "STATIC_PLAN",
+          "phase": "CLARIFY",
+          "reasonCode": "CONTINUATION",
+          "template": "tpl.clarify.slot",
+          "cardComponents": ["TASK_PROGRESS", "RISK_NOTICE"],
+          "slotValues": {"question": "请问转账金额是多少？", "options": []},
+          "textContains": ["转账金额"]
+        }
+      },
+      {
+        "query": "1000",
+        "expect": {
+          "decision": "STATIC_PLAN",
+          "phase": "CONFIRM",
+          "reasonCode": "CONTINUATION",
+          "template": "tpl.transfer.confirm",
+          "cardComponents": ["TASK_PROGRESS", "REVIEW_SUMMARY", "RISK_NOTICE"],
+          "responseActions": ["CONFIRM", "CANCEL"],
+          "taskIdPresent": true,
+          "slotValues": {"payee": "张三", "amount": "1000", "conditionDecision": "继续办理"},
+          "textContains": ["张三", "1000", "确认"]
+        }
+      },
+      {
+        "actionFromPrevious": "CONFIRM",
+        "expect": {
+          "decision": "STATIC_PLAN",
+          "phase": "FINAL",
+          "reasonCode": "CONTINUATION",
+          "template": "tpl.plan.result",
+          "cardComponents": ["TASK_PROGRESS", "RESULT_SUMMARY"],
+          "slotValues": {"completedCount": 2, "totalCount": 2},
+          "textContains": ["已完成"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "static-condition-decline",
+    "category": "Todo-条件不成立跳过执行",
+    "steps": [
+      {
+        "query": "先查余额，不足就别转",
+        "expect": {
+          "decision": "STATIC_PLAN",
+          "phase": "CLARIFY",
+          "reasonCode": "RESULT_RULE",
+          "template": "tpl.clarify.condition",
+          "cardComponents": ["TASK_PROGRESS", "RISK_NOTICE"],
+          "slotValues": {"options": ["继续办理", "不办理"]}
+        }
+      },
+      {
+        "quickReplyFromPrevious": "不办理",
+        "expect": {
+          "decision": "STATIC_PLAN",
+          "phase": "FINAL",
+          "reasonCode": "CONTINUATION",
+          "template": "tpl.answer.condition-not-met",
+          "cardComponents": ["TASK_PROGRESS"],
+          "textContains": ["不足就别转", "转账"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "open-diagnosis-loop",
+    "category": "Agent Loop",
+    "steps": [
+      {
+        "query": "工资没到账，帮我排查原因",
+        "expect": {
+          "decision": "START_LOOP",
+          "phase": "FINAL",
+          "reasonCode": "AFTER_OBSERVATION",
+          "taskShape": "OPEN_ENDED_DIAGNOSIS",
+          "cardComponents": ["LOOP_STATUS"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "a2a-multi-hop",
+    "category": "A2A",
+    "page": "finance-center",
+    "steps": [
+      {
+        "query": "请金融助手帮我查询基金产品C",
+        "expect": {
+          "decision": "DELEGATE_GOAL",
+          "phase": "FINAL",
+          "candidate": "agent.finance_assistant",
+          "cardComponents": ["RESULT_SUMMARY"],
+          "textContains": ["基金产品C"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "scaffold-menu-fallback",
+    "category": "未建设能力降级",
+    "steps": [
+      {
+        "query": "我要购买储蓄国债",
+        "expect": {
+          "decision": "NAVIGATION",
+          "phase": "FINAL",
+          "candidate": "cap.nav.bond_service_储蓄国债",
+          "cardComponents": ["NAVIGATION"],
+          "textContains": ["储蓄国债"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "capability-not-open",
+    "category": "策略降级",
+    "steps": [
+      {
+        "query": "帮我把信用卡额度改成10万",
+        "expect": {
+          "decision": "HANDOFF",
+          "phase": "ERROR",
+          "reasonCode": "POLICY_BLOCK",
+          "template": "tpl.reject.capability-not-open",
+          "actionCodes": ["CONTACT_SERVICE"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "task-switch-reject",
+    "category": "任务切换",
+    "steps": [
+      {
+        "query": "换卡",
+        "expect": {
+          "decision": "CLARIFY",
+          "phase": "CLARIFY"
+        }
+      },
+      {
+        "query": "先查信用卡账单",
+        "expect": {
+          "decision": "CLARIFY",
+          "phase": "SWITCH_REVIEW",
+          "cardComponents": ["REVIEW_SUMMARY"],
+          "responseActions": ["SWITCH_ACCEPT", "SWITCH_REJECT"]
+        }
+      },
+      {
+        "actionFromPrevious": "SWITCH_REJECT",
+        "expect": {
+          "decision": "RESUME_TASK",
+          "phase": "ACK"
+        }
+      },
+      {
+        "query": "取消",
+        "expect": {
+          "decision": "CANCEL",
+          "phase": "FINAL"
+        }
+      }
+    ]
+  },
+  {
+    "id": "task-switch-accept-resume-execute",
+    "category": "任务切换-接受并恢复",
+    "steps": [
+      {
+        "query": "查一下余额",
+        "expect": {
+          "decision": "EXECUTE_CAPABILITY",
+          "phase": "FINAL",
+          "candidate": "cap.account.balance.query",
+          "cardComponents": ["RESULT_SUMMARY"],
+          "textContains": ["可用余额"]
+        }
+      },
+      {
+        "query": "用第二张卡给张三转账",
+        "expect": {
+          "decision": "CLARIFY",
+          "phase": "CLARIFY",
+          "reasonCode": "MISSING_SLOT",
+          "candidate": "cap.transfer",
+          "taskIdPresent": true,
+          "captureTaskIdAs": "suspendedTransfer"
+        }
+      },
+      {
+        "query": "先看看基金产品C",
+        "expect": {
+          "decision": "CLARIFY",
+          "phase": "SWITCH_REVIEW",
+          "cardComponents": ["REVIEW_SUMMARY"],
+          "responseActions": ["SWITCH_ACCEPT", "SWITCH_REJECT"],
+          "textContains": ["切换"]
+        }
+      },
+      {
+        "actionFromPrevious": "SWITCH_ACCEPT",
+        "expect": {
+          "phase": "FINAL",
+          "template": "tpl.product.result",
+          "cardComponents": ["RESULT_SUMMARY"],
+          "responseActions": ["RESUME_SUSPENDED"],
+          "taskIdDiffersCapture": "suspendedTransfer",
+          "captureTaskIdAs": "fundTask",
+          "textContains": ["基金产品C"]
+        }
+      },
+      {
+        "actionFromPrevious": "RESUME_SUSPENDED",
+        "actionRefCaptureFromPrevious": "suspendedTransfer",
+        "expect": {
+          "decision": "RESUME_TASK",
+          "taskIdEqualsCapture": "suspendedTransfer",
+          "textContains": ["金额"]
+        }
+      },
+      {
+        "query": "1000",
+        "expect": {
+          "decision": "RESUME_TASK",
+          "phase": "CONFIRM",
+          "cardComponents": ["REVIEW_SUMMARY", "RISK_NOTICE"],
+          "responseActions": ["CONFIRM", "CANCEL"],
+          "actionRefsTaskId": ["CONFIRM", "CANCEL"],
+          "taskIdEqualsCapture": "suspendedTransfer",
+          "slotValues": {"accountOrdinal": 2, "payee": "张三", "amount": "1000"}
+        }
+      },
+      {
+        "actionFromPrevious": "CONFIRM",
+        "expect": {
+          "decision": "RESUME_TASK",
+          "phase": "FINAL",
+          "template": "tpl.transfer.result",
+          "cardComponents": ["RESULT_SUMMARY"],
+          "taskIdEqualsCapture": "suspendedTransfer",
+          "textContains": ["张三", "1000"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "multiple-suspended-requires-selection",
+    "category": "多挂起任务-继续时必须选择",
+    "steps": [
+      {
+        "query": "换卡",
+        "page": "home",
+        "expect": {
+          "decision": "CLARIFY",
+          "phase": "CLARIFY",
+          "reasonCode": "MISSING_SLOT",
+          "captureTaskIdAs": "multiCardTask"
+        }
+      },
+      {
+        "query": "先给张三转 1000",
+        "page": "transfer",
+        "expect": {
+          "decision": "CLARIFY",
+          "phase": "SWITCH_REVIEW",
+          "responseActions": ["SWITCH_ACCEPT", "SWITCH_REJECT"]
+        }
+      },
+      {
+        "actionFromPrevious": "SWITCH_ACCEPT",
+        "page": "transfer",
+        "expect": {
+          "phase": "CONFIRM",
+          "candidate": "cap.transfer",
+          "responseActions": ["CONFIRM", "CANCEL"],
+          "captureTaskIdAs": "multiTransferTask"
+        }
+      },
+      {
+        "query": "先查信用卡账单",
+        "page": "home",
+        "expect": {
+          "decision": "CLARIFY",
+          "phase": "SWITCH_REVIEW",
+          "responseActions": ["SWITCH_ACCEPT", "SWITCH_REJECT"]
+        }
+      },
+      {
+        "actionFromPrevious": "SWITCH_ACCEPT",
+        "page": "home",
+        "expect": {
+          "phase": "CLARIFY",
+          "candidate": "cap.creditcard.bill.query",
+          "textContains": ["哪张信用卡"]
+        }
+      },
+      {
+        "query": "尾号8821那张",
+        "page": "home",
+        "expect": {
+          "phase": "FINAL",
+          "template": "tpl.bill.result",
+          "cardComponents": ["RESULT_SUMMARY"]
+        }
+      },
+      {
+        "query": "继续",
+        "page": "home",
+        "expect": {
+          "decision": "CLARIFY",
+          "phase": "CLARIFY",
+          "reasonCode": "RESUME_REQUIRED",
+          "template": "tpl.resume.select",
+          "cardComponents": ["CHOICE_LIST"],
+          "responseActions": ["RESUME_SUSPENDED"],
+          "actionRefsCaptures": [
+            {"event": "RESUME_SUSPENDED", "capture": "multiCardTask"},
+            {"event": "RESUME_SUSPENDED", "capture": "multiTransferTask"}
+          ]
+        }
+      },
+      {
+        "actionFromPrevious": "RESUME_SUSPENDED",
+        "actionRefCaptureFromPrevious": "multiCardTask",
+        "page": "home",
+        "expect": {
+          "decision": "RESUME_TASK",
+          "taskIdEqualsCapture": "multiCardTask",
+          "textContains": ["信用卡", "借记卡"]
+        }
+      },
+      {
+        "query": "取消",
+        "page": "home",
+        "expect": {
+          "decision": "CANCEL",
+          "phase": "FINAL",
+          "taskIdEqualsCapture": "multiCardTask"
+        }
+      }
+    ]
+  },
+  {
+    "id": "product-compare-cross-type-clarify",
+    "category": "产品比较-跨类业务规约",
+    "steps": [
+      {
+        "query": "对比产品A和产品B",
+        "expect": {
+          "decision": "CLARIFY",
+          "phase": "CLARIFY",
+          "reasonCode": "INCOMPARABLE_PRODUCT_TYPE",
+          "template": "tpl.product.compare.incomparable",
+          "cardComponents": ["CHOICE_LIST"],
+          "taskIdPresent": false,
+          "slotValues": {
+            "leftName": "产品A",
+            "leftType": "保险产品",
+            "rightName": "产品B",
+            "rightType": "理财产品",
+            "options": ["查看产品A", "查看产品B"]
+          },
+          "textContains": ["产品A", "产品B", "保险产品", "理财产品", "不能直接比较"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "product-compare-same-type-loop",
+    "category": "产品比较-同类Agent Loop",
+    "steps": [
+      {
+        "query": "对比产品B和产品B2",
+        "expect": {
+          "decision": "START_LOOP",
+          "phase": "FINAL",
+          "reasonCode": "AFTER_OBSERVATION",
+          "taskShape": "OBSERVATION_DRIVEN",
+          "cardComponents": ["LOOP_STATUS", "RESULT_SUMMARY", "PRODUCT_COMPARISON"],
+          "taskIdPresent": true,
+          "slotValues": {
+            "comparisonReady": true
+          },
+          "textContains": ["产品B", "产品B2", "R2", "R3"]
+        }
+      }
+    ]
+  }
+]

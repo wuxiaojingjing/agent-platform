@@ -1,0 +1,14 @@
+# 科技域子智能体：基金服务
+
+- capabilityId: agent.fund_service
+  name: 基金助手
+  type: AGENT
+  granularity: AGENT
+  domains: [fund_service]
+  description: 基金产品要素查询相关的领域智能体
+  riskLevel: R0
+  timeoutMs: 5000
+  idempotency: SUPPORTED
+  owner: 基金领域
+  version: "1.0.0"
+  status: ACTIVE

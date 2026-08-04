@@ -1,0 +1,77 @@
+# 强规则（v0.7 §3.3 二级短路：强规则直出）。
+#
+# 命中即直接给出出口，不调用模型。但按 §3.3 原文，「仍校验风险等级和必填槽位」——
+# 这一步在 StrongRuleEngine 之后由 SlotGate 强制执行，规则本身无权跳过槽位校验。
+#
+# 条件用 Aviator 表达式，可用变量：
+#   query      归一化后的用户输入
+#   rawQuery   原始输入
+#   channel    渠道，如 MOBILE / WEB
+#   page       当前页面
+#   userState  用户状态
+#
+# priority 小者先判。安全与策略类必须排在业务类之前（§3.2 融合顺序：安全与互斥规则优先）。
+
+rules:
+
+  # 模型缺口回归：债券 Agent 尚未建设时，“购买储蓄国债”曾在债券/财富候选间产生跨域冲突。
+  # 这里只授权打开既有菜单，不授权购买或交易；待债券能力建设完成后删除本规则。
+  - ruleId: rule.fallback.bond-purchase-menu
+    description: 储蓄国债执行意图在债券 Agent 未建设期间降级到现有菜单
+    category: STRONG_BUSINESS
+    priority: 20
+    when: "string.contains(query,'储蓄国债') && (string.contains(query,'买') || string.contains(query,'购买') || string.contains(query,'办理'))"
+    decision: NAVIGATION
+    capabilityId: cap.nav.bond_service_储蓄国债
+    reasonCode: SHORT_CIRCUIT_STRONG_RULE
+
+  - ruleId: rule.route.finance-assistant-fund
+    description: 金融中心显式要求金融助手时，将自治目标交给金融助手识别和编排
+    category: STRONG_BUSINESS
+    priority: 45
+    when: "agentId == 'agent.mobile-banking-assistant' && page == 'finance-center' && string.contains(query,'金融助手') && string.contains(query,'基金')"
+    decision: EXECUTE_CAPABILITY
+    capabilityId: agent.finance_assistant
+    reasonCode: SHORT_CIRCUIT_STRONG_RULE
+
+  # ---- 策略拦截：本期未开放的能力 ----
+  # 这里判 REJECT 而不是靠「召回不到候选」，两者的 reasonCode 与话术完全不同：
+  # 召回不到是 NO_CANDIDATE（我没听懂），未开放是 POLICY_BLOCK（我听懂了但不能办）。
+  # 对用户说错这两者，一个显得笨，一个显得不可信。
+  - ruleId: rule.policy.credit-limit-adjust
+    description: 信用卡额度调整本期未开放，引导至现网既有入口
+    category: POLICY
+    priority: 10
+    when: "string.contains(query,'额度') && (string.contains(query,'改') || string.contains(query,'调') || string.contains(query,'提') || string.contains(query,'升'))"
+    decision: HANDOFF
+    reasonCode: POLICY_BLOCK
+    handoffCode: CAPABILITY_NOT_OPEN
+    templateKey: tpl.reject.capability-not-open
+    slots:
+      capabilityName: 信用卡额度调整
+      alternativeEntry: 信用卡菜单 - 额度管理
+
+  - ruleId: rule.policy.password-reset
+    description: 密码重置涉及强身份核验，不在助手内办理
+    category: POLICY
+    priority: 11
+    when: "(string.contains(query,'密码') || string.contains(query,'口令')) && (string.contains(query,'改') || string.contains(query,'重置') || string.contains(query,'忘'))"
+    decision: HANDOFF
+    reasonCode: POLICY_BLOCK
+    handoffCode: CAPABILITY_NOT_OPEN
+    templateKey: tpl.reject.capability-not-open
+    slots:
+      capabilityName: 密码重置
+      alternativeEntry: 我的 - 安全中心
+
+  # ---- 强业务规则：页面上下文唯一确定意图 ----
+  # 用户已经站在转账页面上说「转账」，再走一遍语义召回与模型仲裁纯属浪费预算。
+  # 但风险等级与必填槽位照常校验，R2 该确认还是要确认。
+  - ruleId: rule.page.transfer
+    description: 转账页面内的转账表述直接命中转账能力
+    category: STRONG_BUSINESS
+    priority: 50
+    when: "page == 'transfer' && (string.contains(query,'转账') || string.contains(query,'转给') || string.contains(query,'汇款'))"
+    decision: EXECUTE_CAPABILITY
+    capabilityId: cap.transfer
+    reasonCode: SHORT_CIRCUIT_STRONG_RULE

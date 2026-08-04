@@ -1,0 +1,18 @@
+# 科技域子智能体：企业服务
+
+- capabilityId: agent.enterprise_service
+  name: 企业助手
+  type: AGENT
+  granularity: AGENT
+  domains: [enterprise_service]
+  description: 对公与企业服务相关的领域智能体。本期面客 TOOL 未开放
+  riskLevel: R0
+  timeoutMs: 8000
+  idempotency: SUPPORTED
+  owner: 企业领域
+  version: "1.0.0"
+  status: DISABLED
+  implementationStatus: SCAFFOLD
+  positiveBoundary: [对公服务, 企业服务]
+  negativeBoundary: [本期不办理企业业务, 本期不提交对公交易]
+  fallbackCapabilityIds: []

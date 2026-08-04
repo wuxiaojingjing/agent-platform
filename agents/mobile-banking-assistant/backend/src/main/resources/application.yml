@@ -1,0 +1,193 @@
+spring:
+  application:
+    name: mobile-banking-assistant
+  config:
+    # 本机密钥：mobile-banking-assistant/application-local.yml（已 gitignore）。复制 example 后填入。
+    import: optional:file:./application-local.yml
+  datasource:
+    url: jdbc:postgresql://localhost:5432/agent_platform
+    username: agent_platform
+    password: agent_platform
+    hikari:
+      maximum-pool-size: 10
+      # 连接池不宜过大：中控的数据库操作都是短事务，池子开大只会把压力转嫁给 Postgres
+      connection-timeout: 3000
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+
+huawei:
+  finance:
+    cache:
+      decision:
+        # 问法出口决策缓存默认关闭；可在本地运营页临时开启。
+        enabled: ${HUAWEI_FINANCE_DECISION_CACHE_ENABLED:false}
+    agent:
+      # 服务端声明的逻辑身份，参与上下文、缓存和持久化隔离。
+      id: agent.mobile-banking-assistant
+      assets:
+        # 空则走 AgentAssetLocations（AGENT_HOME/assets）。生产可设 AGENT_ASSETS_PATH。
+        # 勿再默认 ../assets：那只在 cwd=backend 时碰巧正确，从 Agent 根启动会指到 agents/assets。
+        path: ${AGENT_ASSETS_PATH:}
+      a2a:
+        remote:
+          gateway-url: ${A2A_GATEWAY_URL:http://localhost:8086}
+      nacos:
+        enabled: false
+        server-addr: 127.0.0.1:8848
+        config:
+          group: DEFAULT_GROUP
+          refreshable: []
+        discovery:
+          group: HUAWEI_FINANCE_AGENT
+          service-name: mobile-banking-assistant
+      registry:
+        opensearch-url: http://localhost:9200
+        build-index-on-startup: true
+      model:
+        base-url: https://api.siliconflow.cn/v1
+        api-key-env: SILICONFLOW_API_KEY
+        chat:
+          base-url: https://api.deepseek.com
+          api-key-env: DEEPSEEK_API_KEY
+        embedding:
+          model: Qwen/Qwen3-Embedding-0.6B
+          dimensions: 1024
+        arbitration:
+          model: deepseek-v4-flash
+          temperature: 0.0
+          max-prompt-chars: 7000
+          stream-timing: true
+        # 逻辑契约独立；model 留空时复用 arbitration.model。
+        context-rewrite:
+          model: ""
+          temperature: 0.0
+          max-tokens: 768
+          timeout-ms: 8000
+          cache-ttl-seconds: 60
+          cache-max-entries: 1000
+          max-attempts: 2
+          retry-backoff-ms: 250
+        continuation:
+          model: ""
+          temperature: 0.0
+          max-tokens: 256
+          timeout-ms: 8000
+          cache-ttl-seconds: 60
+          cache-max-entries: 1000
+          max-attempts: 2
+          retry-backoff-ms: 250
+        loop:
+          model: ""
+          temperature: 0.0
+          max-tokens: 256
+          timeout-ms: 5000
+        response:
+          model: ""
+          temperature: 0.0
+          max-tokens: 256
+          timeout-ms: 5000
+        rerank:
+          enabled: false
+          model: Qwen/Qwen3-Reranker-0.6B
+      instance-id: ${AGENT_INSTANCE_ID:}
+      slowpath:
+        enabled: true
+        execution-mode: AUTO_READ_ONLY
+        max-auto-steps: 5
+        model: deepseek-v4-flash
+        workspace-path: ${AGENT_SLOWPATH_WORKSPACE:}
+      loop:
+        # 所有环境默认开启；能力级 LoopAccess 与 PolicyGate 继续控制真实可用动作。
+        enabled: true
+        max-iterations: 6
+        max-candidates: 8
+        max-model-calls: 8
+        max-repeat-action: 1
+        max-delegation-depth: 3
+        deadline-seconds: 30
+        claim-recovery-seconds: 60
+    mobile-banking:
+      console:
+        enabled: true
+        # 默认关闭；本地 Compose 显式开启，生产只通过 Git/MR 发布资产。
+        write-enabled: ${HUAWEI_FINANCE_MOBILE_BANKING_CONSOLE_WRITE_ENABLED:false}
+        display-name: 手机银行助手
+        default-user-id: u-console
+        default-space-id: default
+        default-channel: WEB
+        channels: [WEB, MOBILE_BANK, WECHAT]
+        session-prefix: console
+        default-page: home
+        page-options: [home, finance-center, account, transfer]
+        default-user-state: LOGGED_IN
+        user-state-options: [LOGGED_IN, GUEST]
+        refresh-interval: 5s
+        auto-refresh-enabled: true
+        example-queries:
+          - 查一下我的余额
+          - 帮我转两千给张三
+          - 先查余额，不足就别转
+          - 请金融助手帮我查询基金产品C
+    sample:
+      # 示例实现默认只用于本地走通骨架，不能作为生产领域能力。
+      mock:
+        enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      application: mobile-banking-assistant
+  tracing:
+    sampling:
+      # 行外全采。默认 0.1 意味着十次排障有九次查不到链路，而当前阶段的调用量根本不需要抽样。
+      # 接行内前必须按行内 APM 的容量规范下调，并与限流阈值一起复核。
+      probability: 1.0
+    # FP-63：OTLP 导出器已在 classpath。不要在这里写空的 endpoint——
+    # Boot 的 @ConditionalOnProperty 把空串也当成「已配置」，会造出连不上的导出器刷屏。
+    # 接行内 collector 时用环境变量打开：
+    # MANAGEMENT_OPENTELEMETRY_TRACING_EXPORT_OTLP_ENDPOINT=http://otel-collector:4318/v1/traces
+
+logging:
+  structured:
+    format.console: logstash
+    json:
+      add:
+        service: ${spring.application.name}
+        agentId: ${huawei.finance.agent.id}
+        implementationMode: application
+        role: entry
+  level:
+    com.huawei.finance: INFO
+    # OpenJiuwen 的 logger 名是扁平的（graph / workflow / session / controller），不带包名，
+    # 但确实走 SLF4J，所以能在这里管（已实测）。
+    #
+    # 为什么是 OFF 而不是 WARN：它把「节点抛业务异常」按 ERROR 连堆栈打两遍，而超限、
+    # 缺信息这类在我们这里是正常业务结局。设成 WARN 挡不住——WARN 阈值照样放行 ERROR，
+    # 只有 OFF 拦得住。代价是引擎自身的故障日志也一起没了，因此这是个取舍：
+    # 办理失败的归类与原因由 com.huawei.finance.sample.workflow 侧按 WARN 记全，信息不丢；
+    # 若要排查引擎本身的问题，临时把这三行调回 INFO。
+    graph: "OFF"
+    workflow: "OFF"
+    session: "OFF"
+    controller: "OFF"
+    agent: "OFF"
+    tool: "OFF"
+    com.openjiuwen.core: WARN
+  # traceId/spanId 进日志行首。没有它，OTEL 采到的链路和这里的日志是两套东西，
+  # 排障时只能靠时间戳硬凑。
+  pattern:
+    correlation: "[${spring.application.name:},%X{traceId:-},%X{spanId:-}] "

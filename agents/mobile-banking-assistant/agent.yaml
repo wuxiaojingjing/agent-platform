@@ -1,0 +1,18 @@
+agent:
+  id: agent.mobile-banking-assistant
+  displayName: 手机银行助手
+  roles: [entry, routing, aggregation]
+  domains: [mobile_banking]
+implementation: { mode: application, artifact: "com.huawei.finance:mobile-banking-assistant" }
+runtime:
+  intentEngine: default
+  context: enabled
+  taskOrchestrator: enabled
+a2a:
+  inbound: true
+  delegation:
+    enabled: true
+assets:
+  path: ./assets
+storage:
+  namespace: mobile-banking-assistant

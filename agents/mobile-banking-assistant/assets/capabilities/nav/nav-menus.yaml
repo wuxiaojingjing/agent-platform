@@ -1,0 +1,713 @@
+# 首批菜单跳转能力（R0）。由领域入库脚本挑选，AGENT 为 agent.nav。
+- capabilityId: agent.nav
+  name: 菜单导航助手
+  type: AGENT
+  granularity: AGENT
+  domains:
+  - finance_assistant
+  description: 手机银行菜单跳转相关的领域智能体。本能力不办理资金交易
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 入口领域
+  version: 1.0.0
+  status: ACTIVE
+  principalRequired: false
+- capabilityId: cap.nav.bond_service_储蓄国债
+  name: 打开储蓄国债
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.bond_service
+  domains:
+  - bond_service
+  description: 打开手机银行菜单「储蓄国债」并跳转至对应页面。本能力不涉及债券购买或交易提交
+  supportedIntents:
+  - 打开储蓄国债
+  - 跳转储蓄国债
+  - 购买储蓄国债
+  utterances:
+  - 打开储蓄国债
+  - 进入储蓄国债页面
+  - 我要购买储蓄国债
+  keywords:
+  - 储蓄国债
+  - 国债
+  - 打开
+  - 购买
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 入口领域
+  version: 1.0.0
+  status: ACTIVE
+  principalRequired: false
+- capabilityId: cap.nav.wealth_aggregate_查询我的资产
+  name: 打开查询我的资产
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.finance_assistant
+  domains:
+  - wealth_aggregate
+  description: 打开手机银行菜单「查询我的资产」并跳转至对应页面。本能力不涉及资金划转、不办理业务交易
+  supportedIntents:
+  - 打开查询我的资产
+  - 跳转查询我的资产
+  utterances:
+  - 打开查询我的资产
+  - 进入查询我的资产页面
+  keywords:
+  - 查询我的资产
+  - 打开
+  - 菜单
+  - 查询
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 入口领域
+  version: 1.0.0
+  status: ACTIVE
+  principalRequired: false
+- capabilityId: cap.nav.wealth_aggregate_资产诊断
+  name: 打开资产诊断
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.finance_assistant
+  domains:
+  - wealth_aggregate
+  description: 打开手机银行菜单「资产诊断」并跳转至对应页面。本能力不涉及资金划转、不办理业务交易
+  supportedIntents:
+  - 打开资产诊断
+  - 跳转资产诊断
+  utterances:
+  - 打开资产诊断
+  - 进入资产诊断
+  - 去资产诊断
+  keywords:
+  - 资产诊断
+  - 打开
+  - 菜单
+  - 资产
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 入口领域
+  version: 1.0.0
+  status: ACTIVE
+  principalRequired: false
+- capabilityId: cap.nav.fund_service_查询基金持仓
+  name: 打开查询基金持仓
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.finance_assistant
+  domains:
+  - fund_service
+  description: 打开手机银行菜单「查询基金持仓」并跳转至对应页面。本能力不涉及资金划转、不办理业务交易
+  supportedIntents:
+  - 打开查询基金持仓
+  - 跳转查询基金持仓
+  utterances:
+  - 打开查询基金持仓
+  - 进入查询基金持仓页面
+  keywords:
+  - 查询基金持仓
+  - 打开
+  - 菜单
+  - 查询
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 入口领域
+  version: 1.0.0
+  status: ACTIVE
+  principalRequired: false
+- capabilityId: cap.nav.fund_service_查询基金收益
+  name: 打开查询基金收益
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.finance_assistant
+  domains:
+  - fund_service
+  description: 打开手机银行菜单「查询基金收益」并跳转至对应页面。本能力不涉及资金划转、不办理业务交易
+  supportedIntents:
+  - 打开查询基金收益
+  - 跳转查询基金收益
+  utterances:
+  - 打开查询基金收益
+  - 进入查询基金收益
+  - 去查询基金收益
+  keywords:
+  - 查询基金收益
+  - 打开
+  - 菜单
+  - 查询
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 入口领域
+  version: 1.0.0
+  status: ACTIVE
+  principalRequired: false
+- capabilityId: cap.nav.fund_service_看基金行情
+  name: 打开看基金行情
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.finance_assistant
+  domains:
+  - fund_service
+  description: 打开手机银行菜单「看基金行情」并跳转至对应页面。本能力不涉及资金划转、不办理业务交易
+  supportedIntents:
+  - 打开看基金行情
+  - 跳转看基金行情
+  utterances:
+  - 打开看基金行情
+  - 进入看基金行情
+  - 去看基金行情
+  keywords:
+  - 看基金行情
+  - 打开
+  - 菜单
+  - 看基
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 入口领域
+  version: 1.0.0
+  status: ACTIVE
+  principalRequired: false
+- capabilityId: cap.nav.fund_service_看基金资讯
+  name: 打开看基金资讯
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.finance_assistant
+  domains:
+  - fund_service
+  description: 打开手机银行菜单「看基金资讯」并跳转至对应页面。本能力不涉及资金划转、不办理业务交易
+  supportedIntents:
+  - 打开看基金资讯
+  - 跳转看基金资讯
+  utterances:
+  - 打开看基金资讯
+  - 进入看基金资讯
+  - 去看基金资讯
+  keywords:
+  - 看基金资讯
+  - 打开
+  - 菜单
+  - 看基
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 入口领域
+  version: 1.0.0
+  status: ACTIVE
+  principalRequired: false
+- capabilityId: cap.nav.fund_service_基金选品
+  name: 打开基金选品
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.finance_assistant
+  domains:
+  - fund_service
+  description: 打开手机银行菜单「基金选品」并跳转至对应页面。本能力不涉及资金划转、不办理业务交易
+  supportedIntents:
+  - 打开基金选品
+  - 跳转基金选品
+  utterances:
+  - 打开基金选品
+  - 进入基金选品
+  - 去基金选品
+  keywords:
+  - 基金选品
+  - 打开
+  - 菜单
+  - 基金
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 入口领域
+  version: 1.0.0
+  status: ACTIVE
+  principalRequired: false
+- capabilityId: cap.nav.fund_service_基金解读
+  name: 打开基金解读
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.finance_assistant
+  domains:
+  - fund_service
+  description: 打开手机银行菜单「基金解读」并跳转至对应页面。本能力不涉及资金划转、不办理业务交易
+  supportedIntents:
+  - 打开基金解读
+  - 跳转基金解读
+  utterances:
+  - 打开基金解读
+  - 进入基金解读
+  - 去基金解读
+  keywords:
+  - 基金解读
+  - 打开
+  - 菜单
+  - 基金
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 入口领域
+  version: 1.0.0
+  status: ACTIVE
+  principalRequired: false
+- capabilityId: cap.nav.fund_service_基金对比
+  name: 打开基金对比
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.finance_assistant
+  domains:
+  - fund_service
+  description: 打开手机银行菜单「基金对比」并跳转至对应页面。本能力不涉及资金划转、不办理业务交易
+  supportedIntents:
+  - 打开基金对比
+  - 跳转基金对比
+  utterances:
+  - 打开基金对比
+  - 进入基金对比
+  - 去基金对比
+  keywords:
+  - 基金对比
+  - 打开
+  - 菜单
+  - 基金
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 入口领域
+  version: 1.0.0
+  status: ACTIVE
+  principalRequired: false
+- capabilityId: cap.nav.wealth_aggregate_基金财富学苑
+  name: 打开基金财富学苑
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.finance_assistant
+  domains:
+  - wealth_aggregate
+  description: 打开手机银行菜单「基金财富学苑」并跳转至对应页面。本能力不涉及资金划转、不办理业务交易
+  supportedIntents:
+  - 打开基金财富学苑
+  - 跳转基金财富学苑
+  utterances:
+  - 打开基金财富学苑
+  - 进入基金财富学苑
+  - 去基金财富学苑
+  keywords:
+  - 基金财富学苑
+  - 打开
+  - 菜单
+  - 基金
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 入口领域
+  version: 1.0.0
+  status: ACTIVE
+  principalRequired: false
+- capabilityId: cap.nav.wealth_product_理财选品购买
+  name: 打开理财选品购买
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.finance_assistant
+  domains:
+  - wealth_product
+  description: 打开手机银行菜单「理财选品购买」并跳转至对应页面。本能力不涉及资金划转、不办理业务交易
+  supportedIntents:
+  - 打开理财选品购买
+  - 跳转理财选品购买
+  utterances:
+  - 打开理财选品购买
+  - 进入理财选品购买
+  - 去理财选品购买
+  keywords:
+  - 理财选品购买
+  - 打开
+  - 菜单
+  - 理财
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 入口领域
+  version: 1.0.0
+  status: ACTIVE
+  principalRequired: false
+- capabilityId: cap.nav.wealth_product_查询理财持仓
+  name: 打开查询理财持仓
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.finance_assistant
+  domains:
+  - wealth_product
+  description: 打开手机银行菜单「查询理财持仓」并跳转至对应页面。本能力不涉及资金划转、不办理业务交易
+  supportedIntents:
+  - 打开查询理财持仓
+  - 跳转查询理财持仓
+  utterances:
+  - 打开查询理财持仓
+  - 进入查询理财持仓页面
+  keywords:
+  - 查询理财持仓
+  - 打开
+  - 菜单
+  - 查询
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 入口领域
+  version: 1.0.0
+  status: ACTIVE
+  principalRequired: false
+- capabilityId: cap.nav.creditcard_service_信用卡还款
+  name: 打开信用卡还款
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.finance_assistant
+  domains:
+  - creditcard_service
+  description: 打开手机银行菜单「信用卡还款」并跳转至对应页面。本能力不涉及资金划转、不办理业务交易
+  supportedIntents:
+  - 打开信用卡还款
+  - 跳转信用卡还款
+  utterances:
+  - 打开信用卡还款
+  - 进入信用卡还款
+  - 去信用卡还款
+  keywords:
+  - 信用卡还款
+  - 打开
+  - 菜单
+  - 信用
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 入口领域
+  version: 1.0.0
+  status: ACTIVE
+  principalRequired: false
+- capabilityId: cap.nav.account_查询账户余额
+  name: 打开查询账户余额
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.finance_assistant
+  domains:
+  - account
+  description: 打开手机银行菜单「查询账户余额」并跳转至对应页面。本能力不涉及资金划转、不办理业务交易
+  supportedIntents:
+  - 打开查询账户余额
+  - 跳转查询账户余额
+  utterances:
+  - 打开查询账户余额
+  - 进入查询账户余额
+  - 去查询账户余额
+  keywords:
+  - 查询账户余额
+  - 打开
+  - 菜单
+  - 查询
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 入口领域
+  version: 1.0.0
+  status: ACTIVE
+  principalRequired: false
+- capabilityId: cap.nav.account_查询开户行
+  name: 打开查询开户行
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.finance_assistant
+  domains:
+  - account
+  description: 打开手机银行菜单「查询开户行」并跳转至对应页面。本能力不涉及资金划转、不办理业务交易
+  supportedIntents:
+  - 打开查询开户行
+  - 跳转查询开户行
+  utterances:
+  - 打开查询开户行
+  - 进入查询开户行
+  - 去查询开户行
+  keywords:
+  - 查询开户行
+  - 打开
+  - 菜单
+  - 查询
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 入口领域
+  version: 1.0.0
+  status: ACTIVE
+  principalRequired: false
+- capabilityId: cap.nav.account_查询收支明细
+  name: 打开查询收支明细
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.finance_assistant
+  domains:
+  - account
+  description: 打开手机银行菜单「查询收支明细」并跳转至对应页面。本能力不涉及资金划转、不办理业务交易
+  supportedIntents:
+  - 打开查询收支明细
+  - 跳转查询收支明细
+  utterances:
+  - 打开查询收支明细
+  - 进入查询收支明细
+  - 去查询收支明细
+  keywords:
+  - 查询收支明细
+  - 打开
+  - 菜单
+  - 查询
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 入口领域
+  version: 1.0.0
+  status: ACTIVE
+  principalRequired: false
+- capabilityId: cap.nav.account_收支分析
+  name: 打开收支分析
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.finance_assistant
+  domains:
+  - account
+  description: 打开手机银行菜单「收支分析」并跳转至对应页面。本能力不涉及资金划转、不办理业务交易
+  supportedIntents:
+  - 打开收支分析
+  - 跳转收支分析
+  utterances:
+  - 打开收支分析
+  - 进入收支分析
+  - 去收支分析
+  keywords:
+  - 收支分析
+  - 打开
+  - 菜单
+  - 收支
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 入口领域
+  version: 1.0.0
+  status: ACTIVE
+  principalRequired: false
+- capabilityId: cap.nav.transfer_快速转账
+  name: 打开快速转账
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.finance_assistant
+  domains:
+  - transfer
+  description: 打开手机银行菜单「快速转账」并跳转至对应页面。本能力不涉及资金划转、不办理业务交易
+  supportedIntents:
+  - 打开快速转账
+  - 跳转快速转账
+  utterances:
+  - 打开快速转账
+  - 进入快速转账
+  - 去快速转账
+  keywords:
+  - 快速转账
+  - 打开
+  - 菜单
+  - 快速
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 入口领域
+  version: 1.0.0
+  status: ACTIVE
+  principalRequired: false
+- capabilityId: cap.nav.wealth_aggregate_产品信息查询
+  name: 打开产品信息查询
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.finance_assistant
+  domains:
+  - wealth_aggregate
+  description: 打开手机银行菜单「产品信息查询」并跳转至对应页面。本能力不涉及资金划转、不办理业务交易
+  supportedIntents:
+  - 打开产品信息查询
+  - 跳转产品信息查询
+  utterances:
+  - 打开产品信息查询
+  - 进入产品信息查询
+  - 去产品信息查询
+  keywords:
+  - 产品信息查询
+  - 打开
+  - 菜单
+  - 产品
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 入口领域
+  version: 1.0.0
+  status: ACTIVE
+  principalRequired: false
+- capabilityId: cap.nav.wealth_aggregate_风险评测
+  name: 打开风险评测
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.finance_assistant
+  domains:
+  - wealth_aggregate
+  description: 打开手机银行菜单「风险评测」并跳转至对应页面。本能力不涉及资金划转、不办理业务交易
+  supportedIntents:
+  - 打开风险评测
+  - 跳转风险评测
+  utterances:
+  - 打开风险评测
+  - 进入风险评测
+  - 去风险评测
+  keywords:
+  - 风险评测
+  - 打开
+  - 菜单
+  - 风险
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 入口领域
+  version: 1.0.0
+  status: ACTIVE
+  principalRequired: false
+- capabilityId: cap.nav.wealth_product_理财交易记录
+  name: 打开理财交易记录
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.finance_assistant
+  domains:
+  - wealth_product
+  description: 打开手机银行菜单「理财交易记录」并跳转至对应页面。本能力不涉及资金划转、不办理业务交易
+  supportedIntents:
+  - 打开理财交易记录
+  - 跳转理财交易记录
+  utterances:
+  - 打开理财交易记录
+  - 进入理财交易记录
+  - 去理财交易记录
+  keywords:
+  - 理财交易记录
+  - 打开
+  - 菜单
+  - 理财
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 入口领域
+  version: 1.0.0
+  status: ACTIVE
+  principalRequired: false
+- capabilityId: cap.nav.wealth_product_理财定投
+  name: 打开理财定投
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.finance_assistant
+  domains:
+  - wealth_product
+  description: 打开手机银行菜单「理财定投」并跳转至对应页面。本能力不涉及资金划转、不办理业务交易
+  supportedIntents:
+  - 打开理财定投
+  - 跳转理财定投
+  utterances:
+  - 打开理财定投
+  - 进入理财定投
+  - 去理财定投
+  keywords:
+  - 理财定投
+  - 打开
+  - 菜单
+  - 理财
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 入口领域
+  version: 1.0.0
+  status: ACTIVE
+  principalRequired: false
+- capabilityId: cap.nav.fund_service_基金定投
+  name: 打开基金定投
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.finance_assistant
+  domains:
+  - fund_service
+  description: 打开手机银行菜单「基金定投」并跳转至对应页面。本能力不涉及资金划转、不办理业务交易
+  supportedIntents:
+  - 打开基金定投
+  - 跳转基金定投
+  utterances:
+  - 打开基金定投
+  - 进入基金定投
+  - 去基金定投
+  keywords:
+  - 基金定投
+  - 打开
+  - 菜单
+  - 基金
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 入口领域
+  version: 1.0.0
+  status: ACTIVE
+  principalRequired: false
+- capabilityId: cap.nav.creditcard_service_信用卡账单
+  name: 打开信用卡账单
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.finance_assistant
+  domains:
+  - creditcard_service
+  description: 打开手机银行菜单「信用卡账单」并跳转至对应页面。本能力不涉及资金划转、不办理业务交易
+  supportedIntents:
+  - 打开信用卡账单
+  - 跳转信用卡账单
+  utterances:
+  - 打开信用卡账单
+  - 进入信用卡账单
+  - 去信用卡账单
+  keywords:
+  - 信用卡账单
+  - 打开
+  - 菜单
+  - 信用
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 2000
+  idempotency: SUPPORTED
+  owner: 入口领域
+  version: 1.0.0
+  status: ACTIVE
+  principalRequired: false

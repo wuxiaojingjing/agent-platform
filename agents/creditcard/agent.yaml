@@ -1,0 +1,10 @@
+agent:
+  id: agent.creditcard
+  displayName: 信用卡助手
+  roles: [domain]
+  domains: [creditcard_service]
+implementation: { mode: extension, artifact: "com.huawei.finance:creditcard" }
+runtime: { intentEngine: default, context: enabled, taskOrchestrator: enabled }
+a2a: { inbound: true, delegation: { enabled: true } }
+assets: { path: ./assets }
+storage: { namespace: creditcard }

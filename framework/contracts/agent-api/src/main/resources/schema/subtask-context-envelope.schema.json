@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://huawei.finance.agent.com/schema/subtask-context-envelope.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["baseStateVersion", "confirmedInputs", "facts", "allowedCapabilities", "readScopes", "writeScope"],
+  "properties": {
+    "contextLeaseId": {"type": ["string", "null"]},
+    "baseStateVersion": {"type": "integer", "minimum": 0},
+    "expiresAt": {"type": ["string", "null"], "format": "date-time"},
+    "goal": {"type": ["string", "null"]},
+    "confirmedInputs": {"type": "object"},
+    "facts": {"type": "array", "items": {"$ref": "#/$defs/evidence"}},
+    "allowedCapabilities": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "readScopes": {"type": "array", "uniqueItems": true, "items": {"type": "string", "enum": ["SUBTASK", "DOMAIN", "ROOT_TASK"]}},
+    "writeScope": {"type": "string", "enum": ["SUBTASK", "DOMAIN", "ROOT_TASK"]}
+  },
+  "$defs": {
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "kind", "value", "sensitivity"],
+      "properties": {
+        "ref": {"type": "string", "minLength": 1},
+        "kind": {"type": "string", "enum": ["TOOL_FACT", "CONFIRMED_INPUT", "RUNTIME_STATE"]},
+        "value": {"type": "object"},
+        "sourceAgentId": {"type": ["string", "null"]},
+        "sourceTaskId": {"type": ["string", "null"]},
+        "sourceTurnRef": {"type": ["string", "null"]},
+        "observedAt": {"type": ["string", "null"], "format": "date-time"},
+        "validUntil": {"type": ["string", "null"], "format": "date-time"},
+        "sensitivity": {"type": "string", "enum": ["PUBLIC", "INTERNAL", "SENSITIVE", "RESTRICTED"]}
+      }
+    }
+  }
+}

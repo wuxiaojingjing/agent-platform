@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://huawei.finance.agent.com/schema/unified-task.schema.json",
+  "title": "UnifiedTask",
+  "description": "中控 → 领域 Agent（v0.7 附录 B）",
+  "type": "object",
+  "required": ["taskId", "traceId", "source", "invocationOrigin", "capabilityId", "riskLevel", "guardrailCheck"],
+  "properties": {
+    "taskId": {"type": "string", "minLength": 1},
+    "traceId": {"type": "string", "minLength": 1},
+    "source": {"type": "string", "enum": ["FAST_PATH", "SLOW_PATH"]},
+    "invocationOrigin": {"type": "string", "enum": ["LOCAL", "A2A"]},
+    "goal": {"type": "string"},
+    "capabilityId": {"type": "string", "minLength": 1},
+    "parameters": {"type": "object"},
+    "riskLevel": {"type": "string", "enum": ["R0", "R1", "R2"]},
+    "confirmation": {"type": "object"},
+    "guardrailCheck": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {"type": "string", "enum": ["PENDING", "PASSED", "FAILED"]},
+        "codes": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "idempotencyKey": {"type": "string"},
+    "contextRefs": {"type": "array", "items": {"type": "string"}},
+    "deadline": {"type": "string"}
+  },
+  "allOf": [
+    {
+      "description": "幂等键只能在护栏通过后存在（实施架构 §8.4）。未过护栏就持有可执行凭据等于发放可重放的执行许可。",
+      "if": {
+        "properties": {"idempotencyKey": {"type": "string", "minLength": 1}},
+        "required": ["idempotencyKey"]
+      },
+      "then": {
+        "properties": {
+          "guardrailCheck": {"properties": {"status": {"const": "PASSED"}}, "required": ["status"]}
+        },
+        "required": ["guardrailCheck"]
+      }
+    }
+  ]
+}

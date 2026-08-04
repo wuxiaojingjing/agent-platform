@@ -1,0 +1,10 @@
+- capabilityId: agent.disabled
+  type: AGENT
+  name: Disabled test agent
+  description: Explicitly unavailable test fixture
+  domains: [disabled]
+  riskLevel: R0
+  timeoutMs: 1000
+  owner: platform-test
+  version: 1.0.0
+  status: DISABLED

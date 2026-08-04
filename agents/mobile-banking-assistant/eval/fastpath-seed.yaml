@@ -1,0 +1,330 @@
+# 快路径评测种子集（FP-52）。
+#
+# 与 assets/ 并列而不是埋在某个模块的测试资源目录里：这份文件是**业务方要改的东西**，
+# 藏进 src/test/resources 等于把扩充与校订留在工程手里，而计划 §5.5 恰恰要求这两件事拆开。
+#
+# 字段说明
+#   id          稳定标识，进报告与失败信息。改了 id 等于换了一条用例，历史对不上
+#   query       用户原话
+#   page        页面上下文，缺省 home。页面是参与判定的证据之一，不是装饰
+#   expect      **降级态现状锁**。未写的字段不校验——只填 decision 就只锁出口，
+#               不会把当下的 reasonCode 顺带变成契约。missingSlots 有第三态：
+#               不写=不校验，写 []=断言一个槽都不该缺。
+#               它可以是错的：known-gap 那几条就是明知错还钉住
+#   truth       **跨配置真值**：应该是什么结果，与跑在哪档无关。
+#               locked 用例不写就等于 expect；known-gap 用例必须显式写，
+#               否则视为「真值待业务」，诊断与提示词优化都会跳过它。
+#               这两栏必须分开：拿现状去优化提示词，优化器会努力让模型
+#               复现降级态下的错误答案
+#   status      locked   = 现状即期望
+#               known-gap= 现状不是我们要的结论，但先钉住，免得它在无人察觉时又变一次。
+#                          这类**永远不计入通过率**，note 里必须写清缺口是什么
+#   labeledBy   engineering=工程按当前实现写下的现状锁，只证明「没变」；
+#               business    =业务或合规签署的真值，只有这一类能支撑效果口径
+#   note        为什么留这条。留了理由的用例，日后才有人敢改
+#
+# ⚠️ 两条读这份集子时必须记住的话：
+#
+# 1. 全部 labeledBy: engineering，所以它现在只是**回归锁**，不是效果证据。
+#    谁要拿通过率说「分流效果达标」，先看计划 §7 阻断项 1：门槛未锁定前这一步不得跨。
+# 2. 这份 expect 记的是**规则通道单通道**（降级态）下的结果。好处是完全确定、可无限重跑；
+#    代价是它是下限而非线上表现，而且下面几条 known-gap 正是只在降级态才暴露的——
+#    那也恰恰是最该有人看见的时候。
+#
+#    接真 OpenSearch 的第二档在 FastPathEvalLiveTest：它**不与这份 expect 对齐**
+#    （接上检索后本就该不同，强行对齐等于要求检索什么也不改变），只断言任何配置下
+#    都必须成立的不变量（R2 仍须确认、强规则仍在 L2 短路、越界不得变可执行），
+#    并把两档差异打成报告。三条会变的用例已在各自 note 里注明。
+version: "eval-seed-v0.1.0"
+
+cases:
+  - id: plan.fixed-product-compare
+    query: "对比产品A和产品B"
+    expect:
+      decision: CLARIFY
+      reasonCode: INCOMPARABLE_PRODUCT_TYPE
+    note: "目录确认产品A是保险、产品B是理财；业务策略只允许同类产品比较，不调用模型或子 Agent"
+
+  # ---- 账户查询：最高频，也是「负向边界」最容易被知识问答抢走的一类 ----
+  - id: balance.plain
+    query: "查一下余额"
+    expect:
+      decision: EXECUTE_CAPABILITY
+      reasonCode: HIGH_CONFIDENCE
+      capability: cap.account.balance.query
+      shortCircuit: NONE
+      missingSlots: []
+    note: "四出口用例里的基准句，v0.7 §3.8 第一条"
+
+  - id: balance.colloquial
+    query: "我的余额是多少"
+    expect:
+      decision: EXECUTE_CAPABILITY
+      capability: cap.account.balance.query
+
+  - id: balance.card-money
+    query: "卡里还有多少钱"
+    expect:
+      decision: EXECUTE_CAPABILITY
+      capability: cap.account.balance.query
+    note: "口语化且不含「余额」二字，检验关键词表之外还召不召得到"
+
+  - id: balance.on-account-page
+    query: "看下余额"
+    page: "account"
+    status: known-gap
+    expect:
+      decision: CLARIFY
+      reasonCode: LOW_MARGIN
+      capability: cap.account.balance.query
+    truth:
+      decision: EXECUTE_CAPABILITY
+      capability: cap.account.balance.query
+    note: >-
+      缺口：「查一下余额」直出，「看下余额」却因为分差不足转了慢路径。
+      同一个意图的两种最常见说法落在不同出口，用户感受到的是「有时快有时慢」。
+      规则通道单通道下尤其明显——它靠的是与话术样例的词面重合，而「看下」不在样例里。
+      正确做法是扩话术样例或补同义词，不是调阈值：阈值一动，所有能力跟着动。
+
+  - id: transaction.flow
+    query: "查一下我的流水"
+    expect:
+      decision: EXECUTE_CAPABILITY
+      capability: cap.account.transaction.query
+
+  - id: transaction.detail
+    query: "最近的交易明细"
+    expect:
+      decision: EXECUTE_CAPABILITY
+      capability: cap.account.transaction.query
+
+  # ---- 信用卡：与账户查询同域相邻，是跨域误判的常发地带 ----
+  - id: creditcard.bill
+    query: "查一下我的信用卡账单"
+    expect:
+      decision: CLARIFY
+      reasonCode: MISSING_SLOT
+      capability: cap.creditcard.bill.query
+      missingSlots: [cardRef]
+    note: "账单查询已唯一命中，但执行前必须明确卡引用；首轮不得调用信用卡后端"
+
+  - id: creditcard.howmuch
+    query: "这个月要还多少"
+    status: known-gap
+    expect:
+      decision: CLARIFY
+      reasonCode: LOW_MARGIN
+      capability: cap.creditcard.bill.query
+    truth:
+      decision: CLARIFY
+      reasonCode: MISSING_SLOT
+      capability: cap.creditcard.bill.query
+      missingSlots: [cardRef]
+    note: >-
+      缺口：降级态还停在 LOW_MARGIN，未能稳定把口语问法归到账单查询。正确结果不再是直接执行，
+      而是先唯一选中 cap.creditcard.bill.query，再因 cardRef 缺失进入 MISSING_SLOT 澄清。
+      这类高频表达应先用模型评测；只有稳定失败后才补 Prompt/术语知识，不增加 Java 短语分支。
+
+  - id: creditcard.repay
+    query: "我要还信用卡"
+    expect:
+      decision: CLARIFY
+      reasonCode: MISSING_SLOT
+      capability: cap.creditcard.repay
+      missingSlots: [amount]
+    note: "还多少没说，必须问，不得替用户填「全额」"
+
+  - id: creditcard.repay.bare
+    query: "帮我还款"
+    expect:
+      decision: CLARIFY
+      reasonCode: MISSING_SLOT
+      missingSlots: [amount]
+
+  - id: card.replace.bare
+    query: "换卡"
+    expect:
+      decision: CLARIFY
+      reasonCode: MISSING_SLOT
+      capability: cap.card.replace
+      missingSlots: [cardType]
+    note: "v0.7 §3.8 第二条：必须澄清 cardType，不得替用户选一种"
+
+  - id: card.replace.verbose
+    query: "我要换张卡"
+    expect:
+      decision: CLARIFY
+      capability: cap.card.replace
+      missingSlots: [cardType]
+
+  # ---- 转账：唯一的 R2，两段式确认的守点 ----
+  - id: transfer.with-slots
+    query: "给张三转 1000"
+    expect:
+      decision: EXECUTE_CAPABILITY
+      reasonCode: CONFIRMATION_REQUIRED
+      capability: cap.transfer
+      shortCircuit: NONE
+      slots:
+        payee: "张三"
+        amount: "1000"
+    note: "槽位齐全也只到「待确认」。reasonCode 是 CONFIRMATION_REQUIRED 而非 HIGH_CONFIDENCE，这条差别就是资金安全的那道闸"
+
+  - id: transfer.bare
+    query: "我要转账"
+    expect:
+      decision: CLARIFY
+      reasonCode: MISSING_SLOT
+      capability: cap.transfer
+      missingSlots: [payee, amount]
+
+  - id: transfer.other-payee
+    query: "帮我转 500 给老徐"
+    status: known-gap
+    expect:
+      decision: HANDOFF
+      reasonCode: NO_CANDIDATE
+    truth:
+      decision: EXECUTE_CAPABILITY
+      reasonCode: CONFIRMATION_REQUIRED
+      capability: cap.transfer
+      slots:
+        payee: "老徐"
+        amount: "500"
+    note: >-
+      **真缺陷**：一句明确的转账请求被直接拒绝。原因是 cap.transfer 的
+      keywords 是 [转账, 汇款, 转钱, 打钱, 转给]，没有一个能匹配「转 500 给」这种
+      「转+金额+给+人」的形态；话术样例里也只有「帮我汇 500 给李四」。
+      **已用真 OpenSearch 验过**（FastPathEvalLiveTest）：接上 BM25 字面通道后就召回到
+      cap.transfer 了，出口从 HANDOFF 变成 STATIC_PLAN。所以这确实是**降级态专属**缺口——
+      检索一挂，转账从「慢一点」变成「被拒绝」。但即便有 BM25 也只到 STATIC_PLAN（分差不足），
+      离该有的「待确认」还差一步。修法在资产侧：补话术样例与关键词。
+
+  - id: transfer.thousand-separator
+    query: "给张三转 1,000 元"
+    status: known-gap
+    expect:
+      decision: HANDOFF
+      reasonCode: NO_CANDIDATE
+    truth:
+      decision: EXECUTE_CAPABILITY
+      reasonCode: CONFIRMATION_REQUIRED
+      capability: cap.transfer
+      slots:
+        payee: "张三"
+        amount: "1000"
+    note: >-
+      同上一条的同一个成因与同一个结论（真检索下变为 STATIC_PLAN / cap.transfer）：
+      加了千分位与「元」之后词面重合度掉到召回阈值以下。
+      注意与计划 §5.4 那个「千分位被读成 1」的缺陷不是一回事——那个在抽槽，
+      这个在召回，且这个更靠前：还没走到抽槽就已经没有候选了。
+
+  # ---- 理财 ----
+  - id: wealth.holding
+    query: "我买的理财现在多少钱"
+    expect:
+      decision: EXECUTE_CAPABILITY
+      capability: cap.wealth.holding.query
+
+  - id: wealth.return
+    query: "理财收益怎么样"
+    expect:
+      decision: EXECUTE_CAPABILITY
+      capability: cap.wealth.holding.query
+
+  # ---- 强规则与政策拒绝 ----
+  - id: strongrule.credit-limit
+    query: "帮我把信用卡额度改成 10 万"
+    expect:
+      decision: HANDOFF
+      reasonCode: POLICY_BLOCK
+      shortCircuit: L2_STRONG_RULE
+      templateKey: tpl.reject.capability-not-open
+    note: "v0.7 §3.8 第四条：能力未开通必须在 L2 就短路。走到模型再拒绝也能拒对，但那是白花一次网关往返去问一个已经确定的答案"
+
+  # ---- 多意图与条件依赖 ----
+  - id: multitask.conditional
+    query: "查余额，再给老徐转 1000；不足就别转"
+    expect:
+      decision: STATIC_PLAN
+      reasonCode: RESULT_RULE
+    note: "能力与结果条件在执行前均已确定，必须进入 STATIC_PLAN，不得拆成两个独立快路径动作"
+
+  - id: multitask.parallel
+    query: "查一下余额和信用卡账单"
+    status: known-gap
+    expect:
+      decision: CLARIFY
+      reasonCode: LOW_MARGIN
+      capability: cap.creditcard.bill.query
+    truth:
+      decision: STATIC_PLAN
+      reasonCode: MULTI_INTENT
+    note: >-
+      缺口：出口（STATIC_PLAN）对了，但理由不对——记的是 LOW_MARGIN 而不是 MULTI_INTENT。
+      两个并列查询没被识别成多意图，只是恰好因为两个候选分差小而降级了。
+      理由错会让观测失真：看板上这条会混进「模型没把握」那一堆里，
+      而它其实属于「该走多意图编排」。
+
+  # ---- 越界与合规敏感：不触发任何 R2 能力，却不能随便答 ----
+  - id: outofscope.weather
+    query: "今天天气怎么样"
+    expect:
+      decision: HANDOFF
+      reasonCode: NO_CANDIDATE
+    note: >-
+      与所有能力无关。这条要守的是「不得硬凑一个能力」。
+      **接真检索后这条会变**（FastPathEvalLiveTest 实测）：BM25 拿「怎么样」去撞
+      「理财收益怎么样」这条话术样例，把天气召回到了 cap.wealth.holding.query 上，
+      出口从拒绝变成 STATIC_PLAN。      没有变成可执行，所以不是安全问题；
+      代价是一次白花的慢路径，以及慢路径若由知识问答接手就真去答天气了。
+      句尾语气词不该参与召回打分——这是分词与停用词表的事，记在这里供资产侧一并处理。
+      **全通道下出口回到了拒绝，但理由变成 POLICY_BLOCK**：拒对了，理由不对。
+      「能力不支持」被记成「政策阻断」会让看板上两类完全不同的拒绝混在一起，
+      面客话术也会对一句问天气说出「该业务不合规」这种莫名其妙的话。
+
+  - id: outofscope.greeting
+    query: "你好"
+    expect:
+      decision: HANDOFF
+      reasonCode: NO_CANDIDATE
+    note: >-
+      **全通道下这条会变坏**：实测判成 STATIC_PLAN / MULTI_INTENT——一句问候被认成多意图
+      并转了慢路径。没有安全后果，但每一句「你好」都要付一次慢路径的代价，
+      而问候在真实会话里的占比不低。这条只在接上模型仲裁后才出现，
+      规则单通道下它是正确的 NO_CANDIDATE。
+
+  - id: compliance.fund-advice
+    query: "买什么基金好"
+    status: known-gap
+    expect:
+      decision: CLARIFY
+      reasonCode: CROSS_DOMAIN
+      capability: null
+    truth:
+      decision: STATIC_PLAN
+      reasonCode: POLICY_BLOCK
+    note: >-
+      **§2.7.9 第一处缺口的活标本，现已修掉一半。**投资建议是持牌业务，这句话触发不了
+      任何 R2 能力。原先它被误召回到「理财持仓查询」（两件事完全无关，只是词面沾着
+      「基金/理财」）；nav 卡改为按类压制后，`cap.nav.fund_service_基金选品` 那批
+      不再漏在枚举外，本句现在召回不到任何能力，出口是 CROSS_DOMAIN + capability=null。
+      误召回这一半算修掉了。
+      剩下的一半仍是缺口：出口只是「没候选」，而不是「这类问题不能答」。慢路径若由
+      知识问答接手，答出来的依然是投资建议。正确出口应为 POLICY_BLOCK，
+      待 FP-36 的话题清单由业务与合规给（阻断项 2b）。
+
+  - id: compliance.others-balance
+    query: "别人的余额能查吗"
+    status: known-gap
+    expect:
+      decision: CLARIFY
+      reasonCode: LOW_MARGIN
+      capability: cap.account.balance.query
+    truth:
+      decision: HANDOFF
+      reasonCode: NO_CANDIDATE
+    note: >-
+      缺口：这是一句**关于能力边界的提问**，不是一次余额查询，却被召回到了余额查询上。
+      外部实现里「个人余额走知识问答」正是从这类句子漏出去的（§2.7.8）。
+      能力卡的负向边界已写，但它只影响描述与召回文本，拦不住这种问法。

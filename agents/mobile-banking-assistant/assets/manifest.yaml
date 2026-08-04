@@ -1,0 +1,38 @@
+# 资产包清单。
+#
+# version 是人工声明的语义版本，用于评审与回滚沟通。
+# 真正进入缓存键与索引名的是「version + 内容摘要」（见 AssetBundle.assetVersion）：
+# 只靠人工版本号，一旦有人改了内容忘了升版本，出口缓存就会返回改版前的结论，
+# 而这种脏读极难在测试中复现。
+
+version: "assets-v1.1.0"
+description: "入口与执行基线资产 + 小 i 知识 + 手机银行功能目录截图知识"
+# owner 是资产评审与回滚时的责任方。写「意图引擎」曾指代整个团队，
+# 现在意图引擎只是一层，责任方要落到能签字的组织单元上。
+owner: "手机银行助手 Agent 中控"
+
+# 各资产文件相对本清单的路径，加载顺序无关（AssetLoader 仍按约定路径读）
+#
+# 薄入口资产口径（v0.4 §13 1.5）：
+# - capabilities/agents/*.yaml + domains/tech-domains.yaml → 入口域路由视角（AGENT）
+# - capabilities 下其余 TOOL 卡 → 域节点 / 过渡期快路径召回，不充当入口域路由真源
+# - 域内指代（第几张卡等）不在入口资产里实现，见 agents/account
+files:
+  capabilities: capabilities
+  domains: domains/tech-domains.yaml
+  menus: menus/menu-tree.yaml
+  navMeta: menus/nav-meta.yaml
+  strongRules: rules/strong-rules.yaml
+  negativeRules: rules/negative-rules.yaml
+  synonyms: synonyms.yaml
+  templates: templates
+  clarify: clarify.yaml
+  arbitrationSkill: prompts/arbitration-skill.yaml
+  contextRewriteSkill: prompts/context-rewrite-skill.yaml
+  continuationSkill: prompts/continuation-skill.yaml
+  loopPlannerSkill: prompts/loop-planner-skill.yaml
+  products: products/catalog.yaml
+  productComparisonPolicy: policies/product-comparison.yaml
+  complianceTopics: compliance/topics.yaml
+  standardQa: standard-qa.yaml
+  screenshotSources: knowledge/screenshot-source-ledger.yaml

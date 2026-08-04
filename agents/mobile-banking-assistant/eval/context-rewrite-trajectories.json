@@ -1,0 +1,957 @@
+[ {
+  "caseId" : "half-verb-first",
+  "query" : "转一半给张三",
+  "userPrompt" : "originalQuery=转一半给张三\nstateVersion=1\ngoal=查一下余额\nconfirmedFacts={}\nconversationHistory=[{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:utterance\",\"content\":\"查一下余额\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:assistant\",\"content\":{\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.account.balance.query\"}},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:tool\",\"content\":{\"pending\":\"NONE\",\"outcome\":\"SUCCEEDED\",\"facts\":{\"availableBalance\":\"12,845.60\"}}}]\nknowledgeExamples=[]\navailableContext=[{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:account-alias\",\"value\":{\"accountAlias\":\"尾号 8821 借记卡\"},\"sensitivity\":\"SENSITIVE\"},{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:balance-snapshot\",\"value\":{\"availableBalance\":\"12,845.60\"},\"sensitivity\":\"SENSITIVE\"},{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:accounts\",\"value\":{\"cards\":[{\"index\":1,\"alias\":\"尾号 8821 借记卡\"},{\"index\":2,\"alias\":\"尾号 3344 借记卡\"}]},\"sensitivity\":\"SENSITIVE\"},{\"ref\":\"turn:context-opt-balance#0:utterance\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"sensitivity\":\"SENSITIVE\",\"kind\":\"USER_TURN\",\"value\":{\"pending\":\"NONE\",\"decision\":\"EXECUTE_CAPABILITY\",\"text\":\"查一下余额\",\"capabilityId\":\"cap.account.balance.query\",\"outcome\":\"SUCCEEDED\"}}]\n输出 JSON。\n",
+  "conversationHistory" : [ {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:utterance",
+    "content" : "查一下余额"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:assistant",
+    "content" : {
+      "decision" : "EXECUTE_CAPABILITY",
+      "capabilityId" : "cap.account.balance.query"
+    }
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:tool",
+    "content" : {
+      "pending" : "NONE",
+      "outcome" : "SUCCEEDED",
+      "facts" : {
+        "availableBalance" : "12,845.60"
+      }
+    }
+  } ],
+  "assetVersion" : "assets-v1.0.0+9b02291d",
+  "truth" : {
+    "consumed" : true,
+    "resolutionType" : "REQUERY_THEN_HALF",
+    "slots" : {
+      "amountBasis" : "REQUERY_THEN_HALF"
+    },
+    "usedContextRefs" : [ "fact:account-alias" ],
+    "standaloneContains" : [ "重查", "张三" ],
+    "forbiddenSlotKeys" : [ "amount" ]
+  }
+}, {
+  "caseId" : "half-balance-object",
+  "query" : "给张三转余额的一半",
+  "userPrompt" : "originalQuery=给张三转余额的一半\nstateVersion=1\ngoal=查一下余额\nconfirmedFacts={}\nconversationHistory=[{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:utterance\",\"content\":\"查一下余额\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:assistant\",\"content\":{\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.account.balance.query\"}},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:tool\",\"content\":{\"pending\":\"NONE\",\"outcome\":\"SUCCEEDED\",\"facts\":{\"availableBalance\":\"12,845.60\"}}}]\nknowledgeExamples=[]\navailableContext=[{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:account-alias\",\"value\":{\"accountAlias\":\"尾号 8821 借记卡\"},\"sensitivity\":\"SENSITIVE\"},{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:balance-snapshot\",\"value\":{\"availableBalance\":\"12,845.60\"},\"sensitivity\":\"SENSITIVE\"},{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:accounts\",\"value\":{\"cards\":[{\"index\":1,\"alias\":\"尾号 8821 借记卡\"},{\"index\":2,\"alias\":\"尾号 3344 借记卡\"}]},\"sensitivity\":\"SENSITIVE\"},{\"ref\":\"turn:context-opt-balance#0:utterance\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"sensitivity\":\"SENSITIVE\",\"kind\":\"USER_TURN\",\"value\":{\"pending\":\"NONE\",\"decision\":\"EXECUTE_CAPABILITY\",\"text\":\"查一下余额\",\"capabilityId\":\"cap.account.balance.query\",\"outcome\":\"SUCCEEDED\"}}]\n输出 JSON。\n",
+  "conversationHistory" : [ {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:utterance",
+    "content" : "查一下余额"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:assistant",
+    "content" : {
+      "decision" : "EXECUTE_CAPABILITY",
+      "capabilityId" : "cap.account.balance.query"
+    }
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:tool",
+    "content" : {
+      "pending" : "NONE",
+      "outcome" : "SUCCEEDED",
+      "facts" : {
+        "availableBalance" : "12,845.60"
+      }
+    }
+  } ],
+  "assetVersion" : "assets-v1.0.0+9b02291d",
+  "truth" : {
+    "consumed" : true,
+    "resolutionType" : "REQUERY_THEN_HALF",
+    "slots" : {
+      "amountBasis" : "REQUERY_THEN_HALF"
+    },
+    "usedContextRefs" : [ "fact:account-alias" ],
+    "standaloneContains" : [ "重查", "张三" ],
+    "forbiddenSlotKeys" : [ "amount" ]
+  }
+}, {
+  "caseId" : "half-explicit-prior",
+  "query" : "把刚才余额的一半转给张三",
+  "userPrompt" : "originalQuery=把刚才余额的一半转给张三\nstateVersion=1\ngoal=查一下余额\nconfirmedFacts={}\nconversationHistory=[{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:utterance\",\"content\":\"查一下余额\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:assistant\",\"content\":{\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.account.balance.query\"}},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:tool\",\"content\":{\"pending\":\"NONE\",\"outcome\":\"SUCCEEDED\",\"facts\":{\"availableBalance\":\"12,845.60\"}}}]\nknowledgeExamples=[]\navailableContext=[{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:account-alias\",\"value\":{\"accountAlias\":\"尾号 8821 借记卡\"},\"sensitivity\":\"SENSITIVE\"},{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:balance-snapshot\",\"value\":{\"availableBalance\":\"12,845.60\"},\"sensitivity\":\"SENSITIVE\"},{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:accounts\",\"value\":{\"cards\":[{\"index\":1,\"alias\":\"尾号 8821 借记卡\"},{\"index\":2,\"alias\":\"尾号 3344 借记卡\"}]},\"sensitivity\":\"SENSITIVE\"},{\"ref\":\"turn:context-opt-balance#0:utterance\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"sensitivity\":\"SENSITIVE\",\"kind\":\"USER_TURN\",\"value\":{\"pending\":\"NONE\",\"decision\":\"EXECUTE_CAPABILITY\",\"text\":\"查一下余额\",\"capabilityId\":\"cap.account.balance.query\",\"outcome\":\"SUCCEEDED\"}}]\n输出 JSON。\n",
+  "conversationHistory" : [ {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:utterance",
+    "content" : "查一下余额"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:assistant",
+    "content" : {
+      "decision" : "EXECUTE_CAPABILITY",
+      "capabilityId" : "cap.account.balance.query"
+    }
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:tool",
+    "content" : {
+      "pending" : "NONE",
+      "outcome" : "SUCCEEDED",
+      "facts" : {
+        "availableBalance" : "12,845.60"
+      }
+    }
+  } ],
+  "assetVersion" : "assets-v1.0.0+9b02291d",
+  "truth" : {
+    "consumed" : true,
+    "resolutionType" : "REQUERY_THEN_HALF",
+    "slots" : {
+      "amountBasis" : "REQUERY_THEN_HALF"
+    },
+    "usedContextRefs" : [ "fact:account-alias" ],
+    "standaloneContains" : [ "重查", "张三" ],
+    "forbiddenSlotKeys" : [ "amount" ]
+  }
+}, {
+  "caseId" : "half-payee-first",
+  "query" : "给张三转一半",
+  "userPrompt" : "originalQuery=给张三转一半\nstateVersion=1\ngoal=查一下余额\nconfirmedFacts={}\nconversationHistory=[{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:utterance\",\"content\":\"查一下余额\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:assistant\",\"content\":{\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.account.balance.query\"}},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:tool\",\"content\":{\"pending\":\"NONE\",\"outcome\":\"SUCCEEDED\",\"facts\":{\"availableBalance\":\"12,845.60\"}}}]\nknowledgeExamples=[]\navailableContext=[{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:account-alias\",\"value\":{\"accountAlias\":\"尾号 8821 借记卡\"},\"sensitivity\":\"SENSITIVE\"},{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:balance-snapshot\",\"value\":{\"availableBalance\":\"12,845.60\"},\"sensitivity\":\"SENSITIVE\"},{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:accounts\",\"value\":{\"cards\":[{\"index\":1,\"alias\":\"尾号 8821 借记卡\"},{\"index\":2,\"alias\":\"尾号 3344 借记卡\"}]},\"sensitivity\":\"SENSITIVE\"},{\"ref\":\"turn:context-opt-balance#0:utterance\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"sensitivity\":\"SENSITIVE\",\"kind\":\"USER_TURN\",\"value\":{\"pending\":\"NONE\",\"decision\":\"EXECUTE_CAPABILITY\",\"text\":\"查一下余额\",\"capabilityId\":\"cap.account.balance.query\",\"outcome\":\"SUCCEEDED\"}}]\n输出 JSON。\n",
+  "conversationHistory" : [ {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:utterance",
+    "content" : "查一下余额"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:assistant",
+    "content" : {
+      "decision" : "EXECUTE_CAPABILITY",
+      "capabilityId" : "cap.account.balance.query"
+    }
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:tool",
+    "content" : {
+      "pending" : "NONE",
+      "outcome" : "SUCCEEDED",
+      "facts" : {
+        "availableBalance" : "12,845.60"
+      }
+    }
+  } ],
+  "assetVersion" : "assets-v1.0.0+9b02291d",
+  "truth" : {
+    "consumed" : true,
+    "resolutionType" : "REQUERY_THEN_HALF",
+    "slots" : {
+      "amountBasis" : "REQUERY_THEN_HALF"
+    },
+    "usedContextRefs" : [ "fact:account-alias" ],
+    "standaloneContains" : [ "重查", "张三" ],
+    "forbiddenSlotKeys" : [ "amount" ]
+  }
+}, {
+  "caseId" : "half-another-payee",
+  "query" : "再把一半转给李四",
+  "userPrompt" : "originalQuery=再把一半转给李四\nstateVersion=1\ngoal=查一下余额\nconfirmedFacts={}\nconversationHistory=[{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:utterance\",\"content\":\"查一下余额\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:assistant\",\"content\":{\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.account.balance.query\"}},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:tool\",\"content\":{\"pending\":\"NONE\",\"outcome\":\"SUCCEEDED\",\"facts\":{\"availableBalance\":\"12,845.60\"}}}]\nknowledgeExamples=[]\navailableContext=[{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:account-alias\",\"value\":{\"accountAlias\":\"尾号 8821 借记卡\"},\"sensitivity\":\"SENSITIVE\"},{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:balance-snapshot\",\"value\":{\"availableBalance\":\"12,845.60\"},\"sensitivity\":\"SENSITIVE\"},{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:accounts\",\"value\":{\"cards\":[{\"index\":1,\"alias\":\"尾号 8821 借记卡\"},{\"index\":2,\"alias\":\"尾号 3344 借记卡\"}]},\"sensitivity\":\"SENSITIVE\"},{\"ref\":\"turn:context-opt-balance#0:utterance\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"sensitivity\":\"SENSITIVE\",\"kind\":\"USER_TURN\",\"value\":{\"pending\":\"NONE\",\"decision\":\"EXECUTE_CAPABILITY\",\"text\":\"查一下余额\",\"capabilityId\":\"cap.account.balance.query\",\"outcome\":\"SUCCEEDED\"}}]\n输出 JSON。\n",
+  "conversationHistory" : [ {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:utterance",
+    "content" : "查一下余额"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:assistant",
+    "content" : {
+      "decision" : "EXECUTE_CAPABILITY",
+      "capabilityId" : "cap.account.balance.query"
+    }
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:tool",
+    "content" : {
+      "pending" : "NONE",
+      "outcome" : "SUCCEEDED",
+      "facts" : {
+        "availableBalance" : "12,845.60"
+      }
+    }
+  } ],
+  "assetVersion" : "assets-v1.0.0+9b02291d",
+  "truth" : {
+    "consumed" : true,
+    "resolutionType" : "REQUERY_THEN_HALF",
+    "slots" : {
+      "amountBasis" : "REQUERY_THEN_HALF"
+    },
+    "usedContextRefs" : [ "fact:account-alias" ],
+    "standaloneContains" : [ "重查", "李四" ],
+    "forbiddenSlotKeys" : [ "amount" ]
+  }
+}, {
+  "caseId" : "ordinal-account",
+  "query" : "第二张呢",
+  "userPrompt" : "originalQuery=第二张呢\nstateVersion=1\ngoal=查一下余额\nconfirmedFacts={}\nconversationHistory=[{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:utterance\",\"content\":\"查一下余额\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:assistant\",\"content\":{\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.account.balance.query\"}},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:tool\",\"content\":{\"pending\":\"NONE\",\"outcome\":\"SUCCEEDED\",\"facts\":{\"availableBalance\":\"12,845.60\"}}}]\nknowledgeExamples=[]\navailableContext=[{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:account-alias\",\"value\":{\"accountAlias\":\"尾号 8821 借记卡\"},\"sensitivity\":\"SENSITIVE\"},{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:balance-snapshot\",\"value\":{\"availableBalance\":\"12,845.60\"},\"sensitivity\":\"SENSITIVE\"},{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:accounts\",\"value\":{\"cards\":[{\"index\":1,\"alias\":\"尾号 8821 借记卡\"},{\"index\":2,\"alias\":\"尾号 3344 借记卡\"}]},\"sensitivity\":\"SENSITIVE\"},{\"ref\":\"turn:context-opt-balance#0:utterance\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"sensitivity\":\"SENSITIVE\",\"kind\":\"USER_TURN\",\"value\":{\"pending\":\"NONE\",\"decision\":\"EXECUTE_CAPABILITY\",\"text\":\"查一下余额\",\"capabilityId\":\"cap.account.balance.query\",\"outcome\":\"SUCCEEDED\"}}]\n输出 JSON。\n",
+  "conversationHistory" : [ {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:utterance",
+    "content" : "查一下余额"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:assistant",
+    "content" : {
+      "decision" : "EXECUTE_CAPABILITY",
+      "capabilityId" : "cap.account.balance.query"
+    }
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:tool",
+    "content" : {
+      "pending" : "NONE",
+      "outcome" : "SUCCEEDED",
+      "facts" : {
+        "availableBalance" : "12,845.60"
+      }
+    }
+  } ],
+  "assetVersion" : "assets-v1.0.0+9b02291d",
+  "truth" : {
+    "consumed" : true,
+    "eventType" : "SUPPLEMENT",
+    "resolutionType" : "ORDINAL_REFERENCE",
+    "slots" : {
+      "accountOrdinal" : "2"
+    },
+    "usedContextRefs" : [ "fact:accounts" ],
+    "standaloneContains" : [ "第二" ],
+    "forbiddenSlotKeys" : [ ]
+  }
+}, {
+  "caseId" : "ordinal-out-of-range",
+  "query" : "第三张呢",
+  "userPrompt" : "originalQuery=第三张呢\nstateVersion=1\ngoal=查一下余额\nconfirmedFacts={}\nconversationHistory=[{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:utterance\",\"content\":\"查一下余额\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:assistant\",\"content\":{\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.account.balance.query\"}},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:tool\",\"content\":{\"pending\":\"NONE\",\"outcome\":\"SUCCEEDED\",\"facts\":{\"availableBalance\":\"12,845.60\"}}}]\nknowledgeExamples=[]\navailableContext=[{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:account-alias\",\"value\":{\"accountAlias\":\"尾号 8821 借记卡\"},\"sensitivity\":\"SENSITIVE\"},{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:balance-snapshot\",\"value\":{\"availableBalance\":\"12,845.60\"},\"sensitivity\":\"SENSITIVE\"},{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:accounts\",\"value\":{\"cards\":[{\"index\":1,\"alias\":\"尾号 8821 借记卡\"},{\"index\":2,\"alias\":\"尾号 3344 借记卡\"}]},\"sensitivity\":\"SENSITIVE\"},{\"ref\":\"turn:context-opt-balance#0:utterance\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"sensitivity\":\"SENSITIVE\",\"kind\":\"USER_TURN\",\"value\":{\"pending\":\"NONE\",\"decision\":\"EXECUTE_CAPABILITY\",\"text\":\"查一下余额\",\"capabilityId\":\"cap.account.balance.query\",\"outcome\":\"SUCCEEDED\"}}]\n输出 JSON。\n",
+  "conversationHistory" : [ {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:utterance",
+    "content" : "查一下余额"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:assistant",
+    "content" : {
+      "decision" : "EXECUTE_CAPABILITY",
+      "capabilityId" : "cap.account.balance.query"
+    }
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:tool",
+    "content" : {
+      "pending" : "NONE",
+      "outcome" : "SUCCEEDED",
+      "facts" : {
+        "availableBalance" : "12,845.60"
+      }
+    }
+  } ],
+  "assetVersion" : "assets-v1.0.0+9b02291d",
+  "truth" : {
+    "consumed" : false,
+    "slots" : { },
+    "usedContextRefs" : [ ],
+    "standaloneContains" : [ "第三张" ],
+    "forbiddenSlotKeys" : [ "accountOrdinal" ]
+  }
+}, {
+  "caseId" : "absolute-amount",
+  "query" : "给张三转1000",
+  "userPrompt" : "originalQuery=给张三转1000\nstateVersion=1\ngoal=查一下余额\nconfirmedFacts={}\nconversationHistory=[{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:utterance\",\"content\":\"查一下余额\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:assistant\",\"content\":{\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.account.balance.query\"}},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:tool\",\"content\":{\"pending\":\"NONE\",\"outcome\":\"SUCCEEDED\",\"facts\":{\"availableBalance\":\"12,845.60\"}}}]\nknowledgeExamples=[]\navailableContext=[{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:account-alias\",\"value\":{\"accountAlias\":\"尾号 8821 借记卡\"},\"sensitivity\":\"SENSITIVE\"},{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:balance-snapshot\",\"value\":{\"availableBalance\":\"12,845.60\"},\"sensitivity\":\"SENSITIVE\"},{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:accounts\",\"value\":{\"cards\":[{\"index\":1,\"alias\":\"尾号 8821 借记卡\"},{\"index\":2,\"alias\":\"尾号 3344 借记卡\"}]},\"sensitivity\":\"SENSITIVE\"},{\"ref\":\"turn:context-opt-balance#0:utterance\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"sensitivity\":\"SENSITIVE\",\"kind\":\"USER_TURN\",\"value\":{\"pending\":\"NONE\",\"decision\":\"EXECUTE_CAPABILITY\",\"text\":\"查一下余额\",\"capabilityId\":\"cap.account.balance.query\",\"outcome\":\"SUCCEEDED\"}}]\n输出 JSON。\n",
+  "conversationHistory" : [ {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:utterance",
+    "content" : "查一下余额"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:assistant",
+    "content" : {
+      "decision" : "EXECUTE_CAPABILITY",
+      "capabilityId" : "cap.account.balance.query"
+    }
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:tool",
+    "content" : {
+      "pending" : "NONE",
+      "outcome" : "SUCCEEDED",
+      "facts" : {
+        "availableBalance" : "12,845.60"
+      }
+    }
+  } ],
+  "assetVersion" : "assets-v1.0.0+9b02291d",
+  "truth" : {
+    "consumed" : false,
+    "eventType" : "NEW_TASK",
+    "slots" : { },
+    "usedContextRefs" : [ ],
+    "standaloneContains" : [ "给张三转1000" ],
+    "forbiddenSlotKeys" : [ "amountBasis" ]
+  }
+}, {
+  "caseId" : "explicit-account",
+  "query" : "查尾号3344的余额",
+  "userPrompt" : "originalQuery=查尾号3344的余额\nstateVersion=1\ngoal=查一下余额\nconfirmedFacts={}\nconversationHistory=[{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:utterance\",\"content\":\"查一下余额\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:assistant\",\"content\":{\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.account.balance.query\"}},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:tool\",\"content\":{\"pending\":\"NONE\",\"outcome\":\"SUCCEEDED\",\"facts\":{\"availableBalance\":\"12,845.60\"}}}]\nknowledgeExamples=[]\navailableContext=[{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:account-alias\",\"value\":{\"accountAlias\":\"尾号 8821 借记卡\"},\"sensitivity\":\"SENSITIVE\"},{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:balance-snapshot\",\"value\":{\"availableBalance\":\"12,845.60\"},\"sensitivity\":\"SENSITIVE\"},{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:accounts\",\"value\":{\"cards\":[{\"index\":1,\"alias\":\"尾号 8821 借记卡\"},{\"index\":2,\"alias\":\"尾号 3344 借记卡\"}]},\"sensitivity\":\"SENSITIVE\"},{\"ref\":\"turn:context-opt-balance#0:utterance\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"sensitivity\":\"SENSITIVE\",\"kind\":\"USER_TURN\",\"value\":{\"pending\":\"NONE\",\"decision\":\"EXECUTE_CAPABILITY\",\"text\":\"查一下余额\",\"capabilityId\":\"cap.account.balance.query\",\"outcome\":\"SUCCEEDED\"}}]\n输出 JSON。\n",
+  "conversationHistory" : [ {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:utterance",
+    "content" : "查一下余额"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:assistant",
+    "content" : {
+      "decision" : "EXECUTE_CAPABILITY",
+      "capabilityId" : "cap.account.balance.query"
+    }
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:tool",
+    "content" : {
+      "pending" : "NONE",
+      "outcome" : "SUCCEEDED",
+      "facts" : {
+        "availableBalance" : "12,845.60"
+      }
+    }
+  } ],
+  "assetVersion" : "assets-v1.0.0+9b02291d",
+  "truth" : {
+    "consumed" : false,
+    "eventType" : "NEW_TASK",
+    "slots" : { },
+    "usedContextRefs" : [ ],
+    "standaloneContains" : [ "尾号3344" ],
+    "forbiddenSlotKeys" : [ "accountOrdinal" ]
+  }
+}, {
+  "caseId" : "cancel-active-task",
+  "query" : "取消",
+  "userPrompt" : "originalQuery=取消\nstateVersion=1\ngoal=给张三转1000\nconfirmedFacts={}\nconversationHistory=[{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-transfer#0\",\"ref\":\"turn:context-opt-transfer#0:utterance\",\"content\":\"给张三转1000\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-transfer#0\",\"ref\":\"turn:context-opt-transfer#0:assistant\",\"content\":{\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.transfer\"}},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-transfer#0\",\"ref\":\"turn:context-opt-transfer#0:tool\",\"content\":{\"pending\":\"REVIEW\"}}]\nknowledgeExamples=[]\navailableContext=[{\"ref\":\"turn:context-opt-transfer#0:utterance\",\"sourceTurnRef\":\"turn:context-opt-transfer#0\",\"sensitivity\":\"SENSITIVE\",\"kind\":\"USER_TURN\",\"value\":{\"text\":\"给张三转1000\",\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.transfer\",\"pending\":\"REVIEW\"}}]\n输出 JSON。\n",
+  "conversationHistory" : [ {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-transfer#0",
+    "ref" : "turn:context-opt-transfer#0:utterance",
+    "content" : "给张三转1000"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-transfer#0",
+    "ref" : "turn:context-opt-transfer#0:assistant",
+    "content" : {
+      "decision" : "EXECUTE_CAPABILITY",
+      "capabilityId" : "cap.transfer"
+    }
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-transfer#0",
+    "ref" : "turn:context-opt-transfer#0:tool",
+    "content" : {
+      "pending" : "REVIEW"
+    }
+  } ],
+  "assetVersion" : "assets-v1.0.0+9b02291d",
+  "truth" : {
+    "consumed" : false,
+    "eventType" : "CANCEL",
+    "slots" : { },
+    "usedContextRefs" : [ ],
+    "standaloneContains" : [ "取消" ],
+    "forbiddenSlotKeys" : [ ]
+  }
+}, {
+  "caseId" : "cancel-without-task",
+  "query" : "取消",
+  "userPrompt" : "originalQuery=取消\nstateVersion=1\ngoal=\nconfirmedFacts={}\nconversationHistory=[]\nknowledgeExamples=[]\navailableContext=[]\n输出 JSON。\n",
+  "conversationHistory" : [ ],
+  "assetVersion" : "assets-v1.0.0+9b02291d",
+  "truth" : {
+    "consumed" : false,
+    "eventType" : "CANCEL",
+    "slots" : { },
+    "usedContextRefs" : [ ],
+    "standaloneContains" : [ "取消" ],
+    "forbiddenSlotKeys" : [ ]
+  }
+}, {
+  "caseId" : "independent-question",
+  "query" : "怎么开通短信提醒",
+  "userPrompt" : "originalQuery=怎么开通短信提醒\nstateVersion=1\ngoal=查一下余额\nconfirmedFacts={}\nconversationHistory=[{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:utterance\",\"content\":\"查一下余额\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:assistant\",\"content\":{\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.account.balance.query\"}},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:tool\",\"content\":{\"pending\":\"NONE\",\"outcome\":\"SUCCEEDED\",\"facts\":{\"availableBalance\":\"12,845.60\"}}}]\nknowledgeExamples=[]\navailableContext=[{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:account-alias\",\"value\":{\"accountAlias\":\"尾号 8821 借记卡\"},\"sensitivity\":\"SENSITIVE\"},{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:balance-snapshot\",\"value\":{\"availableBalance\":\"12,845.60\"},\"sensitivity\":\"SENSITIVE\"},{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:accounts\",\"value\":{\"cards\":[{\"index\":1,\"alias\":\"尾号 8821 借记卡\"},{\"index\":2,\"alias\":\"尾号 3344 借记卡\"}]},\"sensitivity\":\"SENSITIVE\"},{\"ref\":\"turn:context-opt-balance#0:utterance\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"sensitivity\":\"SENSITIVE\",\"kind\":\"USER_TURN\",\"value\":{\"pending\":\"NONE\",\"decision\":\"EXECUTE_CAPABILITY\",\"text\":\"查一下余额\",\"capabilityId\":\"cap.account.balance.query\",\"outcome\":\"SUCCEEDED\"}}]\n输出 JSON。\n",
+  "conversationHistory" : [ {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:utterance",
+    "content" : "查一下余额"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:assistant",
+    "content" : {
+      "decision" : "EXECUTE_CAPABILITY",
+      "capabilityId" : "cap.account.balance.query"
+    }
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:tool",
+    "content" : {
+      "pending" : "NONE",
+      "outcome" : "SUCCEEDED",
+      "facts" : {
+        "availableBalance" : "12,845.60"
+      }
+    }
+  } ],
+  "assetVersion" : "assets-v1.0.0+9b02291d",
+  "truth" : {
+    "consumed" : false,
+    "eventType" : "NEW_TASK",
+    "slots" : { },
+    "usedContextRefs" : [ ],
+    "standaloneContains" : [ "短信提醒" ],
+    "forbiddenSlotKeys" : [ ]
+  }
+}, {
+  "caseId" : "topic-switch",
+  "query" : "查一下信用卡账单",
+  "userPrompt" : "originalQuery=查一下信用卡账单\nstateVersion=1\ngoal=查一下余额\nconfirmedFacts={}\nconversationHistory=[{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:utterance\",\"content\":\"查一下余额\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:assistant\",\"content\":{\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.account.balance.query\"}},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"ref\":\"turn:context-opt-balance#0:tool\",\"content\":{\"pending\":\"NONE\",\"outcome\":\"SUCCEEDED\",\"facts\":{\"availableBalance\":\"12,845.60\"}}}]\nknowledgeExamples=[]\navailableContext=[{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:account-alias\",\"value\":{\"accountAlias\":\"尾号 8821 借记卡\"},\"sensitivity\":\"SENSITIVE\"},{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:balance-snapshot\",\"value\":{\"availableBalance\":\"12,845.60\"},\"sensitivity\":\"SENSITIVE\"},{\"kind\":\"TOOL_FACT\",\"ref\":\"fact:accounts\",\"value\":{\"cards\":[{\"index\":1,\"alias\":\"尾号 8821 借记卡\"},{\"index\":2,\"alias\":\"尾号 3344 借记卡\"}]},\"sensitivity\":\"SENSITIVE\"},{\"ref\":\"turn:context-opt-balance#0:utterance\",\"sourceTurnRef\":\"turn:context-opt-balance#0\",\"sensitivity\":\"SENSITIVE\",\"kind\":\"USER_TURN\",\"value\":{\"pending\":\"NONE\",\"decision\":\"EXECUTE_CAPABILITY\",\"text\":\"查一下余额\",\"capabilityId\":\"cap.account.balance.query\",\"outcome\":\"SUCCEEDED\"}}]\n输出 JSON。\n",
+  "conversationHistory" : [ {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:utterance",
+    "content" : "查一下余额"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:assistant",
+    "content" : {
+      "decision" : "EXECUTE_CAPABILITY",
+      "capabilityId" : "cap.account.balance.query"
+    }
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-balance#0",
+    "ref" : "turn:context-opt-balance#0:tool",
+    "content" : {
+      "pending" : "NONE",
+      "outcome" : "SUCCEEDED",
+      "facts" : {
+        "availableBalance" : "12,845.60"
+      }
+    }
+  } ],
+  "assetVersion" : "assets-v1.0.0+9b02291d",
+  "truth" : {
+    "consumed" : false,
+    "eventType" : "NEW_TASK",
+    "slots" : { },
+    "usedContextRefs" : [ ],
+    "standaloneContains" : [ "信用卡账单" ],
+    "forbiddenSlotKeys" : [ ]
+  }
+}, {
+  "caseId" : "payee-correction",
+  "query" : "不是张三，是李四",
+  "userPrompt" : "originalQuery=不是张三，是李四\nstateVersion=1\ngoal=给张三转1000\nconfirmedFacts={}\nconversationHistory=[{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-transfer#0\",\"ref\":\"turn:context-opt-transfer#0:utterance\",\"content\":\"给张三转1000\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-transfer#0\",\"ref\":\"turn:context-opt-transfer#0:assistant\",\"content\":{\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.transfer\"}},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-transfer#0\",\"ref\":\"turn:context-opt-transfer#0:tool\",\"content\":{\"pending\":\"REVIEW\"}}]\nknowledgeExamples=[]\navailableContext=[{\"ref\":\"turn:context-opt-transfer#0:utterance\",\"sourceTurnRef\":\"turn:context-opt-transfer#0\",\"sensitivity\":\"SENSITIVE\",\"kind\":\"USER_TURN\",\"value\":{\"text\":\"给张三转1000\",\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.transfer\",\"pending\":\"REVIEW\"}}]\n输出 JSON。\n",
+  "conversationHistory" : [ {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-transfer#0",
+    "ref" : "turn:context-opt-transfer#0:utterance",
+    "content" : "给张三转1000"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-transfer#0",
+    "ref" : "turn:context-opt-transfer#0:assistant",
+    "content" : {
+      "decision" : "EXECUTE_CAPABILITY",
+      "capabilityId" : "cap.transfer"
+    }
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-transfer#0",
+    "ref" : "turn:context-opt-transfer#0:tool",
+    "content" : {
+      "pending" : "REVIEW"
+    }
+  } ],
+  "assetVersion" : "assets-v1.0.0+9b02291d",
+  "truth" : {
+    "consumed" : true,
+    "eventType" : "CORRECTION",
+    "resolutionType" : "CORRECTION",
+    "slots" : {
+      "payee" : "李四"
+    },
+    "usedContextRefs" : [ "turn:context-opt-transfer#0:utterance" ],
+    "standaloneContains" : [ "李四" ],
+    "forbiddenSlotKeys" : [ ]
+  }
+}, {
+  "caseId" : "amount-correction",
+  "query" : "金额改成2000",
+  "userPrompt" : "originalQuery=金额改成2000\nstateVersion=1\ngoal=给张三转1000\nconfirmedFacts={}\nconversationHistory=[{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-transfer#0\",\"ref\":\"turn:context-opt-transfer#0:utterance\",\"content\":\"给张三转1000\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-transfer#0\",\"ref\":\"turn:context-opt-transfer#0:assistant\",\"content\":{\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.transfer\"}},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-transfer#0\",\"ref\":\"turn:context-opt-transfer#0:tool\",\"content\":{\"pending\":\"REVIEW\"}}]\nknowledgeExamples=[]\navailableContext=[{\"ref\":\"turn:context-opt-transfer#0:utterance\",\"sourceTurnRef\":\"turn:context-opt-transfer#0\",\"sensitivity\":\"SENSITIVE\",\"kind\":\"USER_TURN\",\"value\":{\"text\":\"给张三转1000\",\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.transfer\",\"pending\":\"REVIEW\"}}]\n输出 JSON。\n",
+  "conversationHistory" : [ {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-transfer#0",
+    "ref" : "turn:context-opt-transfer#0:utterance",
+    "content" : "给张三转1000"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-transfer#0",
+    "ref" : "turn:context-opt-transfer#0:assistant",
+    "content" : {
+      "decision" : "EXECUTE_CAPABILITY",
+      "capabilityId" : "cap.transfer"
+    }
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-transfer#0",
+    "ref" : "turn:context-opt-transfer#0:tool",
+    "content" : {
+      "pending" : "REVIEW"
+    }
+  } ],
+  "assetVersion" : "assets-v1.0.0+9b02291d",
+  "truth" : {
+    "consumed" : true,
+    "eventType" : "CORRECTION",
+    "resolutionType" : "CORRECTION",
+    "slots" : {
+      "amount" : "2000"
+    },
+    "usedContextRefs" : [ "turn:context-opt-transfer#0:utterance" ],
+    "standaloneContains" : [ "2000" ],
+    "forbiddenSlotKeys" : [ ]
+  }
+}, {
+  "caseId" : "payee-coreference",
+  "query" : "给他再转500",
+  "userPrompt" : "originalQuery=给他再转500\nstateVersion=1\ngoal=给张三转1000\nconfirmedFacts={}\nconversationHistory=[{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-transfer#0\",\"ref\":\"turn:context-opt-transfer#0:utterance\",\"content\":\"给张三转1000\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-transfer#0\",\"ref\":\"turn:context-opt-transfer#0:assistant\",\"content\":{\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.transfer\"}},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-transfer#0\",\"ref\":\"turn:context-opt-transfer#0:tool\",\"content\":{\"pending\":\"REVIEW\"}}]\nknowledgeExamples=[]\navailableContext=[{\"ref\":\"turn:context-opt-transfer#0:utterance\",\"sourceTurnRef\":\"turn:context-opt-transfer#0\",\"sensitivity\":\"SENSITIVE\",\"kind\":\"USER_TURN\",\"value\":{\"text\":\"给张三转1000\",\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.transfer\",\"pending\":\"REVIEW\"}}]\n输出 JSON。\n",
+  "conversationHistory" : [ {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-transfer#0",
+    "ref" : "turn:context-opt-transfer#0:utterance",
+    "content" : "给张三转1000"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-transfer#0",
+    "ref" : "turn:context-opt-transfer#0:assistant",
+    "content" : {
+      "decision" : "EXECUTE_CAPABILITY",
+      "capabilityId" : "cap.transfer"
+    }
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-transfer#0",
+    "ref" : "turn:context-opt-transfer#0:tool",
+    "content" : {
+      "pending" : "REVIEW"
+    }
+  } ],
+  "assetVersion" : "assets-v1.0.0+9b02291d",
+  "truth" : {
+    "consumed" : true,
+    "eventType" : "SUPPLEMENT",
+    "resolutionType" : "COREFERENCE",
+    "slots" : {
+      "payee" : "张三"
+    },
+    "usedContextRefs" : [ "turn:context-opt-transfer#0:utterance" ],
+    "standaloneContains" : [ "张三", "500" ],
+    "forbiddenSlotKeys" : [ ]
+  }
+}, {
+  "caseId" : "replace-card-slot",
+  "query" : "信用卡",
+  "userPrompt" : "originalQuery=信用卡\nstateVersion=1\ngoal=换卡\nconfirmedFacts={}\nconversationHistory=[{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-replace#0\",\"ref\":\"turn:context-opt-replace#0:utterance\",\"content\":\"换卡\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-replace#0\",\"ref\":\"turn:context-opt-replace#0:assistant\",\"content\":{\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.card.replace\"}},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-replace#0\",\"ref\":\"turn:context-opt-replace#0:tool\",\"content\":{\"pending\":\"CLARIFY\"}}]\nknowledgeExamples=[]\navailableContext=[{\"ref\":\"turn:context-opt-replace#0:utterance\",\"sourceTurnRef\":\"turn:context-opt-replace#0\",\"sensitivity\":\"SENSITIVE\",\"kind\":\"USER_TURN\",\"value\":{\"text\":\"换卡\",\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.card.replace\",\"pending\":\"CLARIFY\"}}]\n输出 JSON。\n",
+  "conversationHistory" : [ {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-replace#0",
+    "ref" : "turn:context-opt-replace#0:utterance",
+    "content" : "换卡"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-replace#0",
+    "ref" : "turn:context-opt-replace#0:assistant",
+    "content" : {
+      "decision" : "EXECUTE_CAPABILITY",
+      "capabilityId" : "cap.card.replace"
+    }
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-replace#0",
+    "ref" : "turn:context-opt-replace#0:tool",
+    "content" : {
+      "pending" : "CLARIFY"
+    }
+  } ],
+  "assetVersion" : "assets-v1.0.0+9b02291d",
+  "truth" : {
+    "consumed" : true,
+    "eventType" : "SUPPLEMENT",
+    "resolutionType" : "ELLIPSIS",
+    "slots" : {
+      "cardType" : "信用卡"
+    },
+    "usedContextRefs" : [ "turn:context-opt-replace#0:utterance" ],
+    "standaloneContains" : [ "换卡", "信用卡" ],
+    "forbiddenSlotKeys" : [ ]
+  }
+}, {
+  "caseId" : "review-accept",
+  "query" : "就按这个办",
+  "userPrompt" : "originalQuery=就按这个办\nstateVersion=1\ngoal=查询信用卡账单\nconfirmedFacts={}\nconversationHistory=[{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-bill-review#0\",\"ref\":\"turn:context-opt-bill-review#0:utterance\",\"content\":\"查询信用卡账单\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-bill-review#0\",\"ref\":\"turn:context-opt-bill-review#0:assistant\",\"content\":{\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.creditcard.bill.query\"}},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-bill-review#0\",\"ref\":\"turn:context-opt-bill-review#0:tool\",\"content\":{\"pending\":\"REVIEW\"}}]\nknowledgeExamples=[]\navailableContext=[{\"ref\":\"turn:context-opt-bill-review#0:utterance\",\"sourceTurnRef\":\"turn:context-opt-bill-review#0\",\"sensitivity\":\"SENSITIVE\",\"kind\":\"USER_TURN\",\"value\":{\"text\":\"查询信用卡账单\",\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.creditcard.bill.query\",\"pending\":\"REVIEW\"}}]\n输出 JSON。\n",
+  "conversationHistory" : [ {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-bill-review#0",
+    "ref" : "turn:context-opt-bill-review#0:utterance",
+    "content" : "查询信用卡账单"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-bill-review#0",
+    "ref" : "turn:context-opt-bill-review#0:assistant",
+    "content" : {
+      "decision" : "EXECUTE_CAPABILITY",
+      "capabilityId" : "cap.creditcard.bill.query"
+    }
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-bill-review#0",
+    "ref" : "turn:context-opt-bill-review#0:tool",
+    "content" : {
+      "pending" : "REVIEW"
+    }
+  } ],
+  "assetVersion" : "assets-v1.0.0+9b02291d",
+  "truth" : {
+    "consumed" : true,
+    "eventType" : "REVIEW_ACCEPT",
+    "resolutionType" : "TASK_REFERENCE",
+    "slots" : { },
+    "usedContextRefs" : [ "turn:context-opt-bill-review#0:utterance" ],
+    "standaloneContains" : [ "信用卡账单" ],
+    "forbiddenSlotKeys" : [ ]
+  }
+}, {
+  "caseId" : "review-accept-explicit",
+  "query" : "接受这个方案",
+  "userPrompt" : "originalQuery=接受这个方案\nstateVersion=1\ngoal=查询信用卡账单\nconfirmedFacts={}\nconversationHistory=[{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-bill-review#0\",\"ref\":\"turn:context-opt-bill-review#0:utterance\",\"content\":\"查询信用卡账单\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-bill-review#0\",\"ref\":\"turn:context-opt-bill-review#0:assistant\",\"content\":{\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.creditcard.bill.query\"}},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-bill-review#0\",\"ref\":\"turn:context-opt-bill-review#0:tool\",\"content\":{\"pending\":\"REVIEW\"}}]\nknowledgeExamples=[]\navailableContext=[{\"ref\":\"turn:context-opt-bill-review#0:utterance\",\"sourceTurnRef\":\"turn:context-opt-bill-review#0\",\"sensitivity\":\"SENSITIVE\",\"kind\":\"USER_TURN\",\"value\":{\"text\":\"查询信用卡账单\",\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.creditcard.bill.query\",\"pending\":\"REVIEW\"}}]\n输出 JSON。\n",
+  "conversationHistory" : [ {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-bill-review#0",
+    "ref" : "turn:context-opt-bill-review#0:utterance",
+    "content" : "查询信用卡账单"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-bill-review#0",
+    "ref" : "turn:context-opt-bill-review#0:assistant",
+    "content" : {
+      "decision" : "EXECUTE_CAPABILITY",
+      "capabilityId" : "cap.creditcard.bill.query"
+    }
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-bill-review#0",
+    "ref" : "turn:context-opt-bill-review#0:tool",
+    "content" : {
+      "pending" : "REVIEW"
+    }
+  } ],
+  "assetVersion" : "assets-v1.0.0+9b02291d",
+  "truth" : {
+    "consumed" : true,
+    "eventType" : "REVIEW_ACCEPT",
+    "resolutionType" : "TASK_REFERENCE",
+    "slots" : { },
+    "usedContextRefs" : [ "turn:context-opt-bill-review#0:utterance" ],
+    "standaloneContains" : [ "信用卡账单" ],
+    "forbiddenSlotKeys" : [ ]
+  }
+}, {
+  "caseId" : "explicit-confirmation",
+  "query" : "确认执行",
+  "userPrompt" : "originalQuery=确认执行\nstateVersion=1\ngoal=给张三转1000\nconfirmedFacts={}\nconversationHistory=[{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-transfer#0\",\"ref\":\"turn:context-opt-transfer#0:utterance\",\"content\":\"给张三转1000\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-transfer#0\",\"ref\":\"turn:context-opt-transfer#0:assistant\",\"content\":{\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.transfer\"}},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-transfer#0\",\"ref\":\"turn:context-opt-transfer#0:tool\",\"content\":{\"pending\":\"REVIEW\"}}]\nknowledgeExamples=[]\navailableContext=[{\"ref\":\"turn:context-opt-transfer#0:utterance\",\"sourceTurnRef\":\"turn:context-opt-transfer#0\",\"sensitivity\":\"SENSITIVE\",\"kind\":\"USER_TURN\",\"value\":{\"text\":\"给张三转1000\",\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.transfer\",\"pending\":\"REVIEW\"}}]\n输出 JSON。\n",
+  "conversationHistory" : [ {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-transfer#0",
+    "ref" : "turn:context-opt-transfer#0:utterance",
+    "content" : "给张三转1000"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-transfer#0",
+    "ref" : "turn:context-opt-transfer#0:assistant",
+    "content" : {
+      "decision" : "EXECUTE_CAPABILITY",
+      "capabilityId" : "cap.transfer"
+    }
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-transfer#0",
+    "ref" : "turn:context-opt-transfer#0:tool",
+    "content" : {
+      "pending" : "REVIEW"
+    }
+  } ],
+  "assetVersion" : "assets-v1.0.0+9b02291d",
+  "truth" : {
+    "consumed" : true,
+    "eventType" : "CONFIRMATION",
+    "resolutionType" : "TASK_REFERENCE",
+    "slots" : { },
+    "usedContextRefs" : [ "turn:context-opt-transfer#0:utterance" ],
+    "standaloneContains" : [ "转" ],
+    "forbiddenSlotKeys" : [ ]
+  }
+}, {
+  "caseId" : "natural-confirmation",
+  "query" : "可以执行",
+  "userPrompt" : "originalQuery=可以执行\nstateVersion=1\ngoal=给张三转1000\nconfirmedFacts={}\nconversationHistory=[{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-transfer#0\",\"ref\":\"turn:context-opt-transfer#0:utterance\",\"content\":\"给张三转1000\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-transfer#0\",\"ref\":\"turn:context-opt-transfer#0:assistant\",\"content\":{\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.transfer\"}},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-transfer#0\",\"ref\":\"turn:context-opt-transfer#0:tool\",\"content\":{\"pending\":\"REVIEW\"}}]\nknowledgeExamples=[]\navailableContext=[{\"ref\":\"turn:context-opt-transfer#0:utterance\",\"sourceTurnRef\":\"turn:context-opt-transfer#0\",\"sensitivity\":\"SENSITIVE\",\"kind\":\"USER_TURN\",\"value\":{\"text\":\"给张三转1000\",\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.transfer\",\"pending\":\"REVIEW\"}}]\n输出 JSON。\n",
+  "conversationHistory" : [ {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-transfer#0",
+    "ref" : "turn:context-opt-transfer#0:utterance",
+    "content" : "给张三转1000"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-transfer#0",
+    "ref" : "turn:context-opt-transfer#0:assistant",
+    "content" : {
+      "decision" : "EXECUTE_CAPABILITY",
+      "capabilityId" : "cap.transfer"
+    }
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-transfer#0",
+    "ref" : "turn:context-opt-transfer#0:tool",
+    "content" : {
+      "pending" : "REVIEW"
+    }
+  } ],
+  "assetVersion" : "assets-v1.0.0+9b02291d",
+  "truth" : {
+    "consumed" : true,
+    "eventType" : "CONFIRMATION",
+    "resolutionType" : "TASK_REFERENCE",
+    "slots" : { },
+    "usedContextRefs" : [ "turn:context-opt-transfer#0:utterance" ],
+    "standaloneContains" : [ "转" ],
+    "forbiddenSlotKeys" : [ ]
+  }
+}, {
+  "caseId" : "resume-suspended",
+  "query" : "继续换卡",
+  "userPrompt" : "originalQuery=继续换卡\nstateVersion=1\ngoal=换卡\nconfirmedFacts={}\nconversationHistory=[{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-replace-suspended#0\",\"ref\":\"turn:context-opt-replace-suspended#0:utterance\",\"content\":\"换卡\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-replace-suspended#0\",\"ref\":\"turn:context-opt-replace-suspended#0:assistant\",\"content\":{\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.card.replace\"}},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-replace-suspended#0\",\"ref\":\"turn:context-opt-replace-suspended#0:tool\",\"content\":{\"pending\":\"SUSPENDED\"}}]\nknowledgeExamples=[]\navailableContext=[{\"ref\":\"turn:context-opt-replace-suspended#0:utterance\",\"sourceTurnRef\":\"turn:context-opt-replace-suspended#0\",\"sensitivity\":\"SENSITIVE\",\"kind\":\"USER_TURN\",\"value\":{\"text\":\"换卡\",\"decision\":\"EXECUTE_CAPABILITY\",\"capabilityId\":\"cap.card.replace\",\"pending\":\"SUSPENDED\"}}]\n输出 JSON。\n",
+  "conversationHistory" : [ {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-replace-suspended#0",
+    "ref" : "turn:context-opt-replace-suspended#0:utterance",
+    "content" : "换卡"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-replace-suspended#0",
+    "ref" : "turn:context-opt-replace-suspended#0:assistant",
+    "content" : {
+      "decision" : "EXECUTE_CAPABILITY",
+      "capabilityId" : "cap.card.replace"
+    }
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-replace-suspended#0",
+    "ref" : "turn:context-opt-replace-suspended#0:tool",
+    "content" : {
+      "pending" : "SUSPENDED"
+    }
+  } ],
+  "assetVersion" : "assets-v1.0.0+9b02291d",
+  "truth" : {
+    "consumed" : true,
+    "eventType" : "RESUME_SUSPENDED",
+    "resolutionType" : "TASK_REFERENCE",
+    "slots" : { },
+    "usedContextRefs" : [ "turn:context-opt-replace-suspended#0:utterance" ],
+    "standaloneContains" : [ "换卡" ],
+    "forbiddenSlotKeys" : [ ]
+  }
+}, {
+  "caseId" : "half-without-source",
+  "query" : "给张三转一半",
+  "userPrompt" : "originalQuery=给张三转一半\nstateVersion=1\ngoal=\nconfirmedFacts={}\nconversationHistory=[]\nknowledgeExamples=[]\navailableContext=[]\n输出 JSON。\n",
+  "conversationHistory" : [ ],
+  "assetVersion" : "assets-v1.0.0+9b02291d",
+  "truth" : {
+    "consumed" : false,
+    "eventType" : "NEW_TASK",
+    "slots" : { },
+    "usedContextRefs" : [ ],
+    "standaloneContains" : [ "给张三转一半" ],
+    "forbiddenSlotKeys" : [ "amount", "amountBasis" ]
+  }
+}, {
+  "caseId" : "long-bank-history-independent-balance",
+  "query" : "查看我在招行有多少钱",
+  "userPrompt" : "originalQuery=查看我在招行有多少钱\nstateVersion=1\ngoal=查看招行理财产品有哪些\nconfirmedFacts={}\nconversationHistory=[{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-long-bank#3\",\"ref\":\"turn:context-opt-long-bank#3:utterance\",\"content\":\"查看我的建行卡余额\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-long-bank#3\",\"ref\":\"turn:context-opt-long-bank#3:assistant\",\"content\":\"NoAvailableTool(appName=建行)\"},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-long-bank#3\",\"ref\":\"turn:context-opt-long-bank#3:tool\",\"content\":{\"result\":\"succeed\",\"assistantReply\":\"请通过中国建设银行官方渠道查询余额\"}},{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-long-bank#4\",\"ref\":\"turn:context-opt-long-bank#4:utterance\",\"content\":\"给我爸转账1元\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-long-bank#4\",\"ref\":\"turn:context-opt-long-bank#4:assistant\",\"content\":\"TransferRemittance(currencyAmount=1元,payee=我爸)\"},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-long-bank#4\",\"ref\":\"turn:context-opt-long-bank#4:tool\",\"content\":{\"assistantReply\":\"当前有中国建设银行和中信百信银行可选\",\"result\":\"succeed\",\"status\":\"select\"}},{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-long-bank#5\",\"ref\":\"turn:context-opt-long-bank#5:utterance\",\"content\":\"看看我建行卡上个月花了多少钱\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-long-bank#5\",\"ref\":\"turn:context-opt-long-bank#5:assistant\",\"content\":\"CheckBankTransactionDetails(time=上个月,bankName=建行)\"},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-long-bank#5\",\"ref\":\"turn:context-opt-long-bank#5:tool\",\"content\":{\"result\":\"succeed\",\"assistantReply\":\"\"}},{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-long-bank#6\",\"ref\":\"turn:context-opt-long-bank#6:utterance\",\"content\":\"看看我建行买的理财收益多少了\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-long-bank#6\",\"ref\":\"turn:context-opt-long-bank#6:assistant\",\"content\":\"ViewFinancialProduct(appName=建行)\"},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-long-bank#6\",\"ref\":\"turn:context-opt-long-bank#6:tool\",\"content\":{\"result\":\"succeed\",\"assistantReply\":\"请在建设银行手机银行的持仓收益中查看\"}},{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-long-bank#7\",\"ref\":\"turn:context-opt-long-bank#7:utterance\",\"content\":\"我想用建行交话费\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-long-bank#7\",\"ref\":\"turn:context-opt-long-bank#7:assistant\",\"content\":\"RechargeCallFee(rechargePlatformName=建行)\"},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-long-bank#7\",\"ref\":\"turn:context-opt-long-bank#7:tool\",\"content\":{\"result\":\"succeed\",\"assistantReply\":\"请在建设银行生活服务中办理话费充值\"}},{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-long-bank#8\",\"ref\":\"turn:context-opt-long-bank#8:utterance\",\"content\":\"查看我在招行的收支情况\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-long-bank#8\",\"ref\":\"turn:context-opt-long-bank#8:assistant\",\"content\":\"CheckBankTransactionDetails(bankName=招行)\"},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-long-bank#8\",\"ref\":\"turn:context-opt-long-bank#8:tool\",\"content\":{\"result\":\"succeed\",\"assistantReply\":\"\"}},{\"role\":\"user\",\"sourceTurnRef\":\"turn:context-opt-long-bank#9\",\"ref\":\"turn:context-opt-long-bank#9:utterance\",\"content\":\"查看招行理财产品有哪些\"},{\"role\":\"assistant\",\"sourceTurnRef\":\"turn:context-opt-long-bank#9\",\"ref\":\"turn:context-opt-long-bank#9:assistant\",\"content\":\"ViewFinancialProduct(appName=招行)\"},{\"role\":\"tool\",\"sourceTurnRef\":\"turn:context-opt-long-bank#9\",\"ref\":\"turn:context-opt-long-bank#9:tool\",\"content\":{\"result\":\"succeed\",\"assistantReply\":\"招商银行提供多类不同风险等级的理财产品\"}}]\nknowledgeExamples=[]\navailableContext=[]\n输出 JSON。\n",
+  "conversationHistory" : [ {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-long-bank#3",
+    "ref" : "turn:context-opt-long-bank#3:utterance",
+    "content" : "查看我的建行卡余额"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-long-bank#3",
+    "ref" : "turn:context-opt-long-bank#3:assistant",
+    "content" : "NoAvailableTool(appName=建行)"
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-long-bank#3",
+    "ref" : "turn:context-opt-long-bank#3:tool",
+    "content" : {
+      "result" : "succeed",
+      "assistantReply" : "请通过中国建设银行官方渠道查询余额"
+    }
+  }, {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-long-bank#4",
+    "ref" : "turn:context-opt-long-bank#4:utterance",
+    "content" : "给我爸转账1元"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-long-bank#4",
+    "ref" : "turn:context-opt-long-bank#4:assistant",
+    "content" : "TransferRemittance(currencyAmount=1元,payee=我爸)"
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-long-bank#4",
+    "ref" : "turn:context-opt-long-bank#4:tool",
+    "content" : {
+      "assistantReply" : "当前有中国建设银行和中信百信银行可选",
+      "result" : "succeed",
+      "status" : "select"
+    }
+  }, {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-long-bank#5",
+    "ref" : "turn:context-opt-long-bank#5:utterance",
+    "content" : "看看我建行卡上个月花了多少钱"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-long-bank#5",
+    "ref" : "turn:context-opt-long-bank#5:assistant",
+    "content" : "CheckBankTransactionDetails(time=上个月,bankName=建行)"
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-long-bank#5",
+    "ref" : "turn:context-opt-long-bank#5:tool",
+    "content" : {
+      "result" : "succeed",
+      "assistantReply" : ""
+    }
+  }, {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-long-bank#6",
+    "ref" : "turn:context-opt-long-bank#6:utterance",
+    "content" : "看看我建行买的理财收益多少了"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-long-bank#6",
+    "ref" : "turn:context-opt-long-bank#6:assistant",
+    "content" : "ViewFinancialProduct(appName=建行)"
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-long-bank#6",
+    "ref" : "turn:context-opt-long-bank#6:tool",
+    "content" : {
+      "result" : "succeed",
+      "assistantReply" : "请在建设银行手机银行的持仓收益中查看"
+    }
+  }, {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-long-bank#7",
+    "ref" : "turn:context-opt-long-bank#7:utterance",
+    "content" : "我想用建行交话费"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-long-bank#7",
+    "ref" : "turn:context-opt-long-bank#7:assistant",
+    "content" : "RechargeCallFee(rechargePlatformName=建行)"
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-long-bank#7",
+    "ref" : "turn:context-opt-long-bank#7:tool",
+    "content" : {
+      "result" : "succeed",
+      "assistantReply" : "请在建设银行生活服务中办理话费充值"
+    }
+  }, {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-long-bank#8",
+    "ref" : "turn:context-opt-long-bank#8:utterance",
+    "content" : "查看我在招行的收支情况"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-long-bank#8",
+    "ref" : "turn:context-opt-long-bank#8:assistant",
+    "content" : "CheckBankTransactionDetails(bankName=招行)"
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-long-bank#8",
+    "ref" : "turn:context-opt-long-bank#8:tool",
+    "content" : {
+      "result" : "succeed",
+      "assistantReply" : ""
+    }
+  }, {
+    "role" : "user",
+    "sourceTurnRef" : "turn:context-opt-long-bank#9",
+    "ref" : "turn:context-opt-long-bank#9:utterance",
+    "content" : "查看招行理财产品有哪些"
+  }, {
+    "role" : "assistant",
+    "sourceTurnRef" : "turn:context-opt-long-bank#9",
+    "ref" : "turn:context-opt-long-bank#9:assistant",
+    "content" : "ViewFinancialProduct(appName=招行)"
+  }, {
+    "role" : "tool",
+    "sourceTurnRef" : "turn:context-opt-long-bank#9",
+    "ref" : "turn:context-opt-long-bank#9:tool",
+    "content" : {
+      "result" : "succeed",
+      "assistantReply" : "招商银行提供多类不同风险等级的理财产品"
+    }
+  } ],
+  "assetVersion" : "assets-v1.0.0+9b02291d",
+  "truth" : {
+    "consumed" : false,
+    "eventType" : "NEW_TASK",
+    "slots" : { },
+    "usedContextRefs" : [ ],
+    "standaloneContains" : [ "招行", "多少钱" ],
+    "forbiddenSlotKeys" : [ "accountOrdinal", "amountBasis" ]
+  }
+} ]

@@ -1,0 +1,10 @@
+agent:
+  id: agent.personal_info
+  displayName: 个人信息助手
+  roles: [domain]
+  domains: [personal_info]
+implementation: { mode: scaffold }
+runtime: { intentEngine: default, context: enabled, taskOrchestrator: enabled }
+a2a: { inbound: true, delegation: { enabled: true } }
+assets: { path: ./assets }
+storage: { namespace: personal-info }

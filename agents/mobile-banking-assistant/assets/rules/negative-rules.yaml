@@ -1,0 +1,45 @@
+# 负向过滤与近邻抑制（v0.7 §3.2 负向过滤通道）。
+#
+# 负向分不是「减一点分」的调味料，它承担的是「近邻误入、越界、互斥」这三类真实错误。
+# 命中后进入 Candidate.scores.negative，融合时做减法，并在 matchedEvidence 里留下原因，
+# 否则线上出现打压过度时无法归因。
+
+rules:
+
+  - ruleId: neg.wealth-suppresses-fund-movement
+    description: 用户在问理财持仓时，不应召回转账与还款这类资金划转动作
+    when: "string.contains(query,'理财') || string.contains(query,'基金') || string.contains(query,'持仓') || string.contains(query,'收益')"
+    suppress: [cap.transfer, cap.creditcard.repay]
+    penalty: 0.6
+
+  - ruleId: neg.query-verb-suppresses-transaction
+    description: 明确的查询类动词出现时，压制有副作用的能力，避免把「查还款日」做成「还款」
+    when: "string.contains(query,'查') || string.contains(query,'看') || string.contains(query,'多少')"
+    suppress: [cap.transfer, cap.creditcard.repay, cap.card.replace]
+    penalty: 0.35
+
+  - ruleId: neg.balance-not-bill
+    description: 借记卡余额与信用卡账单是高频近邻，用户说余额时压制账单候选
+    when: "string.contains(query,'余额') && !string.contains(query,'信用卡') && !string.contains(query,'账单')"
+    suppress: [cap.creditcard.bill.query]
+    penalty: 0.4
+
+  # 菜单跳转 vs 直办：用户想直接办事时，导航卡不得抢走业务办理卡。
+  #
+  # 条件必须同时有正向项和否定项。只写否定项（「没说打开就压」）等于对每一句不含
+  # 「打开」的话都打压一遍——「你好」也会命中，打压表里因此堆一批从未被召回的能力，
+  # 归因时分不清哪条打压真的起过作用。正向项限定为「用户确实要办一件事」。
+  #
+  # suppress 用类通配而不是逐条枚举：nav 卡有 24 张且会随菜单增长，
+  # 枚举漏一张的后果是它**不被压制**，即默默去抢业务卡的名次——错在危险的方向。
+  # 这个缺口真实发生过：曾漏 15 张，cap.nav.creditcard_service_信用卡账单
+  # 因此压过了 cap.creditcard.bill.query。
+  - ruleId: neg.nav-requires-open-verb
+    description: 用户表达办理意图且未说打开/进入/跳转时，导航能力不得压过业务办理卡
+    when: >-
+      (string.contains(query,'查') || string.contains(query,'转') || string.contains(query,'还')
+       || string.contains(query,'买') || string.contains(query,'办') || string.contains(query,'多少'))
+      && !string.contains(query,'打开') && !string.contains(query,'进入') && !string.contains(query,'跳转')
+    suppress:
+      - cap.nav.*
+    penalty: 0.7

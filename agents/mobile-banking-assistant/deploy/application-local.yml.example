@@ -1,0 +1,45 @@
+# 复制为 agents/mobile-banking-assistant/application-local.yml 后填入真实值。
+# application-local.yml 已 gitignore，不要提交。
+#
+# 工作目录需为 agents/mobile-banking-assistant（scripts/run-local.sh / smoke 默认如此），
+# application.yml 会 optional 导入 ./application-local.yml。
+
+spring:
+  datasource:
+    # 若本机 5432 已被占用，用 scripts/run-local.sh（映到 5434）或改成实际端口。
+    url: jdbc:postgresql://localhost:5434/agent_platform
+    username: agent_platform
+    password: agent_platform
+
+huawei:
+  finance:
+    agent:
+      model:
+        # embedding 仍可读环境变量 SILICONFLOW_API_KEY；需要时也可写在这里：
+        # api-key: sk-硅基流动密钥
+        chat:
+          api-key: sk-替换为你自己的 DeepSeek 密钥
+
+  # 阶段 3a/3b：入口对白名单域走 A2A GOAL（默认关，见 EntryDelegationProperties）。
+  # 生产主配置不得默认全开 26 域；阻断项 2/3（R 分级与权威数据源）未关前也不要全开。
+  # 本地可先开账户 + 转账；其余首批域按需取消注释。
+      # a2a:
+      #   entry-delegation:
+      #     enabled: true
+      #     domains:
+      #       - account
+      #       - transfer
+      #       # - creditcard_service
+      #       # - wealth_aggregate
+      #       # - fund_service
+      #       # - insurance_service
+      #       # - finance_assistant
+
+# 本地 OTLP → Jaeger（先 docker compose up -d jaeger）
+# 不启 Jaeger 就整段删掉或注释掉，否则导出器会连 4318 失败刷屏。
+management:
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: http://127.0.0.1:4318/v1/traces

@@ -1,0 +1,304 @@
+[ {
+  "caseId" : "balance.plain",
+  "query" : "查一下余额",
+  "userPrompt" : "渠道：MOBILE_BANK\n当前页面：home\n\n日期基准（相对日期只能照此换算）：\n今天=2026-03-15 昨天=2026-03-14 前天=2026-03-13\n本月=2026-03-01~2026-03-15 上月=2026-02-01~2026-02-28\n最近7天=2026-03-09~2026-03-15 最近30天=2026-02-14~2026-03-15\n已抽取到的参数（规则抽取，优先级高于你的抽取）：{}\n\n候选能力：\n1. cap.account.balance.query | 融合分 0.795 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 utterance:查一下余额,semantic:0.746,bm25:0.635\n2. cap.account.transaction.query | 融合分 0.360 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 semantic:0.689,bm25:0.202\n3. cap.creditcard.bill.query | 融合分 0.000 | 领域 creditcard_service | 风险 R0 | 必填槽位 无 | 证据 negative:neg.balance-not-bill,semantic:0.656,bm25:0.192\n4. cap.nav.account_查询账户余额 | 融合分 0.000 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 negative:neg.nav-requires-open-verb,semantic:0.813,bm25:0.577\n5. cap.nav.account_查询开户行 | 融合分 0.000 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 negative:neg.nav-requires-open-verb,semantic:0.661\n\n\n用户输入：查一下余额\n\n输出 JSON：\n",
+  "assetVersion" : "assets-v1.0.0+51166223",
+  "truth" : {
+    "decision" : "EXECUTE_CAPABILITY",
+    "reasonCode" : "HIGH_CONFIDENCE",
+    "capability" : "cap.account.balance.query",
+    "capabilityDeclared" : true,
+    "missingSlots" : [ ],
+    "slots" : { }
+  }
+}, {
+  "caseId" : "balance.colloquial",
+  "query" : "我的余额是多少",
+  "userPrompt" : "渠道：MOBILE_BANK\n当前页面：home\n\n日期基准（相对日期只能照此换算）：\n今天=2026-03-15 昨天=2026-03-14 前天=2026-03-13\n本月=2026-03-01~2026-03-15 上月=2026-02-01~2026-02-28\n最近7天=2026-03-09~2026-03-15 最近30天=2026-02-14~2026-03-15\n已抽取到的参数（规则抽取，优先级高于你的抽取）：{}\n\n候选能力：\n1. cap.account.balance.query | 融合分 0.834 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 utterance:我的余额是多少,semantic:0.755,bm25:0.778\n2. cap.account.transaction.query | 融合分 0.396 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 semantic:0.700,bm25:0.324\n3. cap.wealth.holding.query | 融合分 0.083 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 bm25:0.334\n4. cap.creditcard.bill.query | 融合分 0.013 | 领域 creditcard_service | 风险 R0 | 必填槽位 无 | 证据 negative:neg.balance-not-bill,semantic:0.670,bm25:0.446\n5. cap.nav.wealth_aggregate_查询我的资产 | 融合分 0.000 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 negative:neg.nav-requires-open-verb,semantic:0.745,bm25:0.598\n\n\n用户输入：我的余额是多少\n\n输出 JSON：\n",
+  "assetVersion" : "assets-v1.0.0+51166223",
+  "truth" : {
+    "decision" : "EXECUTE_CAPABILITY",
+    "reasonCode" : null,
+    "capability" : "cap.account.balance.query",
+    "capabilityDeclared" : true,
+    "slots" : { }
+  }
+}, {
+  "caseId" : "balance.card-money",
+  "query" : "卡里还有多少钱",
+  "userPrompt" : "渠道：MOBILE_BANK\n当前页面：home\n\n日期基准（相对日期只能照此换算）：\n今天=2026-03-15 昨天=2026-03-14 前天=2026-03-13\n本月=2026-03-01~2026-03-15 上月=2026-02-01~2026-02-28\n最近7天=2026-03-09~2026-03-15 最近30天=2026-02-14~2026-03-15\n已抽取到的参数（规则抽取，优先级高于你的抽取）：{}\n\n候选能力：\n1. cap.account.balance.query | 融合分 0.798 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 keyword:余额,semantic:0.753,bm25:0.635\n2. cap.nav.account_查询账户余额 | 融合分 0.457 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 semantic:0.694,bm25:0.577\n3. cap.account.transaction.query | 融合分 0.352 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 semantic:0.671,bm25:0.202\n4. cap.nav.wealth_aggregate_查询我的资产 | 融合分 0.305 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 semantic:0.679\n5. cap.nav.account_收支分析 | 融合分 0.296 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 semantic:0.658\n\n\n用户输入：卡里还有多少钱\n\n输出 JSON：\n",
+  "assetVersion" : "assets-v1.0.0+51166223",
+  "truth" : {
+    "decision" : "EXECUTE_CAPABILITY",
+    "reasonCode" : null,
+    "capability" : "cap.account.balance.query",
+    "capabilityDeclared" : true,
+    "slots" : { }
+  }
+}, {
+  "caseId" : "balance.on-account-page",
+  "query" : "看下余额",
+  "userPrompt" : "渠道：MOBILE_BANK\n当前页面：account\n\n日期基准（相对日期只能照此换算）：\n今天=2026-03-15 昨天=2026-03-14 前天=2026-03-13\n本月=2026-03-01~2026-03-15 上月=2026-02-01~2026-02-28\n最近7天=2026-03-09~2026-03-15 最近30天=2026-02-14~2026-03-15\n已抽取到的参数（规则抽取，优先级高于你的抽取）：{}\n\n候选能力：\n1. cap.account.balance.query | 融合分 0.656 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 keyword:余额,semantic:0.749,bm25:0.677\n2. cap.nav.account_查询账户余额 | 融合分 0.503 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 semantic:0.798,bm25:0.577\n3. cap.account.transaction.query | 融合分 0.368 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 semantic:0.705,bm25:0.202\n4. cap.nav.wealth_aggregate_查询我的资产 | 融合分 0.333 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 semantic:0.740\n5. cap.nav.account_查询收支明细 | 融合分 0.330 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 semantic:0.733\n\n\n用户输入：看下余额\n\n输出 JSON：\n",
+  "assetVersion" : "assets-v1.0.0+51166223",
+  "truth" : {
+    "decision" : "EXECUTE_CAPABILITY",
+    "reasonCode" : null,
+    "capability" : "cap.account.balance.query",
+    "capabilityDeclared" : true,
+    "slots" : { }
+  }
+}, {
+  "caseId" : "transaction.flow",
+  "query" : "查一下我的流水",
+  "userPrompt" : "渠道：MOBILE_BANK\n当前页面：home\n\n日期基准（相对日期只能照此换算）：\n今天=2026-03-15 昨天=2026-03-14 前天=2026-03-13\n本月=2026-03-01~2026-03-15 上月=2026-02-01~2026-02-28\n最近7天=2026-03-09~2026-03-15 最近30天=2026-02-14~2026-03-15\n已抽取到的参数（规则抽取，优先级高于你的抽取）：{}\n\n候选能力：\n1. cap.account.transaction.query | 融合分 0.797 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 utterance:查一下我的流水,semantic:0.769,bm25:0.604\n2. cap.creditcard.bill.query | 融合分 0.354 | 领域 creditcard_service | 风险 R0 | 必填槽位 无 | 证据 semantic:0.658,bm25:0.231\n3. cap.wealth.holding.query | 融合分 0.046 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 bm25:0.182\n4. cap.account.balance.query | 融合分 0.043 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 bm25:0.170\n5. cap.nav.wealth_aggregate_查询我的资产 | 融合分 0.000 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 negative:neg.nav-requires-open-verb,semantic:0.708,bm25:0.598\n\n\n用户输入：查一下我的流水\n\n输出 JSON：\n",
+  "assetVersion" : "assets-v1.0.0+51166223",
+  "truth" : {
+    "decision" : "EXECUTE_CAPABILITY",
+    "reasonCode" : null,
+    "capability" : "cap.account.transaction.query",
+    "capabilityDeclared" : true,
+    "slots" : { }
+  }
+}, {
+  "caseId" : "transaction.detail",
+  "query" : "最近的交易明细",
+  "userPrompt" : "渠道：MOBILE_BANK\n当前页面：home\n\n日期基准（相对日期只能照此换算）：\n今天=2026-03-15 昨天=2026-03-14 前天=2026-03-13\n本月=2026-03-01~2026-03-15 上月=2026-02-01~2026-02-28\n最近7天=2026-03-09~2026-03-15 最近30天=2026-02-14~2026-03-15\n已抽取到的参数（规则抽取，优先级高于你的抽取）：{}\n\n候选能力：\n1. cap.account.transaction.query | 融合分 0.862 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 utterance:最近的交易明细,semantic:0.773,bm25:0.857\n2. cap.nav.account_查询收支明细 | 融合分 0.499 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 semantic:0.772,bm25:0.606\n3. cap.nav.wealth_product_理财交易记录 | 融合分 0.444 | 领域 wealth_product | 风险 R0 | 必填槽位 无 | 证据 semantic:0.715,bm25:0.488\n4. cap.nav.account_收支分析 | 融合分 0.344 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 semantic:0.743,bm25:0.037\n5. cap.nav.wealth_aggregate_产品信息查询 | 融合分 0.322 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 semantic:0.716\n\n\n用户输入：最近的交易明细\n\n输出 JSON：\n",
+  "assetVersion" : "assets-v1.0.0+51166223",
+  "truth" : {
+    "decision" : "EXECUTE_CAPABILITY",
+    "reasonCode" : null,
+    "capability" : "cap.account.transaction.query",
+    "capabilityDeclared" : true,
+    "slots" : { }
+  }
+}, {
+  "caseId" : "creditcard.bill",
+  "query" : "查一下我的信用卡账单",
+  "userPrompt" : "渠道：MOBILE_BANK\n当前页面：home\n\n日期基准（相对日期只能照此换算）：\n今天=2026-03-15 昨天=2026-03-14 前天=2026-03-13\n本月=2026-03-01~2026-03-15 上月=2026-02-01~2026-02-28\n最近7天=2026-03-09~2026-03-15 最近30天=2026-02-14~2026-03-15\n已抽取到的参数（规则抽取，优先级高于你的抽取）：{cardType=CREDIT}\n\n候选能力：\n1. cap.creditcard.bill.query | 融合分 0.912 | 领域 creditcard_service | 风险 R0 | 必填槽位 无 | 证据 utterance:查一下我的信用卡账单,semantic:0.885,bm25:0.854\n2. cap.account.balance.query | 融合分 0.411 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 semantic:0.632,bm25:0.508\n3. cap.account.transaction.query | 融合分 0.335 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 semantic:0.642,bm25:0.185\n4. cap.creditcard.repay | 融合分 0.120 | 领域 creditcard_service | 风险 R2 | 必填槽位 amount | 证据 negative:neg.query-verb-suppresses-transaction,semantic:0.626,bm25:0.754\n5. cap.nav.creditcard_service_信用卡账单 | 融合分 0.106 | 领域 creditcard_service | 风险 R0 | 必填槽位 无 | 证据 keyword:信用卡账单,keyword:信用,negative:neg.nav-requires-open-verb,semantic:0.859,bm25:0.837\n\n\n用户输入：查一下我的信用卡账单\n\n输出 JSON：\n",
+  "assetVersion" : "assets-v1.0.0+51166223",
+  "truth" : {
+    "decision" : "EXECUTE_CAPABILITY",
+    "reasonCode" : null,
+    "capability" : "cap.creditcard.bill.query",
+    "capabilityDeclared" : true,
+    "slots" : { }
+  }
+}, {
+  "caseId" : "creditcard.howmuch",
+  "query" : "这个月要还多少",
+  "userPrompt" : "渠道：MOBILE_BANK\n当前页面：home\n\n日期基准（相对日期只能照此换算）：\n今天=2026-03-15 昨天=2026-03-14 前天=2026-03-13\n本月=2026-03-01~2026-03-15 上月=2026-02-01~2026-02-28\n最近7天=2026-03-09~2026-03-15 最近30天=2026-02-14~2026-03-15\n已抽取到的参数（规则抽取，优先级高于你的抽取）：{}\n\n候选能力：\n1. cap.creditcard.bill.query | 融合分 0.599 | 领域 creditcard_service | 风险 R0 | 必填槽位 无 | 证据 keyword:账单,semantic:0.713,bm25:0.634\n2. cap.nav.creditcard_service_信用卡账单 | 融合分 0.429 | 领域 creditcard_service | 风险 R0 | 必填槽位 无 | 证据 semantic:0.620,bm25:0.599\n3. cap.account.balance.query | 融合分 0.347 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 semantic:0.657,bm25:0.204\n4. cap.nav.account_收支分析 | 融合分 0.298 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 semantic:0.663\n5. cap.nav.account_查询收支明细 | 融合分 0.294 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 semantic:0.652\n\n\n用户输入：这个月要还多少\n\n输出 JSON：\n",
+  "assetVersion" : "assets-v1.0.0+51166223",
+  "truth" : {
+    "decision" : "EXECUTE_CAPABILITY",
+    "reasonCode" : null,
+    "capability" : "cap.creditcard.bill.query",
+    "capabilityDeclared" : true,
+    "slots" : { }
+  }
+}, {
+  "caseId" : "creditcard.repay",
+  "query" : "我要还信用卡",
+  "userPrompt" : "渠道：MOBILE_BANK\n当前页面：home\n\n日期基准（相对日期只能照此换算）：\n今天=2026-03-15 昨天=2026-03-14 前天=2026-03-13\n本月=2026-03-01~2026-03-15 上月=2026-02-01~2026-02-28\n最近7天=2026-03-09~2026-03-15 最近30天=2026-02-14~2026-03-15\n已抽取到的参数（规则抽取，优先级高于你的抽取）：{cardType=CREDIT}\n\n候选能力：\n1. cap.creditcard.repay | 融合分 0.841 | 领域 creditcard_service | 风险 R2 | 必填槽位 amount | 证据 utterance:我要还信用卡,semantic:0.786,bm25:0.751\n2. cap.creditcard.bill.query | 融合分 0.652 | 领域 creditcard_service | 风险 R0 | 必填槽位 无 | 证据 keyword:信用卡,semantic:0.723,bm25:0.706\n3. cap.card.replace | 融合分 0.363 | 领域 creditcard_service,account | 风险 R1 | 必填槽位 cardType | 证据 semantic:0.650,bm25:0.283\n4. cap.transfer | 融合分 0.070 | 领域 transfer | 风险 R2 | 必填槽位 payee,amount | 证据 bm25:0.278\n5. cap.account.balance.query | 融合分 0.064 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 bm25:0.254\n\n\n用户输入：我要还信用卡\n\n输出 JSON：\n",
+  "assetVersion" : "assets-v1.0.0+51166223",
+  "truth" : {
+    "decision" : "CLARIFY",
+    "reasonCode" : "MISSING_SLOT",
+    "capability" : "cap.creditcard.repay",
+    "capabilityDeclared" : true,
+    "missingSlots" : [ "amount" ],
+    "slots" : { }
+  }
+}, {
+  "caseId" : "creditcard.repay.bare",
+  "query" : "帮我还款",
+  "userPrompt" : "渠道：MOBILE_BANK\n当前页面：home\n\n日期基准（相对日期只能照此换算）：\n今天=2026-03-15 昨天=2026-03-14 前天=2026-03-13\n本月=2026-03-01~2026-03-15 上月=2026-02-01~2026-02-28\n最近7天=2026-03-09~2026-03-15 最近30天=2026-02-14~2026-03-15\n已抽取到的参数（规则抽取，优先级高于你的抽取）：{}\n\n候选能力：\n1. cap.creditcard.repay | 融合分 0.751 | 领域 creditcard_service | 风险 R2 | 必填槽位 amount | 证据 utterance:帮我还款,semantic:0.644,bm25:0.645\n2. cap.creditcard.bill.query | 融合分 0.341 | 领域 creditcard_service | 风险 R0 | 必填槽位 无 | 证据 semantic:0.604,bm25:0.278\n3. cap.transfer | 融合分 0.051 | 领域 transfer | 风险 R2 | 必填槽位 payee,amount | 证据 bm25:0.205\n4. cap.nav.creditcard_service_信用卡还款 | 融合分 0.000 | 领域 creditcard_service | 风险 R0 | 必填槽位 无 | 证据 negative:neg.nav-requires-open-verb,semantic:0.641,bm25:0.589\n5. cap.nav.wealth_aggregate_风险评测 | 融合分 0.000 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 negative:neg.nav-requires-open-verb,semantic:0.581\n\n\n用户输入：帮我还款\n\n输出 JSON：\n",
+  "assetVersion" : "assets-v1.0.0+51166223",
+  "truth" : {
+    "decision" : "CLARIFY",
+    "reasonCode" : "MISSING_SLOT",
+    "capability" : null,
+    "capabilityDeclared" : false,
+    "missingSlots" : [ "amount" ],
+    "slots" : { }
+  }
+}, {
+  "caseId" : "card.replace.bare",
+  "query" : "换卡",
+  "userPrompt" : "渠道：MOBILE_BANK\n当前页面：home\n\n日期基准（相对日期只能照此换算）：\n今天=2026-03-15 昨天=2026-03-14 前天=2026-03-13\n本月=2026-03-01~2026-03-15 上月=2026-02-01~2026-02-28\n最近7天=2026-03-09~2026-03-15 最近30天=2026-02-14~2026-03-15\n已抽取到的参数（规则抽取，优先级高于你的抽取）：{}\n\n候选能力：\n1. cap.card.replace | 融合分 0.835 | 领域 creditcard_service,account | 风险 R1 | 必填槽位 cardType | 证据 utterance:换卡,semantic:0.796,bm25:0.709\n2. cap.nav.wealth_aggregate_产品信息查询 | 融合分 0.286 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 semantic:0.636\n3. cap.nav.creditcard_service_信用卡还款 | 融合分 0.284 | 领域 creditcard_service | 风险 R0 | 必填槽位 无 | 证据 semantic:0.631\n4. cap.nav.account_查询开户行 | 融合分 0.278 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 semantic:0.619\n5. cap.nav.creditcard_service_信用卡账单 | 融合分 0.274 | 领域 creditcard_service | 风险 R0 | 必填槽位 无 | 证据 semantic:0.608\n\n\n用户输入：换卡\n\n输出 JSON：\n",
+  "assetVersion" : "assets-v1.0.0+51166223",
+  "truth" : {
+    "decision" : "CLARIFY",
+    "reasonCode" : "MISSING_SLOT",
+    "capability" : "cap.card.replace",
+    "capabilityDeclared" : true,
+    "missingSlots" : [ "cardType" ],
+    "slots" : { }
+  }
+}, {
+  "caseId" : "card.replace.verbose",
+  "query" : "我要换张卡",
+  "userPrompt" : "渠道：MOBILE_BANK\n当前页面：home\n\n日期基准（相对日期只能照此换算）：\n今天=2026-03-15 昨天=2026-03-14 前天=2026-03-13\n本月=2026-03-01~2026-03-15 上月=2026-02-01~2026-02-28\n最近7天=2026-03-09~2026-03-15 最近30天=2026-02-14~2026-03-15\n已抽取到的参数（规则抽取，优先级高于你的抽取）：{payee=张卡}\n\n候选能力：\n1. cap.card.replace | 融合分 0.800 | 领域 creditcard_service,account | 风险 R1 | 必填槽位 cardType | 证据 utterance:我要换张卡,semantic:0.831,bm25:0.504\n2. cap.nav.wealth_aggregate_产品信息查询 | 融合分 0.293 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 semantic:0.652\n3. cap.nav.creditcard_service_信用卡还款 | 融合分 0.290 | 领域 creditcard_service | 风险 R0 | 必填槽位 无 | 证据 semantic:0.645\n4. cap.nav.account_查询开户行 | 融合分 0.288 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 semantic:0.640\n5. cap.nav.creditcard_service_信用卡账单 | 融合分 0.285 | 领域 creditcard_service | 风险 R0 | 必填槽位 无 | 证据 semantic:0.634\n\n\n用户输入：我要换张卡\n\n输出 JSON：\n",
+  "assetVersion" : "assets-v1.0.0+51166223",
+  "truth" : {
+    "decision" : "CLARIFY",
+    "reasonCode" : null,
+    "capability" : "cap.card.replace",
+    "capabilityDeclared" : true,
+    "missingSlots" : [ "cardType" ],
+    "slots" : { }
+  }
+}, {
+  "caseId" : "transfer.with-slots",
+  "query" : "给张三转 1000",
+  "userPrompt" : "渠道：MOBILE_BANK\n当前页面：home\n\n日期基准（相对日期只能照此换算）：\n今天=2026-03-15 昨天=2026-03-14 前天=2026-03-13\n本月=2026-03-01~2026-03-15 上月=2026-02-01~2026-02-28\n最近7天=2026-03-09~2026-03-15 最近30天=2026-02-14~2026-03-15\n已抽取到的参数（规则抽取，优先级高于你的抽取）：{payee=张三, amount=1000}\n\n候选能力：\n1. cap.transfer | 融合分 0.786 | 领域 transfer | 风险 R2 | 必填槽位 payee,amount | 证据 utterance:给张三转 1000,semantic:0.716,bm25:0.653\n2. cap.nav.wealth_aggregate_风险评测 | 融合分 0.000 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 negative:neg.nav-requires-open-verb,semantic:0.621\n3. cap.nav.account_查询开户行 | 融合分 0.000 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 negative:neg.nav-requires-open-verb,semantic:0.596\n4. cap.nav.wealth_aggregate_查询我的资产 | 融合分 0.000 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 negative:neg.nav-requires-open-verb,semantic:0.615\n5. cap.nav.account_收支分析 | 融合分 0.000 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 negative:neg.nav-requires-open-verb,semantic:0.630\n\n\n用户输入：给张三转 1000\n\n输出 JSON：\n",
+  "assetVersion" : "assets-v1.0.0+51166223",
+  "truth" : {
+    "decision" : "EXECUTE_CAPABILITY",
+    "reasonCode" : "CONFIRMATION_REQUIRED",
+    "capability" : "cap.transfer",
+    "capabilityDeclared" : true,
+    "slots" : {
+      "amount" : "1000",
+      "payee" : "张三"
+    }
+  }
+}, {
+  "caseId" : "transfer.bare",
+  "query" : "我要转账",
+  "userPrompt" : "渠道：MOBILE_BANK\n当前页面：home\n\n日期基准（相对日期只能照此换算）：\n今天=2026-03-15 昨天=2026-03-14 前天=2026-03-13\n本月=2026-03-01~2026-03-15 上月=2026-02-01~2026-02-28\n最近7天=2026-03-09~2026-03-15 最近30天=2026-02-14~2026-03-15\n已抽取到的参数（规则抽取，优先级高于你的抽取）：{}\n\n候选能力：\n1. cap.transfer | 融合分 0.798 | 领域 transfer | 风险 R2 | 必填槽位 payee,amount | 证据 utterance:我要转账,semantic:0.723,bm25:0.690\n2. cap.creditcard.repay | 融合分 0.059 | 领域 creditcard_service | 风险 R2 | 必填槽位 amount | 证据 bm25:0.237\n3. cap.nav.transfer_快速转账 | 融合分 0.000 | 领域 transfer | 风险 R0 | 必填槽位 无 | 证据 negative:neg.nav-requires-open-verb,semantic:0.715,bm25:0.611\n4. cap.nav.wealth_aggregate_风险评测 | 融合分 0.000 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 negative:neg.nav-requires-open-verb,semantic:0.621\n5. cap.nav.account_查询开户行 | 融合分 0.000 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 negative:neg.nav-requires-open-verb,semantic:0.601\n\n\n用户输入：我要转账\n\n输出 JSON：\n",
+  "assetVersion" : "assets-v1.0.0+51166223",
+  "truth" : {
+    "decision" : "CLARIFY",
+    "reasonCode" : "MISSING_SLOT",
+    "capability" : "cap.transfer",
+    "capabilityDeclared" : true,
+    "missingSlots" : [ "payee", "amount" ],
+    "slots" : { }
+  }
+}, {
+  "caseId" : "transfer.other-payee",
+  "query" : "帮我转 500 给老徐",
+  "userPrompt" : "渠道：MOBILE_BANK\n当前页面：home\n\n日期基准（相对日期只能照此换算）：\n今天=2026-03-15 昨天=2026-03-14 前天=2026-03-13\n本月=2026-03-01~2026-03-15 上月=2026-02-01~2026-02-28\n最近7天=2026-03-09~2026-03-15 最近30天=2026-02-14~2026-03-15\n已抽取到的参数（规则抽取，优先级高于你的抽取）：{payee=老徐, amount=500}\n\n候选能力：\n1. cap.transfer | 融合分 0.461 | 领域 transfer | 风险 R2 | 必填槽位 payee,amount | 证据 semantic:0.722,bm25:0.544\n2. cap.nav.account_查询开户行 | 融合分 0.000 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 negative:neg.nav-requires-open-verb,semantic:0.568\n3. cap.nav.wealth_aggregate_风险评测 | 融合分 0.000 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 negative:neg.nav-requires-open-verb,semantic:0.568\n4. cap.nav.wealth_aggregate_查询我的资产 | 融合分 0.000 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 negative:neg.nav-requires-open-verb,semantic:0.589\n5. cap.nav.account_收支分析 | 融合分 0.000 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 negative:neg.nav-requires-open-verb,semantic:0.578\n\n\n用户输入：帮我转 500 给老徐\n\n输出 JSON：\n",
+  "assetVersion" : "assets-v1.0.0+51166223",
+  "truth" : {
+    "decision" : "EXECUTE_CAPABILITY",
+    "reasonCode" : "CONFIRMATION_REQUIRED",
+    "capability" : "cap.transfer",
+    "capabilityDeclared" : true,
+    "slots" : {
+      "amount" : "500",
+      "payee" : "老徐"
+    }
+  }
+}, {
+  "caseId" : "transfer.thousand-separator",
+  "query" : "给张三转 1,000 元",
+  "userPrompt" : "渠道：MOBILE_BANK\n当前页面：home\n\n日期基准（相对日期只能照此换算）：\n今天=2026-03-15 昨天=2026-03-14 前天=2026-03-13\n本月=2026-03-01~2026-03-15 上月=2026-02-01~2026-02-28\n最近7天=2026-03-09~2026-03-15 最近30天=2026-02-14~2026-03-15\n已抽取到的参数（规则抽取，优先级高于你的抽取）：{payee=张三, amount=1000}\n\n候选能力：\n1. cap.transfer | 融合分 0.472 | 领域 transfer | 风险 R2 | 必填槽位 payee,amount | 证据 semantic:0.717,bm25:0.598\n2. cap.nav.wealth_aggregate_风险评测 | 融合分 0.000 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 negative:neg.nav-requires-open-verb,semantic:0.620\n3. cap.nav.account_查询开户行 | 融合分 0.000 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 negative:neg.nav-requires-open-verb,semantic:0.603\n4. cap.nav.wealth_aggregate_查询我的资产 | 融合分 0.000 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 negative:neg.nav-requires-open-verb,semantic:0.617\n5. cap.nav.account_收支分析 | 融合分 0.000 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 negative:neg.nav-requires-open-verb,semantic:0.635\n\n\n用户输入：给张三转 1,000 元\n\n输出 JSON：\n",
+  "assetVersion" : "assets-v1.0.0+51166223",
+  "truth" : {
+    "decision" : "EXECUTE_CAPABILITY",
+    "reasonCode" : "CONFIRMATION_REQUIRED",
+    "capability" : "cap.transfer",
+    "capabilityDeclared" : true,
+    "slots" : {
+      "amount" : "1000",
+      "payee" : "张三"
+    }
+  }
+}, {
+  "caseId" : "wealth.holding",
+  "query" : "我买的理财现在多少钱",
+  "userPrompt" : "渠道：MOBILE_BANK\n当前页面：home\n\n日期基准（相对日期只能照此换算）：\n今天=2026-03-15 昨天=2026-03-14 前天=2026-03-13\n本月=2026-03-01~2026-03-15 上月=2026-02-01~2026-02-28\n最近7天=2026-03-09~2026-03-15 最近30天=2026-02-14~2026-03-15\n已抽取到的参数（规则抽取，优先级高于你的抽取）：{}\n\n候选能力：\n1. cap.wealth.holding.query | 融合分 0.868 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 utterance:我买的理财现在多少钱,semantic:0.810,bm25:0.815\n2. cap.fund.product.query | 融合分 0.278 | 领域 fund_service | 风险 R0 | 必填槽位 无 | 证据 semantic:0.618\n3. cap.account.balance.query | 融合分 0.217 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 keyword:多少钱,bm25:0.508\n4. cap.creditcard.bill.query | 融合分 0.053 | 领域 creditcard_service | 风险 R0 | 必填槽位 无 | 证据 bm25:0.211\n5. cap.nav.wealth_product_理财交易记录 | 融合分 0.000 | 领域 wealth_product | 风险 R0 | 必填槽位 无 | 证据 keyword:理财,negative:neg.nav-requires-open-verb,semantic:0.693,bm25:0.567\n\n\n用户输入：我买的理财现在多少钱\n\n输出 JSON：\n",
+  "assetVersion" : "assets-v1.0.0+51166223",
+  "truth" : {
+    "decision" : "EXECUTE_CAPABILITY",
+    "reasonCode" : null,
+    "capability" : "cap.wealth.holding.query",
+    "capabilityDeclared" : true,
+    "slots" : { }
+  }
+}, {
+  "caseId" : "wealth.return",
+  "query" : "理财收益怎么样",
+  "userPrompt" : "渠道：MOBILE_BANK\n当前页面：home\n\n日期基准（相对日期只能照此换算）：\n今天=2026-03-15 昨天=2026-03-14 前天=2026-03-13\n本月=2026-03-01~2026-03-15 上月=2026-02-01~2026-02-28\n最近7天=2026-03-09~2026-03-15 最近30天=2026-02-14~2026-03-15\n已抽取到的参数（规则抽取，优先级高于你的抽取）：{}\n\n候选能力：\n1. cap.wealth.holding.query | 融合分 0.803 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 utterance:理财收益怎么样,semantic:0.696,bm25:0.757\n2. cap.nav.wealth_product_理财交易记录 | 融合分 0.510 | 领域 wealth_product | 风险 R0 | 必填槽位 无 | 证据 keyword:理财,semantic:0.629,bm25:0.567\n3. cap.nav.wealth_product_理财定投 | 融合分 0.491 | 领域 wealth_product | 风险 R0 | 必填槽位 无 | 证据 keyword:理财,semantic:0.575,bm25:0.585\n4. cap.nav.wealth_product_理财选品购买 | 融合分 0.488 | 领域 wealth_product | 风险 R0 | 必填槽位 无 | 证据 keyword:理财,semantic:0.579,bm25:0.567\n5. cap.nav.fund_service_查询基金收益 | 融合分 0.457 | 领域 fund_service | 风险 R0 | 必填槽位 无 | 证据 semantic:0.680,bm25:0.606\n\n\n用户输入：理财收益怎么样\n\n输出 JSON：\n",
+  "assetVersion" : "assets-v1.0.0+51166223",
+  "truth" : {
+    "decision" : "EXECUTE_CAPABILITY",
+    "reasonCode" : null,
+    "capability" : "cap.wealth.holding.query",
+    "capabilityDeclared" : true,
+    "slots" : { }
+  }
+}, {
+  "caseId" : "multitask.conditional",
+  "query" : "查余额，再给老徐转 1000；不足就别转",
+  "userPrompt" : "渠道：MOBILE_BANK\n当前页面：home\n\n日期基准（相对日期只能照此换算）：\n今天=2026-03-15 昨天=2026-03-14 前天=2026-03-13\n本月=2026-03-01~2026-03-15 上月=2026-02-01~2026-02-28\n最近7天=2026-03-09~2026-03-15 最近30天=2026-02-14~2026-03-15\n已抽取到的参数（规则抽取，优先级高于你的抽取）：{payee=老徐, amount=1000}\n\n候选能力：\n1. cap.account.balance.query | 融合分 0.490 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 keyword:余额,semantic:0.669,bm25:0.635\n2. cap.account.transaction.query | 融合分 0.352 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 semantic:0.671,bm25:0.202\n3. cap.transfer | 融合分 0.081 | 领域 transfer | 风险 R2 | 必填槽位 payee,amount | 证据 negative:neg.query-verb-suppresses-transaction,semantic:0.656,bm25:0.544\n4. cap.creditcard.bill.query | 融合分 0.000 | 领域 creditcard_service | 风险 R0 | 必填槽位 无 | 证据 negative:neg.balance-not-bill,bm25:0.192\n5. cap.nav.account_查询账户余额 | 融合分 0.000 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 negative:neg.nav-requires-open-verb,semantic:0.764,bm25:0.577\n\n\n用户输入：查余额，再给老徐转 1000；不足就别转\n\n输出 JSON：\n",
+  "assetVersion" : "assets-v1.0.0+51166223",
+  "truth" : {
+    "decision" : "STATIC_PLAN",
+    "reasonCode" : "MULTI_INTENT",
+    "capability" : null,
+    "capabilityDeclared" : false,
+    "slots" : { }
+  }
+}, {
+  "caseId" : "multitask.parallel",
+  "query" : "查一下余额和信用卡账单",
+  "userPrompt" : "渠道：MOBILE_BANK\n当前页面：home\n\n日期基准（相对日期只能照此换算）：\n今天=2026-03-15 昨天=2026-03-14 前天=2026-03-13\n本月=2026-03-01~2026-03-15 上月=2026-02-01~2026-02-28\n最近7天=2026-03-09~2026-03-15 最近30天=2026-02-14~2026-03-15\n已抽取到的参数（规则抽取，优先级高于你的抽取）：{cardType=CREDIT}\n\n候选能力：\n1. cap.creditcard.bill.query | 融合分 0.722 | 领域 creditcard_service | 风险 R0 | 必填槽位 无 | 证据 keyword:账单,keyword:信用卡,semantic:0.832,bm25:0.846\n2. cap.account.balance.query | 融合分 0.556 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 keyword:余额,semantic:0.714,bm25:0.720\n3. cap.account.transaction.query | 融合分 0.365 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 semantic:0.699,bm25:0.202\n4. cap.nav.creditcard_service_信用卡账单 | 融合分 0.066 | 领域 creditcard_service | 风险 R0 | 必填槽位 无 | 证据 keyword:信用卡账单,keyword:信用,negative:neg.nav-requires-open-verb,semantic:0.814,bm25:0.837\n5. cap.nav.creditcard_service_信用卡还款 | 融合分 0.000 | 领域 creditcard_service | 风险 R0 | 必填槽位 无 | 证据 keyword:信用,negative:neg.nav-requires-open-verb,bm25:0.687\n\n\n用户输入：查一下余额和信用卡账单\n\n输出 JSON：\n",
+  "assetVersion" : "assets-v1.0.0+51166223",
+  "truth" : {
+    "decision" : "STATIC_PLAN",
+    "reasonCode" : "MULTI_INTENT",
+    "capability" : null,
+    "capabilityDeclared" : false,
+    "slots" : { }
+  }
+}, {
+  "caseId" : "outofscope.weather",
+  "query" : "今天天气怎么样",
+  "userPrompt" : "渠道：MOBILE_BANK\n当前页面：home\n\n日期基准（相对日期只能照此换算）：\n今天=2026-03-15 昨天=2026-03-14 前天=2026-03-13\n本月=2026-03-01~2026-03-15 上月=2026-02-01~2026-02-28\n最近7天=2026-03-09~2026-03-15 最近30天=2026-02-14~2026-03-15\n已抽取到的参数（规则抽取，优先级高于你的抽取）：{}\n\n候选能力：\n1. cap.nav.wealth_aggregate_产品信息查询 | 融合分 0.302 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 semantic:0.671\n2. cap.nav.wealth_aggregate_风险评测 | 融合分 0.301 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 semantic:0.668\n3. cap.nav.wealth_aggregate_查询我的资产 | 融合分 0.284 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 semantic:0.631\n4. cap.nav.account_查询账户余额 | 融合分 0.284 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 semantic:0.631\n5. cap.nav.wealth_aggregate_资产诊断 | 融合分 0.283 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 semantic:0.629\n\n\n用户输入：今天天气怎么样\n\n输出 JSON：\n",
+  "assetVersion" : "assets-v1.0.0+51166223",
+  "truth" : {
+    "decision" : "HANDOFF",
+    "reasonCode" : "NO_CANDIDATE",
+    "capability" : null,
+    "capabilityDeclared" : false,
+    "slots" : { }
+  }
+}, {
+  "caseId" : "outofscope.greeting",
+  "query" : "你好",
+  "userPrompt" : "渠道：MOBILE_BANK\n当前页面：home\n\n日期基准（相对日期只能照此换算）：\n今天=2026-03-15 昨天=2026-03-14 前天=2026-03-13\n本月=2026-03-01~2026-03-15 上月=2026-02-01~2026-02-28\n最近7天=2026-03-09~2026-03-15 最近30天=2026-02-14~2026-03-15\n已抽取到的参数（规则抽取，优先级高于你的抽取）：{}\n\n候选能力：\n1. cap.nav.wealth_aggregate_产品信息查询 | 融合分 0.341 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 semantic:0.757\n2. cap.nav.wealth_aggregate_风险评测 | 融合分 0.334 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 semantic:0.742\n3. cap.nav.wealth_aggregate_查询我的资产 | 融合分 0.321 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 semantic:0.714\n4. cap.nav.account_查询账户余额 | 融合分 0.316 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 semantic:0.702\n5. cap.nav.wealth_aggregate_资产诊断 | 融合分 0.314 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 semantic:0.699\n\n\n用户输入：你好\n\n输出 JSON：\n",
+  "assetVersion" : "assets-v1.0.0+51166223",
+  "truth" : {
+    "decision" : "HANDOFF",
+    "reasonCode" : "NO_CANDIDATE",
+    "capability" : null,
+    "capabilityDeclared" : false,
+    "slots" : { }
+  }
+}, {
+  "caseId" : "compliance.fund-advice",
+  "query" : "买什么基金好",
+  "userPrompt" : "渠道：MOBILE_BANK\n当前页面：home\n\n日期基准（相对日期只能照此换算）：\n今天=2026-03-15 昨天=2026-03-14 前天=2026-03-13\n本月=2026-03-01~2026-03-15 上月=2026-02-01~2026-02-28\n最近7天=2026-03-09~2026-03-15 最近30天=2026-02-14~2026-03-15\n已抽取到的参数（规则抽取，优先级高于你的抽取）：{payee=金好}\n\n候选能力：\n1. cap.fund.product.query | 融合分 0.203 | 领域 fund_service | 风险 R0 | 必填槽位 无 | 证据 keyword:基金,bm25:0.412\n2. cap.wealth.holding.query | 融合分 0.100 | 领域 wealth_aggregate | 风险 R0 | 必填槽位 无 | 证据 keyword:基金\n3. cap.nav.fund_service_基金解读 | 融合分 0.000 | 领域 fund_service | 风险 R0 | 必填槽位 无 | 证据 keyword:基金,negative:neg.nav-requires-open-verb,semantic:0.713,bm25:0.421\n4. cap.nav.fund_service_基金对比 | 融合分 0.000 | 领域 fund_service | 风险 R0 | 必填槽位 无 | 证据 keyword:基金,negative:neg.nav-requires-open-verb,semantic:0.718,bm25:0.421\n5. cap.nav.fund_service_基金定投 | 融合分 0.000 | 领域 fund_service | 风险 R0 | 必填槽位 无 | 证据 keyword:基金,negative:neg.nav-requires-open-verb,semantic:0.639,bm25:0.421\n\n\n用户输入：买什么基金好\n\n输出 JSON：\n",
+  "assetVersion" : "assets-v1.0.0+51166223",
+  "truth" : {
+    "decision" : "STATIC_PLAN",
+    "reasonCode" : "POLICY_BLOCK",
+    "capability" : null,
+    "capabilityDeclared" : false,
+    "slots" : { }
+  }
+}, {
+  "caseId" : "compliance.others-balance",
+  "query" : "别人的余额能查吗",
+  "userPrompt" : "渠道：MOBILE_BANK\n当前页面：home\n\n日期基准（相对日期只能照此换算）：\n今天=2026-03-15 昨天=2026-03-14 前天=2026-03-13\n本月=2026-03-01~2026-03-15 上月=2026-02-01~2026-02-28\n最近7天=2026-03-09~2026-03-15 最近30天=2026-02-14~2026-03-15\n已抽取到的参数（规则抽取，优先级高于你的抽取）：{}\n\n候选能力：\n1. cap.account.balance.query | 融合分 0.567 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 keyword:余额,semantic:0.718,bm25:0.677\n2. cap.account.transaction.query | 融合分 0.357 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 semantic:0.680,bm25:0.202\n3. cap.creditcard.repay | 融合分 0.000 | 领域 creditcard_service | 风险 R2 | 必填槽位 amount | 证据 negative:neg.query-verb-suppresses-transaction,bm25:0.299\n4. cap.creditcard.bill.query | 融合分 0.000 | 领域 creditcard_service | 风险 R0 | 必填槽位 无 | 证据 negative:neg.balance-not-bill,semantic:0.620,bm25:0.192\n5. cap.nav.account_查询账户余额 | 融合分 0.000 | 领域 account | 风险 R0 | 必填槽位 无 | 证据 negative:neg.nav-requires-open-verb,semantic:0.717,bm25:0.577\n\n\n用户输入：别人的余额能查吗\n\n输出 JSON：\n",
+  "assetVersion" : "assets-v1.0.0+51166223",
+  "truth" : {
+    "decision" : "HANDOFF",
+    "reasonCode" : "NO_CANDIDATE",
+    "capability" : null,
+    "capabilityDeclared" : false,
+    "slots" : { }
+  }
+} ]

@@ -1,0 +1,10 @@
+agent:
+  id: agent.fx_service
+  displayName: 外汇助手
+  roles: [domain]
+  domains: [fx_service]
+implementation: { mode: scaffold }
+runtime: { intentEngine: default, context: enabled, taskOrchestrator: enabled }
+a2a: { inbound: true, delegation: { enabled: true } }
+assets: { path: ./assets }
+storage: { namespace: fx-service }

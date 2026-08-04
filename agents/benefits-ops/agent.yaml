@@ -1,0 +1,10 @@
+agent:
+  id: agent.benefits_ops
+  displayName: 权益运营助手
+  roles: [domain]
+  domains: [benefits_ops]
+implementation: { mode: scaffold }
+runtime: { intentEngine: default, context: enabled, taskOrchestrator: enabled }
+a2a: { inbound: true, delegation: { enabled: true } }
+assets: { path: ./assets }
+storage: { namespace: benefits-ops }

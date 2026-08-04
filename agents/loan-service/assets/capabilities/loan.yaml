@@ -1,0 +1,20 @@
+- capabilityId: cap.loan.product.query
+  name: 查询贷款产品要素
+  type: TOOL
+  granularity: TOOL
+  parentCapabilityId: agent.loan_service
+  domains: [loan_service]
+  description: 查询贷款产品的期限、参考利率和适用范围等公开要素。本能力不涉及申请提交、贷款审批、额度或最终利率承诺
+  supportedIntents: [查询贷款产品, 了解贷款产品]
+  utterances: [有什么贷款产品, 我想了解贷款, 查询贷款产品信息]
+  keywords: [贷款产品, 贷款利率, 贷款期限]
+  requiredSlots: []
+  riskLevel: R0
+  timeoutMs: 3000
+  idempotency: SUPPORTED
+  owner: 贷款领域
+  version: "1.0.0"
+  status: ACTIVE
+  principalRequired: false
+  confirmationPolicy: NONE
+  loopAccess: DEFAULT
